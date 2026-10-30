@@ -3,7 +3,7 @@ using GameBoost.Infrastructure;
 
 namespace GameBoost.Services;
 
-/// <summary>Ein physischer Monitor. Alle Koordinaten in physischen Pixeln (Per-Monitor-DPI-aware).</summary>
+/// <summary>A physical monitor. All coordinates in physical pixels (per-monitor DPI aware).</summary>
 public sealed record MonitorInfo(string DeviceName, int Number, int Left, int Top, int Width, int Height, bool IsPrimary, double DpiScale)
 {
     public string DisplayName =>
@@ -41,7 +41,7 @@ public static class MonitorService
                 }
                 catch (Exception ex)
                 {
-                    Logger.Warn("Monitorinformationen konnten nicht gelesen werden", ex);
+                    Logger.Warn("Could not read monitor info", ex);
                 }
                 return true;
             };
@@ -50,12 +50,12 @@ public static class MonitorService
         }
         catch (Exception ex)
         {
-            Logger.Error("Monitore konnten nicht ermittelt werden", ex);
+            Logger.Error("Could not enumerate monitors", ex);
         }
 
         if (result.Count == 0)
         {
-            // Notfall-Fallback: primärer Bildschirm laut WinForms.
+            // Emergency fallback: primary screen according to WinForms.
             var b = System.Windows.Forms.Screen.PrimaryScreen?.Bounds ?? new System.Drawing.Rectangle(0, 0, 1920, 1080);
             result.Add(new MonitorInfo(@"\\.\DISPLAY1", 1, b.Left, b.Top, b.Width, b.Height, true, 1));
         }

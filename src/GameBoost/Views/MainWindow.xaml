@@ -40,7 +40,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <!-- ================= Seitenleiste ================= -->
+            <!-- ================= Sidebar ================= -->
             <Border Background="{StaticResource B.Bg1}" BorderBrush="{StaticResource B.Border}" BorderThickness="0,0,1,0">
                 <DockPanel>
                     <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="22,22,0,30">
@@ -53,7 +53,7 @@
                         </StackPanel>
                     </StackPanel>
 
-                    <!-- Status unten -->
+                    <!-- Status at the bottom -->
                     <Border DockPanel.Dock="Bottom" Margin="14,0,14,16" Padding="14,12" CornerRadius="12"
                             Background="{StaticResource B.Bg2}" BorderBrush="{StaticResource B.Border}" BorderThickness="1">
                         <StackPanel>
@@ -118,7 +118,7 @@
                 </DockPanel>
             </Border>
 
-            <!-- ================= Inhalt ================= -->
+            <!-- ================= Content ================= -->
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="44" />

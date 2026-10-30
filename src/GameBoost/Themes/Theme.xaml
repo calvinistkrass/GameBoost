@@ -4,7 +4,7 @@
                     xmlns:conv="clr-namespace:GameBoost.Infrastructure"
                     xmlns:controls="clr-namespace:GameBoost.Controls">
 
-    <!-- ============================================================ Farben -->
+    <!-- ============================================================ Colors -->
     <Color x:Key="C.Bg0">#FF0A0D14</Color>
     <Color x:Key="C.Bg1">#FF0F131C</Color>
     <Color x:Key="C.Bg2">#FF141A26</Color>
@@ -46,7 +46,7 @@
         <GradientStop Color="{StaticResource C.Accent2}" Offset="1" />
     </LinearGradientBrush>
 
-    <!-- Hintergrund der Crosshair-Vorschau (stilisierte Spielszene) -->
+    <!-- Crosshair preview background (stylized game scene) -->
     <LinearGradientBrush x:Key="B.PreviewScene" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Color="#FF4A6A86" Offset="0" />
         <GradientStop Color="#FF8FA9B9" Offset="0.48" />
@@ -56,7 +56,7 @@
 
     <FontFamily x:Key="IconFont">Segoe Fluent Icons, Segoe MDL2 Assets</FontFamily>
 
-    <!-- ============================================================ Konverter -->
+    <!-- ============================================================ Converters -->
     <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
     <conv:InverseBoolConverter x:Key="InverseBool" />
     <conv:EqualsToBoolConverter x:Key="EqualsToBool" />
@@ -252,7 +252,7 @@
         </Setter>
     </Style>
 
-    <!-- Großer runder Gaming-Modus-Schalter. Tag=True → aktiv. -->
+    <!-- Large round game mode toggle. Tag=True → active. -->
     <Style x:Key="Button.GameMode" TargetType="Button">
         <Setter Property="Foreground" Value="{StaticResource B.TextDim}" />
         <Setter Property="Cursor" Value="Hand" />
@@ -386,7 +386,7 @@
         </Setter>
     </Style>
 
-    <!-- ============================================================ CheckBox (Schalter) -->
+    <!-- ============================================================ CheckBox (toggle switch) -->
     <Style TargetType="CheckBox">
         <Setter Property="Foreground" Value="{StaticResource B.Text}" />
         <Setter Property="Cursor" Value="Hand" />
@@ -426,7 +426,7 @@
         </Setter>
     </Style>
 
-    <!-- Klassische Auswahlbox; der ganze Inhalt ist klickbar (für Listenzeilen). -->
+    <!-- Classic check box; the whole content is clickable (for list rows). -->
     <Style x:Key="CheckBox.Box" TargetType="CheckBox">
         <Setter Property="Foreground" Value="{StaticResource B.Text}" />
         <Setter Property="Cursor" Value="Hand" />
@@ -466,7 +466,7 @@
         </Setter>
     </Style>
 
-    <!-- ============================================================ TextBox (Tag = Platzhalter) -->
+    <!-- ============================================================ TextBox (Tag = placeholder) -->
     <Style TargetType="TextBox">
         <Setter Property="Foreground" Value="{StaticResource B.Text}" />
         <Setter Property="Background" Value="{StaticResource B.Bg3}" />

@@ -5,8 +5,8 @@ using GameBoost.Models;
 namespace GameBoost.Services;
 
 /// <summary>
-/// Import/Export eines Crosshairs als kurzer Code ("GB1-…").
-/// Inhalt: Base64Url von "Stil,Farbe,Deckkraft%,Länge,Stärke,Gap,Punkt,Outline,OutlineFarbe,OutlineStärke,OffsetX,OffsetY".
+/// Import/export of a crosshair as a short code ("GB1-…").
+/// Payload: Base64Url of "style,color,opacity%,length,thickness,gap,dot,outline,outlineColor,outlineThickness,offsetX,offsetY".
 /// </summary>
 public static class CrosshairCodec
 {

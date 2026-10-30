@@ -9,13 +9,13 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- Kopfzeile -->
+        <!-- Header -->
         <StackPanel Margin="0,0,0,18">
             <TextBlock Text="{DynamicResource GM.Title}" Style="{StaticResource Text.H1}" />
             <TextBlock Text="{DynamicResource GM.Subtitle}" Style="{StaticResource Text.Muted}" Margin="0,4,0,0" />
         </StackPanel>
 
-        <!-- Schalter + Status -->
+        <!-- Toggle + status -->
         <Grid Grid.Row="1" Margin="0,0,0,16">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="460" />
@@ -121,7 +121,7 @@
                 <Border DockPanel.Dock="Top" Height="1" Background="{StaticResource B.Border}" />
 
                 <Grid Margin="18,14,18,16">
-                    <!-- ===== Programme beenden ===== -->
+                    <!-- ===== Close programs ===== -->
                     <DockPanel Visibility="{Binding SelectedTab, Converter={StaticResource EqualsToVis}, ConverterParameter=Kill}">
                         <Grid DockPanel.Dock="Top" Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
@@ -180,7 +180,7 @@
                         </Grid>
                     </DockPanel>
 
-                    <!-- ===== Programme starten ===== -->
+                    <!-- ===== Start programs ===== -->
                     <DockPanel Visibility="{Binding SelectedTab, Converter={StaticResource EqualsToVis}, ConverterParameter=Start}">
                         <Grid DockPanel.Dock="Top" Margin="0,0,0,12">
                             <Grid.ColumnDefinitions>
@@ -224,7 +224,7 @@
                         </Grid>
                     </DockPanel>
 
-                    <!-- ===== Optionen ===== -->
+                    <!-- ===== Options ===== -->
                     <ScrollViewer VerticalScrollBarVisibility="Auto" Visibility="{Binding SelectedTab, Converter={StaticResource EqualsToVis}, ConverterParameter=Options}">
                         <StackPanel MaxWidth="720" HorizontalAlignment="Left">
                             <CheckBox IsChecked="{Binding SelectedProfile.SwitchPowerPlan}" Margin="0,0,0,18">
@@ -258,7 +258,7 @@
                         </StackPanel>
                     </ScrollViewer>
 
-                    <!-- ===== Automatik ===== -->
+                    <!-- ===== Automation ===== -->
                     <DockPanel Visibility="{Binding SelectedTab, Converter={StaticResource EqualsToVis}, ConverterParameter=Auto}">
                         <TextBlock DockPanel.Dock="Top" Text="{DynamicResource GM.Auto.Desc}" Style="{StaticResource Text.Muted}" Margin="0,0,0,10" MaxWidth="760" HorizontalAlignment="Left" />
                         <Border DockPanel.Dock="Top" Style="{StaticResource WarnBox}" Margin="0,0,0,10"

@@ -13,7 +13,7 @@ namespace GameBoost.ViewModels;
 
 public sealed record PresetChoice(string? Name, string Display);
 
-/// <summary>Seite "Gaming-Modus".</summary>
+/// <summary>"Game mode" page.</summary>
 public sealed class GameModeViewModel : ObservableObject, IDisposable, INavigationAware
 {
     private readonly AppController _controller;
@@ -58,7 +58,7 @@ public sealed class GameModeViewModel : ObservableObject, IDisposable, INavigati
         RefreshStatus();
     }
 
-    // ------------------------------------------------------------------ Befehle
+    // ------------------------------------------------------------------ Commands
 
     public AsyncRelayCommand ToggleCommand { get; }
     public AsyncRelayCommand RefreshProcessesCommand { get; }
@@ -74,7 +74,7 @@ public sealed class GameModeViewModel : ObservableObject, IDisposable, INavigati
     public RelayCommand SelectAllVisibleCommand { get; }
     public RelayCommand SelectNoneCommand { get; }
 
-    // ------------------------------------------------------------------ Profile
+    // ------------------------------------------------------------------ Profiles
 
     public ObservableCollection<GameModeProfile> Profiles => _controller.Settings.Profiles;
 
@@ -129,7 +129,7 @@ public sealed class GameModeViewModel : ObservableObject, IDisposable, INavigati
 
     public ObservableCollection<StatusEntry> DisplayEntries { get; } = new();
 
-    // ------------------------------------------------------------------ Prozesse
+    // ------------------------------------------------------------------ Processes
 
     public ICollectionView? ProcessesView
     {
@@ -154,7 +154,7 @@ public sealed class GameModeViewModel : ObservableObject, IDisposable, INavigati
 
     public string SelectedCountText => Loc.F("GM.Proc.SelectedCount", SelectedProfile.ProcessesToKill.Count);
 
-    // ------------------------------------------------------------------ Optionen / Automatik
+    // ------------------------------------------------------------------ Options / automation
 
     public List<PresetChoice> PresetChoices
     {
@@ -190,7 +190,7 @@ public sealed class GameModeViewModel : ObservableObject, IDisposable, INavigati
             RefreshProcessesCommand.Execute(null);
     }
 
-    // ------------------------------------------------------------------ Prozessliste
+    // ------------------------------------------------------------------ Process list
 
     private async Task RefreshProcessesAsync()
     {
@@ -211,7 +211,7 @@ public sealed class GameModeViewModel : ObservableObject, IDisposable, INavigati
         }
         catch (Exception ex)
         {
-            ErrorReporter.Report("Prozessliste konnte nicht geladen werden", ex);
+            ErrorReporter.Report("Could not load process list", ex);
         }
         finally
         {
@@ -231,7 +231,7 @@ public sealed class GameModeViewModel : ObservableObject, IDisposable, INavigati
                 selected.Contains(s.Name), OnItemSelectionChanged));
         }
 
-        // Ausgewählte, aber gerade nicht laufende Programme trotzdem anzeigen.
+        // Still show programs that are selected but not running right now.
         foreach (var name in selected.Where(n => _snapshots.All(s => !s.Name.Equals(n, StringComparison.OrdinalIgnoreCase))))
         {
             items.Add(new ProcessItemViewModel(name, name, null, 0, 0, null, true, OnItemSelectionChanged));
@@ -277,7 +277,7 @@ public sealed class GameModeViewModel : ObservableObject, IDisposable, INavigati
         foreach (ProcessItemViewModel item in ProcessesView) item.IsSelected = selected;
     }
 
-    // ------------------------------------------------------------------ Profilverwaltung
+    // ------------------------------------------------------------------ Profile management
 
     private void NewProfile()
     {
@@ -327,7 +327,7 @@ public sealed class GameModeViewModel : ObservableObject, IDisposable, INavigati
         _controller.SettingsService.RequestSave();
     }
 
-    // ------------------------------------------------------------------ Programme starten
+    // ------------------------------------------------------------------ Start programs
 
     private void AddProgram()
     {
@@ -349,7 +349,7 @@ public sealed class GameModeViewModel : ObservableObject, IDisposable, INavigati
         if (program != null) SelectedProfile.ProgramsToStart.Remove(program);
     }
 
-    // ------------------------------------------------------------------ Automatik
+    // ------------------------------------------------------------------ Automation
 
     private void AddTriggerByName()
     {
@@ -385,7 +385,7 @@ public sealed class GameModeViewModel : ObservableObject, IDisposable, INavigati
         if (name != null) SelectedProfile.TriggerExecutables.Remove(name);
     }
 
-    // ------------------------------------------------------------------ Hilfsfunktionen
+    // ------------------------------------------------------------------ Helpers
 
     private void RebuildPresetChoices()
     {
@@ -480,7 +480,7 @@ public sealed class GameModeViewModel : ObservableObject, IDisposable, INavigati
     }
 }
 
-/// <summary>Seiten, die beim Anzeigen aktualisiert werden möchten.</summary>
+/// <summary>Pages that want to refresh when shown.</summary>
 public interface INavigationAware
 {
     void OnNavigatedTo();

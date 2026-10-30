@@ -2,7 +2,7 @@ using System.Windows.Input;
 
 namespace GameBoost.Infrastructure;
 
-/// <summary>ICommand-Implementierung, die alle Ausnahmen abfängt und protokolliert.</summary>
+/// <summary>ICommand implementation that catches and logs all exceptions.</summary>
 public sealed class RelayCommand : ICommand
 {
     private readonly Action<object?> _execute;
@@ -33,7 +33,7 @@ public sealed class RelayCommand : ICommand
         }
         catch (Exception ex)
         {
-            Logger.Error("CanExecute fehlgeschlagen", ex);
+            Logger.Error("CanExecute failed", ex);
             return false;
         }
     }
@@ -46,12 +46,12 @@ public sealed class RelayCommand : ICommand
         }
         catch (Exception ex)
         {
-            ErrorReporter.Report("Befehl fehlgeschlagen", ex);
+            ErrorReporter.Report("Command failed", ex);
         }
     }
 }
 
-/// <summary>Asynchroner Befehl; ist während der Ausführung deaktiviert.</summary>
+/// <summary>Asynchronous command; disabled while running.</summary>
 public sealed class AsyncRelayCommand : ICommand
 {
     private readonly Func<object?, Task> _execute;
@@ -84,7 +84,7 @@ public sealed class AsyncRelayCommand : ICommand
         }
         catch (Exception ex)
         {
-            Logger.Error("CanExecute fehlgeschlagen", ex);
+            Logger.Error("CanExecute failed", ex);
             return false;
         }
     }
@@ -100,7 +100,7 @@ public sealed class AsyncRelayCommand : ICommand
         }
         catch (Exception ex)
         {
-            ErrorReporter.Report("Asynchroner Befehl fehlgeschlagen", ex);
+            ErrorReporter.Report("Async command failed", ex);
         }
         finally
         {

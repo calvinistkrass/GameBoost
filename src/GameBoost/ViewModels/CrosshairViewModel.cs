@@ -9,7 +9,7 @@ using WinForms = System.Windows.Forms;
 
 namespace GameBoost.ViewModels;
 
-/// <summary>Seite "Crosshair": Editor, Vorschau, Overlay, Presets, Teilen.</summary>
+/// <summary>"Crosshair" page: editor, preview, overlay, presets, sharing.</summary>
 public sealed class CrosshairViewModel : ObservableObject, IDisposable, INavigationAware
 {
     private readonly AppController _controller;
@@ -57,7 +57,7 @@ public sealed class CrosshairViewModel : ObservableObject, IDisposable, INavigat
 
     public static IReadOnlyList<string> OutlineSwatches { get; } = new[] { "#000000", "#FFFFFF", "#303030" };
 
-    // ------------------------------------------------------------------ Befehle
+    // ------------------------------------------------------------------ Commands
 
     public RelayCommand SetColorCommand { get; }
     public RelayCommand SetOutlineColorCommand { get; }
@@ -73,7 +73,7 @@ public sealed class CrosshairViewModel : ObservableObject, IDisposable, INavigat
     public RelayCommand CopyCodeCommand { get; }
     public RelayCommand ImportCommand { get; }
 
-    // ------------------------------------------------------------------ Editor-Hilfsproperties
+    // ------------------------------------------------------------------ Editor helper properties
 
     public string ColorText
     {
@@ -153,7 +153,7 @@ public sealed class CrosshairViewModel : ObservableObject, IDisposable, INavigat
         set => SetProperty(ref _newPresetName, value ?? "");
     }
 
-    // ------------------------------------------------------------------ Teilen
+    // ------------------------------------------------------------------ Sharing
 
     public string ExportCode => CrosshairCodec.Encode(Config);
 
@@ -175,7 +175,7 @@ public sealed class CrosshairViewModel : ObservableObject, IDisposable, INavigat
         private set => SetProperty(ref _shareMessageIsError, value);
     }
 
-    // ------------------------------------------------------------------ Logik
+    // ------------------------------------------------------------------ Logic
 
     public void OnNavigatedTo()
     {
@@ -284,7 +284,7 @@ public sealed class CrosshairViewModel : ObservableObject, IDisposable, INavigat
         }
         catch (Exception ex)
         {
-            Logger.Warn("Zwischenablage nicht verfügbar", ex);
+            Logger.Warn("Clipboard not available", ex);
             ShowShareMessage(Loc.T("CH.Share.CopyFailed"), true);
         }
     }

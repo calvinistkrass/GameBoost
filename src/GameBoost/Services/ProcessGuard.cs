@@ -9,34 +9,34 @@ namespace GameBoost.Services;
 public sealed record ProcessCheckResult(bool Allowed, string? Path, string? Reason);
 
 /// <summary>
-/// Sicherheitsregeln: Entscheidet, ob ein Prozess beendet werden darf.
-/// Erlaubt sind ausschließlich Prozesse des aktuellen Benutzers in der aktuellen Sitzung,
-/// die nicht auf der Blacklist stehen und nicht aus dem Windows-Verzeichnis stammen.
+/// Safety rules: decides whether a process may be closed.
+/// Only processes of the current user in the current session are allowed,
+/// that are not blacklisted and do not come from the Windows directory.
 /// </summary>
 public static class ProcessGuard
 {
-    /// <summary>System-, Windows-, Sicherheits- und Anti-Cheat-Prozesse, die niemals beendet werden.</summary>
+    /// <summary>System, Windows, security and anti-cheat processes that are never closed.</summary>
     private static readonly HashSet<string> Blacklist = new(StringComparer.OrdinalIgnoreCase)
     {
-        // Kernel / Sitzung
+        // Kernel / session
         "system", "idle", "registry", "memory compression", "secure system", "smss", "csrss", "wininit",
         "winlogon", "services", "lsass", "lsaiso", "svchost", "fontdrvhost", "dwm", "userinit", "logonui",
         "lockapp", "sihost", "taskhostw", "ctfmon", "conhost", "openconsole", "dllhost", "rundll32",
         "audiodg", "spoolsv", "wudfhost", "wmiprvse", "dashost", "unsecapp", "backgroundtaskhost",
         "runtimebroker", "comppkgsrv", "sppsvc", "tiworker", "trustedinstaller", "mousocoreworker",
         "wlanext", "useroobebroker", "smartscreen", "sgrmbroker", "werfault", "wermgr", "consent",
-        // Shell / Oberfläche
+        // Shell / UI
         "explorer", "searchhost", "searchapp", "searchui", "searchindexer", "searchprotocolhost",
         "searchfilterhost", "startmenuexperiencehost", "shellexperiencehost", "shellhost", "textinputhost",
         "applicationframehost", "systemsettings", "systemsettingsbroker", "widgets", "widgetservice",
         "taskmgr", "msedgewebview2", "windowsinternal.composableshell.experiences.textinput.inputapp",
-        // Sicherheit
+        // Security
         "msmpeng", "mpdefendercoreservice", "nissrv", "securityhealthsystray", "securityhealthservice",
         "securityhealthhost", "mpcmdrun",
-        // Anti-Cheat (Beenden würde das laufende Spiel stören)
+        // Anti-cheat (closing it would break the running game)
         "vgc", "vgk", "vgtray", "easyanticheat", "easyanticheat_eos", "eac_launcher", "beservice",
         "beservice_x64", "battleye", "faceit", "faceitservice", "faceitclient", "ricochet",
-        // GameBoost selbst
+        // GameBoost itself
         "gameboost"
     };
 
@@ -59,21 +59,21 @@ public static class ProcessGuard
     {
         try
         {
-            if (process.Id == Environment.ProcessId) return Deny("eigener Prozess");
-            if (process.Id <= 4) return Deny("Systemprozess");
-            if (IsProtectedName(process.ProcessName)) return Deny("geschützter Name");
-            if (process.SessionId != CurrentSessionId) return Deny("andere Sitzung");
+            if (process.Id == Environment.ProcessId) return Deny("own process");
+            if (process.Id <= 4) return Deny("system process");
+            if (IsProtectedName(process.ProcessName)) return Deny("protected name");
+            if (process.SessionId != CurrentSessionId) return Deny("other session");
 
             var path = QueryPathAndOwner(process.Id, out var owner);
-            if (path == null) return Deny("kein Zugriff");
-            if (IsProtectedPath(path)) return Deny("Windows-Verzeichnis");
-            if (owner == null || CurrentUserSid == null || !owner.Equals(CurrentUserSid)) return Deny("anderer Benutzer");
+            if (path == null) return Deny("no access");
+            if (IsProtectedPath(path)) return Deny("Windows directory");
+            if (owner == null || CurrentUserSid == null || !owner.Equals(CurrentUserSid)) return Deny("other user");
 
             return new ProcessCheckResult(true, path, null);
         }
         catch (Exception ex)
         {
-            return Deny("Fehler: " + ex.Message);
+            return Deny("error: " + ex.Message);
         }
     }
 
@@ -98,7 +98,7 @@ public static class ProcessGuard
         return list.ToArray();
     }
 
-    /// <summary>Liest Pfad und Besitzer-SID eines Prozesses (ohne Adminrechte).</summary>
+    /// <summary>Reads a process's path and owner SID (without admin rights).</summary>
     private static string? QueryPathAndOwner(int pid, out SecurityIdentifier? owner)
     {
         owner = null;
@@ -140,7 +140,7 @@ public static class ProcessGuard
         try
         {
             if (!NativeMethods.GetTokenInformation(hToken, NativeMethods.TokenUser, buffer, length, out _)) return null;
-            // TOKEN_USER beginnt mit SID_AND_ATTRIBUTES { PSID Sid; DWORD Attributes; }
+            // TOKEN_USER starts with SID_AND_ATTRIBUTES { PSID Sid; DWORD Attributes; }
             var sidPtr = Marshal.ReadIntPtr(buffer);
             return new SecurityIdentifier(sidPtr);
         }

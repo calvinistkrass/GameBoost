@@ -17,6 +17,9 @@ TestResults/
 *.trx
 coverage*/
 
+# Lokale Claude-Konfiguration
+.claude/
+
 # Sonstiges
 *.log
 Thumbs.db

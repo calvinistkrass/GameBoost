@@ -11,7 +11,7 @@ public enum CrosshairStyle
     TShape
 }
 
-/// <summary>Alle Parameter eines Crosshairs. Alle Maße in physischen Bildschirmpixeln.</summary>
+/// <summary>All crosshair parameters. All sizes are in physical screen pixels.</summary>
 public sealed class CrosshairConfig : ObservableObject
 {
     public const int MaxLength = 60;
@@ -40,21 +40,21 @@ public sealed class CrosshairConfig : ObservableObject
         set => SetProperty(ref _style, Enum.IsDefined(value) ? value : CrosshairStyle.Cross);
     }
 
-    /// <summary>Farbe als #RRGGBB. Ungültige Werte werden ignoriert.</summary>
+    /// <summary>Color as #RRGGBB. Invalid values are ignored.</summary>
     public string Color
     {
         get => _color;
         set => SetProperty(ref _color, ColorUtil.Normalize(value) ?? _color);
     }
 
-    /// <summary>Deckkraft 0.05 – 1.0.</summary>
+    /// <summary>Opacity 0.05 – 1.0.</summary>
     public double Opacity
     {
         get => _opacity;
         set => SetProperty(ref _opacity, Math.Round(Math.Clamp(double.IsNaN(value) ? 1 : value, 0.05, 1.0), 2));
     }
 
-    /// <summary>Länge der Linien bzw. Radius beim Kreis.</summary>
+    /// <summary>Line length, or the radius for the circle style.</summary>
     public int Length
     {
         get => _length;
@@ -139,7 +139,7 @@ public sealed class CrosshairConfig : ObservableObject
         OutlineThickness == other.OutlineThickness && OffsetX == other.OffsetX && OffsetY == other.OffsetY;
 }
 
-/// <summary>Ein gespeichertes, benanntes Crosshair.</summary>
+/// <summary>A saved, named crosshair.</summary>
 public sealed class CrosshairPreset : ObservableObject
 {
     private string _name = "Preset";
@@ -155,7 +155,7 @@ public sealed class CrosshairPreset : ObservableObject
     public static CrosshairPreset Create(string name, CrosshairConfig config) => new() { Name = name, Config = config.Clone() };
 }
 
-/// <summary>Beispiel-Crosshairs (Standard-Presets und Vorschaubilder im Editor).</summary>
+/// <summary>Sample crosshairs (default presets and editor style previews).</summary>
 public static class CrosshairSamples
 {
     public static CrosshairConfig Cross { get; } = new() { Style = CrosshairStyle.Cross, Color = "#E8ECF4", Length = 7, Thickness = 2, Gap = 3, Outline = false };
@@ -166,10 +166,10 @@ public static class CrosshairSamples
 
     public static IEnumerable<CrosshairPreset> DefaultPresets()
     {
-        yield return CrosshairPreset.Create("Klassisch Grün", new CrosshairConfig { Style = CrosshairStyle.Cross, Color = "#00FF7F", Length = 6, Thickness = 2, Gap = 3, Outline = true });
-        yield return CrosshairPreset.Create("Präzision Cyan", new CrosshairConfig { Style = CrosshairStyle.CrossWithDot, Color = "#00FFFF", Length = 4, Thickness = 1, Gap = 3, DotSize = 1, Outline = true });
-        yield return CrosshairPreset.Create("Roter Punkt", new CrosshairConfig { Style = CrosshairStyle.Dot, Color = "#FF3B3B", DotSize = 4, Outline = true });
-        yield return CrosshairPreset.Create("Kreis Weiß", new CrosshairConfig { Style = CrosshairStyle.Circle, Color = "#FFFFFF", Length = 10, Thickness = 2, Outline = true });
-        yield return CrosshairPreset.Create("T-Form Gelb", new CrosshairConfig { Style = CrosshairStyle.TShape, Color = "#FFE14D", Length = 7, Thickness = 2, Gap = 4, Outline = true });
+        yield return CrosshairPreset.Create("Classic Green", new CrosshairConfig { Style = CrosshairStyle.Cross, Color = "#00FF7F", Length = 6, Thickness = 2, Gap = 3, Outline = true });
+        yield return CrosshairPreset.Create("Precision Cyan", new CrosshairConfig { Style = CrosshairStyle.CrossWithDot, Color = "#00FFFF", Length = 4, Thickness = 1, Gap = 3, DotSize = 1, Outline = true });
+        yield return CrosshairPreset.Create("Red Dot", new CrosshairConfig { Style = CrosshairStyle.Dot, Color = "#FF3B3B", DotSize = 4, Outline = true });
+        yield return CrosshairPreset.Create("White Circle", new CrosshairConfig { Style = CrosshairStyle.Circle, Color = "#FFFFFF", Length = 10, Thickness = 2, Outline = true });
+        yield return CrosshairPreset.Create("Yellow T", new CrosshairConfig { Style = CrosshairStyle.TShape, Color = "#FFE14D", Length = 7, Thickness = 2, Gap = 4, Outline = true });
     }
 }

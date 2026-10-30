@@ -6,7 +6,7 @@ using GameBoost.Models;
 
 namespace GameBoost.Services;
 
-/// <summary>Lädt und speichert die Einstellungen als JSON in %AppData%\GameBoost\settings.json.</summary>
+/// <summary>Loads and saves the settings as JSON in %AppData%\GameBoost\settings.json.</summary>
 public sealed class SettingsService
 {
     public static readonly JsonSerializerOptions JsonOptions = new()
@@ -32,7 +32,7 @@ public sealed class SettingsService
         {
             if (!File.Exists(path))
             {
-                Logger.Info("Keine Einstellungen gefunden – Standardwerte werden verwendet.");
+                Logger.Info("No settings found – using defaults.");
                 Settings = AppSettings.CreateDefault();
                 Save();
                 return;
@@ -40,21 +40,21 @@ public sealed class SettingsService
 
             var json = File.ReadAllText(path);
             var loaded = JsonSerializer.Deserialize<AppSettings>(json, JsonOptions)
-                         ?? throw new JsonException("Leere Einstellungsdatei");
+                         ?? throw new JsonException("Empty settings file");
             loaded.Normalize();
             Settings = loaded;
-            Logger.Info("Einstellungen geladen.");
+            Logger.Info("Settings loaded.");
         }
         catch (Exception ex)
         {
-            Logger.Error("Einstellungen konnten nicht gelesen werden – Standardwerte werden verwendet.", ex);
+            Logger.Error("Could not read settings – using defaults.", ex);
             BackupCorruptFile(path);
             Settings = AppSettings.CreateDefault();
             Save();
         }
     }
 
-    /// <summary>Speichert sofort (atomar über eine temporäre Datei).</summary>
+    /// <summary>Saves immediately (atomically via a temp file).</summary>
     public void Save()
     {
         try
@@ -72,11 +72,11 @@ public sealed class SettingsService
         }
         catch (Exception ex)
         {
-            Logger.Error("Einstellungen konnten nicht gespeichert werden", ex);
+            Logger.Error("Could not save settings", ex);
         }
     }
 
-    /// <summary>Speichert verzögert (bündelt viele schnelle Änderungen, z. B. beim Ziehen eines Sliders).</summary>
+    /// <summary>Saves with a delay (batches many quick changes, e.g. while dragging a slider).</summary>
     public void RequestSave()
     {
         var dispatcher = System.Windows.Application.Current?.Dispatcher;
@@ -100,7 +100,7 @@ public sealed class SettingsService
         BackupCorruptFile(path, "before-reset");
         Settings = AppSettings.CreateDefault();
         Save();
-        Logger.Info("Einstellungen wurden zurückgesetzt.");
+        Logger.Info("Settings were reset.");
         SettingsReplaced?.Invoke(this, EventArgs.Empty);
     }
 
@@ -111,11 +111,11 @@ public sealed class SettingsService
             if (!File.Exists(path)) return;
             var backup = Path.Combine(Path.GetDirectoryName(path)!, $"settings.{suffix}-{DateTime.Now:yyyyMMdd-HHmmss}.json");
             File.Copy(path, backup, overwrite: true);
-            Logger.Info($"Sicherung der alten Einstellungen: {backup}");
+            Logger.Info($"Backup of old settings: {backup}");
         }
         catch (Exception ex)
         {
-            Logger.Warn("Sicherung der Einstellungsdatei fehlgeschlagen", ex);
+            Logger.Warn("Backing up settings file failed", ex);
         }
     }
 }

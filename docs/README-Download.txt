@@ -1,47 +1,48 @@
-GameBoost – Gaming-Modus & Crosshair-Overlay für Windows
-=========================================================
+GameBoost – Game mode & crosshair overlay for Windows
+=====================================================
 
-SCHNELLSTART
-------------
-1. GameBoost.exe an einen beliebigen Ort kopieren (z. B. C:\Tools\GameBoost\).
-2. Doppelklick auf GameBoost.exe. Keine Installation, keine Adminrechte nötig.
-3. Beim ersten Start warnt Windows evtl. mit "Der Computer wurde durch Windows geschützt"
-   (die .exe ist nicht digital signiert). Auf "Weitere Informationen" -> "Trotzdem ausführen" klicken.
+QUICK START
+-----------
+1. Copy GameBoost.exe anywhere you like (e.g. C:\Tools\GameBoost\).
+2. Double-click GameBoost.exe. No installation and no admin rights needed.
+3. On first launch Windows may show "Windows protected your PC"
+   (the .exe is not digitally signed). Click "More info" -> "Run anyway".
 
-BEDIENUNG
----------
-Gaming-Modus
-  - Profil wählen (z. B. "Standard", "Valorant") und den großen Button drücken.
-  - Tab "Programme beenden": Hintergrundprogramme per Haken auswählen (z. B. Discord-Updater, Browser).
-    System- und Windows-Prozesse werden nie angezeigt und nie beendet.
-  - Tab "Programme starten": Programme, die beim Aktivieren gestartet werden (z. B. Discord, Steam).
-  - Tab "Optionen": Energieplan "Höchstleistung", Benachrichtigungen aus, Crosshair automatisch an.
-  - Tab "Automatik": Spiel-.exe eintragen -> Profil startet automatisch mit dem Spiel.
-  - Beim Ausschalten werden Energieplan und Benachrichtigungen wiederhergestellt.
+HOW TO USE
+----------
+Game mode
+  - Pick a profile (e.g. "Default", "Valorant") and press the big button.
+  - "Close programs" tab: tick background programs to close (e.g. updaters, browser).
+    System and Windows processes are never shown and never closed.
+  - "Start programs" tab: programs started on activation (e.g. Discord, Steam).
+  - "Options" tab: "High performance" power plan, notifications off, show crosshair automatically.
+  - "Automation" tab: enter a game's .exe -> the profile starts automatically with the game.
+  - When you turn it off, power plan and notifications are restored.
 
 Crosshair
-  - Stil, Farbe, Größe, Linienstärke, Abstand, Outline und Offset einstellen – die Vorschau zeigt alles live.
-  - "Crosshair-Overlay anzeigen" einschalten und Monitor wählen.
-  - Presets speichern/laden; Crosshairs als Code (GB1-...) teilen und importieren.
+  - Set style, color, size, thickness, gap, outline and offset – the preview updates live.
+  - Turn on "Show crosshair overlay" and choose your monitor.
+  - Save/load presets; share crosshairs as a code (GB1-...) and import codes from others.
 
-Standard-Hotkeys (änderbar unter Einstellungen)
-  Strg + Alt + C   Crosshair ein/aus
-  Strg + Alt + G   Gaming-Modus ein/aus
-  Strg + Alt + N   Nächstes Crosshair-Preset
+Default hotkeys (change them under Settings)
+  Ctrl + Alt + C   Toggle crosshair
+  Ctrl + Alt + G   Toggle game mode
+  Ctrl + Alt + N   Next crosshair preset
 
-WICHTIG
--------
-* Das Overlay ist nur im Spielmodus "Randloses Fenster" (Borderless / Fenster-Vollbild) sichtbar,
-  nicht im exklusiven Vollbild.
-* Bei Spielen mit strengem Anti-Cheat (z. B. Valorant/Vanguard, FACEIT, ESEA) oder in Turnieren
-  kann ein Overlay unerwünscht oder verboten sein. Nutzung auf eigene Verantwortung.
-* Beendete Programme verlieren ungespeicherte Daten – wähle nur Programme aus, die du nicht brauchst.
-* Schließen (X) minimiert GameBoost in den Infobereich (Tray). Beenden über Rechtsklick aufs Tray-Symbol.
+IMPORTANT
+---------
+* The overlay is only visible in "borderless window" (windowed fullscreen) mode,
+  not in exclusive fullscreen.
+* Games with strict anti-cheat (e.g. Valorant/Vanguard, FACEIT, ESEA) or tournaments
+  may disallow overlays. Use at your own risk.
+* Closed programs lose unsaved data – only select programs you don't need.
+* Closing the window (X) keeps GameBoost running in the system tray.
+  Quit it by right-clicking the tray icon.
 
-DATEN & DEINSTALLATION
-----------------------
-Einstellungen und Logs: %AppData%\GameBoost
-Deinstallieren: In GameBoost "Mit Windows starten" ausschalten, App beenden,
-GameBoost.exe und den Ordner %AppData%\GameBoost löschen.
+DATA & UNINSTALL
+----------------
+Settings and logs: %AppData%\GameBoost
+To uninstall: turn off "Start with Windows" in GameBoost, quit the app,
+then delete GameBoost.exe and the folder %AppData%\GameBoost.
 
-Probleme? Logdateien unter %AppData%\GameBoost\logs mitschicken.
+Problems? Please include the log files from %AppData%\GameBoost\logs.

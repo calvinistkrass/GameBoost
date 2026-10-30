@@ -34,7 +34,7 @@ public partial class MainWindow : Window
 
     private void UpdateMaximizedState()
     {
-        // Ohne Rahmen ragt ein maximiertes Fenster über den Bildschirmrand – das gleichen wir aus.
+        // Without a frame a maximized window overflows the screen edge – compensate for that.
         Root.Margin = WindowState == WindowState.Maximized ? new Thickness(7) : new Thickness(0);
         MaxButton.Content = WindowState == WindowState.Maximized ? "" : "";
     }

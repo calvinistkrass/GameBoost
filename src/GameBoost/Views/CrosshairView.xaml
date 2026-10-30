@@ -23,9 +23,9 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <!-- ================= Linke Spalte ================= -->
+                <!-- ================= Left column ================= -->
                 <StackPanel>
-                    <!-- Vorschau -->
+                    <!-- Preview -->
                     <Border Style="{StaticResource Card}" Margin="0,0,0,16">
                         <StackPanel>
                             <Grid Margin="0,0,0,12">
@@ -89,7 +89,7 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- Teilen -->
+                    <!-- Share -->
                     <Border Style="{StaticResource Card}">
                         <StackPanel>
                             <TextBlock Text="{DynamicResource CH.Share}" Style="{StaticResource Text.H2}" Margin="0,0,0,12" />
@@ -144,7 +144,7 @@
                     </Border>
                 </StackPanel>
 
-                <!-- ================= Rechte Spalte ================= -->
+                <!-- ================= Right column ================= -->
                 <StackPanel Grid.Column="2">
                     <Border Style="{StaticResource Card}" Margin="0,0,0,16">
                         <StackPanel>
@@ -158,7 +158,7 @@
                                 </Button>
                             </Grid>
 
-                            <!-- Stil -->
+                            <!-- Style -->
                             <TextBlock Text="{DynamicResource CH.Style}" Style="{StaticResource Text.Label}" Margin="0,0,0,8" />
                             <WrapPanel Margin="0,0,0,8">
                                 <RadioButton Style="{StaticResource RadioButton.Tile}" IsChecked="{Binding Config.Style, Converter={StaticResource EqualsToBool}, ConverterParameter=Cross}">
@@ -193,7 +193,7 @@
                                 </RadioButton>
                             </WrapPanel>
 
-                            <!-- Farbe -->
+                            <!-- Color -->
                             <TextBlock Text="{DynamicResource CH.Color}" Style="{StaticResource Text.Label}" Margin="0,0,0,8" />
                             <Grid Margin="0,0,0,10">
                                 <Grid.ColumnDefinitions>
@@ -223,7 +223,7 @@
                                 </StackPanel>
                             </Grid>
 
-                            <!-- Werte -->
+                            <!-- Values -->
                             <controls:SliderRow Label="{DynamicResource CH.Opacity}" Minimum="5" Maximum="100" Suffix=" %" Value="{Binding OpacityPercent}" />
                             <controls:SliderRow Label="{Binding LengthLabel}" Minimum="1" Maximum="60" Value="{Binding Config.Length}"
                                                 Visibility="{Binding ShowLength, Converter={StaticResource BoolToVis}}" />

@@ -18,9 +18,9 @@ public partial class App : Application
     {
         base.OnStartup(e);
         RegisterGlobalExceptionHandlers();
-        Logger.Info($"GameBoost {AppPaths.Version} startet (Argumente: {string.Join(' ', e.Args)})");
+        Logger.Info($"GameBoost {AppPaths.Version} starting (args: {string.Join(' ', e.Args)})");
 
-        // Nur eine Instanz: eine zweite Instanz holt das vorhandene Fenster nach vorne und beendet sich.
+        // Single instance: a second instance brings the existing window to front and exits.
         _mutex = new Mutex(true, MutexName, out var createdNew);
         if (!createdNew)
         {
@@ -31,7 +31,7 @@ public partial class App : Application
             }
             catch (Exception ex)
             {
-                Logger.Warn("Laufende Instanz konnte nicht benachrichtigt werden", ex);
+                Logger.Warn("Could not notify running instance", ex);
             }
             _mutex.Dispose();
             _mutex = null;
@@ -51,8 +51,8 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            Logger.Error("Schwerer Fehler beim Start", ex);
-            MessageBox.Show($"GameBoost konnte nicht gestartet werden.\n\n{ex.Message}\n\nLog: {Logger.CurrentLogFile}",
+            Logger.Error("Fatal error during startup", ex);
+            MessageBox.Show($"GameBoost could not be started.\n\n{ex.Message}\n\nLog: {Logger.CurrentLogFile}",
                 "GameBoost", MessageBoxButton.OK, MessageBoxImage.Error);
             Shutdown(1);
         }
@@ -66,7 +66,7 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            Logger.Error("Fehler beim Sitzungsende", ex);
+            Logger.Error("Error at session end", ex);
         }
         base.OnSessionEnding(e);
     }
@@ -86,9 +86,9 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            Logger.Warn("Fehler beim Aufräumen", ex);
+            Logger.Warn("Error during cleanup", ex);
         }
-        Logger.Info($"GameBoost beendet (Code {e.ApplicationExitCode})");
+        Logger.Info($"GameBoost exited (code {e.ApplicationExitCode})");
         base.OnExit(e);
     }
 
@@ -96,16 +96,16 @@ public partial class App : Application
     {
         DispatcherUnhandledException += (_, args) =>
         {
-            ErrorReporter.Report("Unbehandelte Ausnahme im UI-Thread", args.Exception);
-            args.Handled = true; // App läuft weiter
+            ErrorReporter.Report("Unhandled exception on UI thread", args.Exception);
+            args.Handled = true; // keep the app running
         };
 
         AppDomain.CurrentDomain.UnhandledException += (_, args) =>
-            Logger.Error($"Unbehandelte Ausnahme (beendet: {args.IsTerminating})", args.ExceptionObject as Exception);
+            Logger.Error($"Unhandled exception (terminating: {args.IsTerminating})", args.ExceptionObject as Exception);
 
         TaskScheduler.UnobservedTaskException += (_, args) =>
         {
-            Logger.Error("Unbeobachtete Task-Ausnahme", args.Exception);
+            Logger.Error("Unobserved task exception", args.Exception);
             args.SetObserved();
         };
     }

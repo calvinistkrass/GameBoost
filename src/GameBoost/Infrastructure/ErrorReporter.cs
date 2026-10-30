@@ -3,7 +3,7 @@ using GameBoost.Views;
 
 namespace GameBoost.Infrastructure;
 
-/// <summary>Protokolliert Fehler und zeigt dem Nutzer (gedrosselt) einen Hinweis an.</summary>
+/// <summary>Logs errors and shows the user a (throttled) message.</summary>
 public static class ErrorReporter
 {
     private static DateTime _lastShown = DateTime.MinValue;
@@ -28,13 +28,13 @@ public static class ErrorReporter
                 }
                 catch (Exception inner)
                 {
-                    Logger.Error("Fehlerdialog konnte nicht angezeigt werden", inner);
+                    Logger.Error("Could not show error dialog", inner);
                 }
             });
         }
         catch
         {
-            // Niemals aus der Fehlerbehandlung heraus abstürzen.
+            // Never crash from within error handling.
         }
     }
 }

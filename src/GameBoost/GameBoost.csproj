@@ -13,15 +13,15 @@
     <ApplicationIcon>Assets\GameBoost.ico</ApplicationIcon>
     <Version>1.0.0</Version>
     <Product>GameBoost</Product>
-    <Description>Gaming-Modus und Crosshair-Overlay für Windows</Description>
+    <Description>Game mode and crosshair overlay for Windows</Description>
     <Copyright>© 2026 GameBoost</Copyright>
     <SatelliteResourceLanguages>de;en</SatelliteResourceLanguages>
-    <!-- WFAC010 betrifft nur reine WinForms-Apps; für WPF ist das DPI-Manifest korrekt. -->
+    <!-- WFAC010 only applies to pure WinForms apps; for WPF the DPI manifest is correct. -->
     <NoWarn>$(NoWarn);WFAC010</NoWarn>
   </PropertyGroup>
 
-  <!-- WinForms wird nur für das Tray-Icon und den Farbdialog genutzt;
-       die globalen Usings würden sonst mit WPF-Typen kollidieren. -->
+  <!-- WinForms is only used for the tray icon and the color dialog;
+       its global usings would otherwise clash with WPF types. -->
   <ItemGroup>
     <Using Remove="System.Windows.Forms" />
     <Using Remove="System.Drawing" />

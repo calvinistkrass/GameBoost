@@ -36,7 +36,7 @@ public partial class DialogWindow : Window
         }
         catch (InvalidOperationException)
         {
-            // DragMove während eines anderen Mausvorgangs – ignorieren.
+            // DragMove during another mouse operation – ignore.
         }
     }
 
@@ -73,7 +73,7 @@ public partial class DialogWindow : Window
     }
 }
 
-/// <summary>Dunkle Standarddialoge (Hinweis, Fehler, Bestätigung, Eingabe).</summary>
+/// <summary>Dark standard dialogs (info, error, confirm, input).</summary>
 public static class Dialogs
 {
     private const string InfoIcon = "";

@@ -6,7 +6,7 @@ using Drawing = System.Drawing;
 
 namespace GameBoost.Infrastructure;
 
-/// <summary>Liest Programmsymbole aus .exe-Dateien und speichert sie zwischen (threadsicher, eingefroren).</summary>
+/// <summary>Reads program icons from .exe files and caches them (thread-safe, frozen).</summary>
 public static class IconCache
 {
     private static readonly Dictionary<string, ImageSource?> Cache = new(StringComparer.OrdinalIgnoreCase);
@@ -36,7 +36,7 @@ public static class IconCache
         }
         catch (Exception ex)
         {
-            Logger.Warn($"Symbol für '{path}' konnte nicht geladen werden: {ex.Message}");
+            Logger.Warn($"Could not load icon for '{path}': {ex.Message}");
         }
 
         lock (Gate)

@@ -37,7 +37,7 @@ public class CrosshairCodecTests
     [Fact]
     public void Decode_Tolerates_Whitespace_And_Clamps_Values()
     {
-        // Länge 999 und Offset 5000 werden auf die erlaubten Grenzen begrenzt.
+        // Length 999 and offset 5000 are clamped to the allowed limits.
         var raw = "1,FF0000,100,999,2,3,2,1,000000,1,5000,0";
         var code = "GB1-" + Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(raw)).TrimEnd('=').Replace('+', '-').Replace('/', '_');
         Assert.True(CrosshairCodec.TryDecode("  " + code.Insert(8, " \n") + "  ", out var c));
@@ -113,7 +113,7 @@ public class ProcessGuardTests
         {
             foreach (var p in Process.GetProcessesByName(name))
             {
-                using (p) Assert.False(ProcessGuard.Check(p).Allowed, $"{name} ({p.Id}) darf nicht beendet werden");
+                using (p) Assert.False(ProcessGuard.Check(p).Allowed, $"{name} ({p.Id}) must never be closable");
             }
         }
     }
@@ -139,7 +139,7 @@ public class ProcessGuardTests
     [Fact]
     public void Own_User_Process_Outside_Windows_Is_Allowed()
     {
-        // Kopie von ping.exe in einem Temp-Ordner = normales Benutzerprogramm.
+        // A copy of ping.exe in a temp folder = a normal user program.
         var dir = Path.Combine(Path.GetTempPath(), "gb-test-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(dir);
         var exe = Path.Combine(dir, "gbtestping.exe");
@@ -158,7 +158,7 @@ public class ProcessGuardTests
         {
             p.Kill();
             p.WaitForExit(3000);
-            try { Directory.Delete(dir, true); } catch { /* egal */ }
+            try { Directory.Delete(dir, true); } catch { /* ignore */ }
         }
     }
 }
@@ -189,7 +189,7 @@ public class PowerPlanParsingTests
     [Fact]
     public void Active_Scheme_Can_Be_Read()
     {
-        // Nur lesend – ändert nichts am System.
+        // Read-only – does not change the system.
         Assert.NotNull(PowerPlanManager.GetActiveScheme());
     }
 }
@@ -208,9 +208,9 @@ public class HotkeyTests
     [Fact]
     public void ToString_Shows_Modifiers_And_Key()
     {
-        Loc.Apply("de");
+        Loc.Apply("en");
         var b = new HotkeyBinding { Modifiers = HotkeyBinding.ModControl | HotkeyBinding.ModAlt, Key = 0x43 };
-        Assert.Equal("Strg + Alt + C", b.ToString());
+        Assert.Equal("Ctrl + Alt + C", b.ToString());
     }
 }
 
@@ -221,15 +221,15 @@ public class LocalizationTests
     {
         foreach (var (key, (de, en)) in Loc.Strings)
         {
-            Assert.False(string.IsNullOrWhiteSpace(de), $"DE fehlt: {key}");
-            Assert.False(string.IsNullOrWhiteSpace(en), $"EN fehlt: {key}");
+            Assert.False(string.IsNullOrWhiteSpace(de), $"DE missing: {key}");
+            Assert.False(string.IsNullOrWhiteSpace(en), $"EN missing: {key}");
         }
     }
 
     [Fact]
     public void All_Xaml_Resource_Keys_Exist()
     {
-        // Jeder {DynamicResource X} in den Views, der kein Stil/Brush ist, muss übersetzt sein.
+        // Every {DynamicResource X} text key used in the views must be translated.
         var root = FindRepoRoot();
         var xamlFiles = Directory.GetFiles(Path.Combine(root, "src", "GameBoost"), "*.xaml", SearchOption.AllDirectories);
         var regex = new System.Text.RegularExpressions.Regex(@"\{DynamicResource ([\w\.]+)\}");
@@ -251,7 +251,7 @@ public class LocalizationTests
         var root = FindRepoRoot();
         var csFiles = Directory.GetFiles(Path.Combine(root, "src", "GameBoost"), "*.cs", SearchOption.AllDirectories)
             .Where(f => !f.Contains(Path.DirectorySeparatorChar + "obj" + Path.DirectorySeparatorChar))
-            .Where(f => !f.EndsWith("Loc.cs", StringComparison.OrdinalIgnoreCase)); // enthält Beispiel im Doc-Kommentar
+            .Where(f => !f.EndsWith("Loc.cs", StringComparison.OrdinalIgnoreCase)); // contains an example in a doc comment
         var regex = new System.Text.RegularExpressions.Regex(@"Loc\.[TF]\(""([\w\.]+)""");
         var missing = new List<string>();
         foreach (var file in csFiles)
@@ -269,7 +269,7 @@ public class LocalizationTests
     {
         var dir = new DirectoryInfo(AppContext.BaseDirectory);
         while (dir != null && !Directory.Exists(Path.Combine(dir.FullName, "src", "GameBoost"))) dir = dir.Parent;
-        return dir?.FullName ?? throw new InvalidOperationException("Repo-Wurzel nicht gefunden");
+        return dir?.FullName ?? throw new InvalidOperationException("Repository root not found");
     }
 }
 
@@ -309,7 +309,7 @@ public class SettingsServiceTests : IDisposable
     public void Corrupt_File_Falls_Back_To_Defaults_With_Backup()
     {
         Directory.CreateDirectory(_dir);
-        File.WriteAllText(AppPaths.SettingsFile, "{ das ist kein json");
+        File.WriteAllText(AppPaths.SettingsFile, "{ this is not json");
         var s = new SettingsService();
         s.Load();
         Assert.NotEmpty(s.Settings.Profiles);
@@ -321,12 +321,12 @@ public class SettingsServiceTests : IDisposable
     {
         Directory.CreateDirectory(_dir);
         File.WriteAllText(AppPaths.SettingsFile, """
-            { "Language": "fr", "Profiles": [ { "Id": "", "Name": "X", "ProcessesToKill": ["Discord.exe", "discord", ""] } ],
-              "ActiveProfileId": "gibtsnicht", "Crosshair": { "Current": { "Length": 9999, "Color": "rot" } } }
+            { "SchemaVersion": 2, "Language": "fr", "Profiles": [ { "Id": "", "Name": "X", "ProcessesToKill": ["Discord.exe", "discord", ""] } ],
+              "ActiveProfileId": "doesnotexist", "Crosshair": { "Current": { "Length": 9999, "Color": "red-ish" } } }
             """);
         var s = new SettingsService();
         s.Load();
-        Assert.Equal("de", s.Settings.Language);
+        Assert.Equal("en", s.Settings.Language);
         Assert.Single(s.Settings.Profiles);
         Assert.Equal(new[] { "discord" }, s.Settings.Profiles[0].ProcessesToKill);
         Assert.Equal(s.Settings.Profiles[0].Id, s.Settings.ActiveProfileId);
@@ -334,8 +334,37 @@ public class SettingsServiceTests : IDisposable
         Assert.Equal("#00FF7F", s.Settings.Crosshair.Current.Color);
     }
 
+    [Fact]
+    public void Schema1_German_Settings_Are_Migrated_To_English()
+    {
+        Directory.CreateDirectory(_dir);
+        File.WriteAllText(AppPaths.SettingsFile, """
+            { "SchemaVersion": 1, "Language": "de",
+              "Profiles": [ { "Id": "a", "Name": "Standard", "CrosshairPresetName": "Roter Punkt" } ],
+              "Crosshair": { "ActivePresetName": "Klassisch Grün",
+                             "Presets": [ { "Name": "Klassisch Grün", "Config": {} }, { "Name": "Mein Preset", "Config": {} } ] } }
+            """);
+        var s = new SettingsService();
+        s.Load();
+        Assert.Equal("en", s.Settings.Language);
+        Assert.Equal(AppSettings.CurrentSchemaVersion, s.Settings.SchemaVersion);
+        Assert.Equal("Default", s.Settings.Profiles[0].Name);
+        Assert.Equal("Red Dot", s.Settings.Profiles[0].CrosshairPresetName);
+        Assert.Equal("Classic Green", s.Settings.Crosshair.ActivePresetName);
+        Assert.Equal(new[] { "Classic Green", "Mein Preset" }, s.Settings.Crosshair.Presets.Select(p => p.Name));
+    }
+
+    [Fact]
+    public void New_Settings_Default_To_English()
+    {
+        var s = new SettingsService();
+        s.Load();
+        Assert.Equal("en", s.Settings.Language);
+        Assert.Equal("Default", s.Settings.Profiles[0].Name);
+    }
+
     public void Dispose()
     {
-        try { Directory.Delete(_dir, true); } catch { /* egal */ }
+        try { Directory.Delete(_dir, true); } catch { /* ignore */ }
     }
 }

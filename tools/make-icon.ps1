@@ -1,5 +1,5 @@
-# Erzeugt src/GameBoost/Assets/GameBoost.ico (mehrere Größen, PNG-komprimiert).
-# Aufruf:  powershell -ExecutionPolicy Bypass -File tools\make-icon.ps1
+# Generates src/GameBoost/Assets/GameBoost.ico (multiple sizes, PNG-compressed).
+# Usage:  powershell -ExecutionPolicy Bypass -File tools\make-icon.ps1
 param(
     [string]$OutFile = (Join-Path $PSScriptRoot "..\src\GameBoost\Assets\GameBoost.ico")
 )
@@ -13,7 +13,7 @@ function New-LogoPng([int]$size) {
     $g.Clear([System.Drawing.Color]::Transparent)
 
     $s = $size / 32.0
-    # Abgerundetes Quadrat
+    # Rounded square
     $r = 9 * $s; $d = 2 * $r
     $rect = New-Object System.Drawing.RectangleF (0.5 * $s), (0.5 * $s), (31 * $s), (31 * $s)
     $path = New-Object System.Drawing.Drawing2D.GraphicsPath
@@ -25,7 +25,7 @@ function New-LogoPng([int]$size) {
     $bg = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(255, 16, 21, 33))
     $g.FillPath($bg, $path)
 
-    # Fadenkreuz mit Verlauf (Grün → Cyan)
+    # Crosshair with gradient (green → cyan)
     $grad = New-Object System.Drawing.Drawing2D.LinearGradientBrush (New-Object System.Drawing.PointF 0, 0), (New-Object System.Drawing.PointF $size, $size), ([System.Drawing.Color]::FromArgb(0, 240, 168)), ([System.Drawing.Color]::FromArgb(0, 194, 255))
     $pen = New-Object System.Drawing.Pen $grad, ([Math]::Max(1.5, 2.6 * $s))
     $pen.StartCap = [System.Drawing.Drawing2D.LineCap]::Round
@@ -64,4 +64,4 @@ for ($i = 0; $i -lt $sizes.Count; $i++) {
 }
 foreach ($data in $images) { $bw.Write($data) }
 $bw.Close()
-Write-Host "Icon geschrieben: $OutFile"
+Write-Host "Icon written: $OutFile"

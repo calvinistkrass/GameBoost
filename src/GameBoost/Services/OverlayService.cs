@@ -5,7 +5,7 @@ using Microsoft.Win32;
 
 namespace GameBoost.Services;
 
-/// <summary>Verwaltet das Crosshair-Overlay-Fenster.</summary>
+/// <summary>Manages the crosshair overlay window.</summary>
 public sealed class OverlayService : IDisposable
 {
     private readonly SettingsService _settings;
@@ -30,11 +30,11 @@ public sealed class OverlayService : IDisposable
             Reposition();
             if (!_window.IsVisible) _window.Show();
             Reposition();
-            Logger.Info("Crosshair eingeblendet");
+            Logger.Info("Crosshair shown");
         }
         catch (Exception ex)
         {
-            Logger.Error("Crosshair konnte nicht angezeigt werden", ex);
+            Logger.Error("Could not show crosshair", ex);
         }
         RaiseVisibilityChanged();
     }
@@ -46,12 +46,12 @@ public sealed class OverlayService : IDisposable
             if (_window?.IsVisible == true)
             {
                 _window.Hide();
-                Logger.Info("Crosshair ausgeblendet");
+                Logger.Info("Crosshair hidden");
             }
         }
         catch (Exception ex)
         {
-            Logger.Error("Crosshair konnte nicht ausgeblendet werden", ex);
+            Logger.Error("Could not hide crosshair", ex);
         }
         RaiseVisibilityChanged();
     }
@@ -62,7 +62,7 @@ public sealed class OverlayService : IDisposable
         else Show();
     }
 
-    /// <summary>Übernimmt Monitor und Crosshair-Objekt aus den Einstellungen (z. B. nach Reset).</summary>
+    /// <summary>Takes monitor and crosshair object from the settings (e.g. after a reset).</summary>
     public void ApplySettings()
     {
         if (_window == null) return;
@@ -80,7 +80,7 @@ public sealed class OverlayService : IDisposable
         }
         catch (Exception ex)
         {
-            Logger.Error("Overlay-Position konnte nicht aktualisiert werden", ex);
+            Logger.Error("Could not update overlay position", ex);
         }
     }
 
@@ -88,7 +88,7 @@ public sealed class OverlayService : IDisposable
     {
         if (_window != null) return;
         _window = new CrosshairOverlayWindow();
-        _ = _window.Handle; // Fensterhandle erzeugen → Durchklick-Stile sind vor dem Anzeigen aktiv
+        _ = _window.Handle; // create the handle → click-through styles are active before showing
         _window.Closed += (_, _) => _window = null;
     }
 
@@ -96,7 +96,7 @@ public sealed class OverlayService : IDisposable
     {
         Application.Current?.Dispatcher.BeginInvoke(() =>
         {
-            Logger.Info("Bildschirmkonfiguration geändert – Overlay wird neu positioniert");
+            Logger.Info("Display configuration changed – repositioning overlay");
             Reposition();
         });
     }
@@ -109,7 +109,7 @@ public sealed class OverlayService : IDisposable
         }
         catch (Exception ex)
         {
-            Logger.Error("Fehler in VisibilityChanged-Handler", ex);
+            Logger.Error("Error in VisibilityChanged handler", ex);
         }
     }
 
@@ -122,7 +122,7 @@ public sealed class OverlayService : IDisposable
         }
         catch (Exception ex)
         {
-            Logger.Warn("Overlay konnte nicht geschlossen werden", ex);
+            Logger.Warn("Could not close overlay", ex);
         }
         _window = null;
     }

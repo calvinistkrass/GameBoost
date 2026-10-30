@@ -7,8 +7,8 @@ using GameBoost.Models;
 namespace GameBoost.Controls;
 
 /// <summary>
-/// Zeichnet ein Crosshair pixelgenau. Eine Einheit entspricht einem physischen Bildschirmpixel
-/// (multipliziert mit <see cref="Zoom"/>), unabhängig von der Windows-Skalierung.
+/// Draws a pixel-exact crosshair. One unit equals one physical screen pixel
+/// (multiplied by <see cref="Zoom"/>), independent of Windows display scaling.
 /// </summary>
 public sealed class CrosshairRenderer : FrameworkElement
 {
@@ -71,7 +71,7 @@ public sealed class CrosshairRenderer : FrameworkElement
         }
         catch (Exception ex)
         {
-            Logger.Error("Crosshair konnte nicht gezeichnet werden", ex);
+            Logger.Error("Could not draw crosshair", ex);
         }
     }
 
@@ -80,7 +80,7 @@ public sealed class CrosshairRenderer : FrameworkElement
         var dpi = VisualTreeHelper.GetDpi(this);
         var zoom = Math.Max(1, Zoom);
 
-        // Mittelpunkt in physischen Pixeln (ganzzahlig) → zurück in WPF-Einheiten.
+        // Center in physical pixels (integer) → back to WPF units.
         var centerPxX = Math.Floor(ActualWidth * dpi.DpiScaleX / 2);
         var centerPxY = Math.Floor(ActualHeight * dpi.DpiScaleY / 2);
         dc.PushTransform(new TranslateTransform(centerPxX / dpi.DpiScaleX, centerPxY / dpi.DpiScaleY));
@@ -140,8 +140,8 @@ public sealed class CrosshairRenderer : FrameworkElement
     private sealed record EllipseShape(double Cx, double Cy, double R, double StrokeThickness) : Shape;
 
     /// <summary>
-    /// Erzeugt die Formen relativ zum Mittelpunkt (0,0) in Pixeln. Bei ungerader Linienstärke liegt die Mitte
-    /// auf Pixel [0,1), bei gerader zwischen Pixel -1 und 0 – so bleibt das Crosshair symmetrisch.
+    /// Builds the shapes relative to the center (0,0) in pixels. With odd thickness the center lies
+    /// on pixel [0,1), with even thickness between pixels -1 and 0 – this keeps the crosshair symmetric.
     /// </summary>
     private static List<Shape> BuildShapes(CrosshairConfig cfg, int ox, int oy)
     {
@@ -153,11 +153,11 @@ public sealed class CrosshairRenderer : FrameworkElement
         bool cross = cfg.Style is CrosshairStyle.Cross or CrosshairStyle.CrossWithDot or CrosshairStyle.TShape;
         if (cross)
         {
-            list.Add(new RectShape(ox - g - l, oy - half, l, t));                 // links
-            list.Add(new RectShape(ox + g + odd, oy - half, l, t));               // rechts
-            list.Add(new RectShape(ox - half, oy + g + odd, t, l));               // unten
+            list.Add(new RectShape(ox - g - l, oy - half, l, t));                 // left
+            list.Add(new RectShape(ox + g + odd, oy - half, l, t));               // right
+            list.Add(new RectShape(ox - half, oy + g + odd, t, l));               // bottom
             if (cfg.Style != CrosshairStyle.TShape)
-                list.Add(new RectShape(ox - half, oy - g - l, t, l));             // oben
+                list.Add(new RectShape(ox - half, oy - g - l, t, l));             // top
         }
 
         if (cfg.Style == CrosshairStyle.Circle)

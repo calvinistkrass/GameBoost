@@ -4,14 +4,14 @@ using System.Windows;
 namespace GameBoost.Infrastructure;
 
 /// <summary>
-/// Lokalisierung (Deutsch/Englisch). Texte stehen hier zentral nebeneinander, damit keine Übersetzung fehlt.
-/// XAML nutzt {DynamicResource Schlüssel}, Code nutzt Loc.T("Schlüssel").
+/// Localization (English/German). All texts live side by side here so no translation goes missing.
+/// XAML uses {DynamicResource Key}, code uses Loc.T("Key").
 /// </summary>
 public static class Loc
 {
     private static ResourceDictionary? _current;
 
-    public static string Language { get; private set; } = "de";
+    public static string Language { get; private set; } = "en";
 
     public static event EventHandler? LanguageChanged;
 
@@ -19,7 +19,7 @@ public static class Loc
 
     public static void Apply(string language)
     {
-        Language = language == "en" ? "en" : "de";
+        Language = language == "de" ? "de" : "en";
         try
         {
             CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(Language == "en" ? "en-US" : "de-DE");
@@ -38,7 +38,7 @@ public static class Loc
         }
         catch (Exception ex)
         {
-            Logger.Error("Sprache konnte nicht angewendet werden", ex);
+            Logger.Error("Could not apply language", ex);
         }
 
         try
@@ -47,7 +47,7 @@ public static class Loc
         }
         catch (Exception ex)
         {
-            Logger.Error("Fehler in LanguageChanged-Handler", ex);
+            Logger.Error("Error in LanguageChanged handler", ex);
         }
     }
 
@@ -68,7 +68,7 @@ public static class Loc
 
     private static readonly Dictionary<string, (string De, string En)> Texts = new()
     {
-        // ---------------------------------------------------------- Allgemein / Navigation
+        // ---------------------------------------------------------- General / navigation
         ["App.Tagline"] = ("Gaming-Modus & Crosshair", "Game mode & crosshair"),
         ["Nav.GameMode"] = ("Gaming-Modus", "Game Mode"),
         ["Nav.Crosshair"] = ("Crosshair", "Crosshair"),
@@ -81,7 +81,7 @@ public static class Loc
         ["Caption.Close"] = ("Schließen", "Close"),
         ["Err.Generic"] = ("Ein unerwarteter Fehler ist aufgetreten. Details stehen in der Logdatei.", "An unexpected error occurred. Details are in the log file."),
 
-        // ---------------------------------------------------------- Gaming-Modus
+        // ---------------------------------------------------------- Game mode
         ["GM.Title"] = ("Gaming-Modus", "Game Mode"),
         ["GM.Subtitle"] = ("Mehr Leistung, weniger Ablenkung – mit einem Klick.", "More performance, fewer distractions – with one click."),
         ["GM.Toggle.Title"] = ("GAMING-MODUS", "GAME MODE"),
@@ -145,7 +145,7 @@ public static class Loc
         ["GM.Proc.NotRunning"] = ("läuft gerade nicht", "not running"),
         ["GM.Proc.SelectedCount"] = ("{0} ausgewählt", "{0} selected"),
 
-        // ---------------------------------------------------------- Gaming-Modus: Ergebnisse
+        // ---------------------------------------------------------- Game mode: results
         ["GMS.Unexpected"] = ("Unerwarteter Fehler – Details im Log", "Unexpected error – see log"),
         ["GMS.PowerSet"] = ("Energieplan: Höchstleistung aktiv", "Power plan: High performance active"),
         ["GMS.PowerAlready"] = ("Energieplan war bereits Höchstleistung", "Power plan was already High performance"),
@@ -162,7 +162,7 @@ public static class Loc
         ["GMS.StartMissing"] = ("{0} wurde nicht gefunden", "{0} was not found"),
         ["GMS.StartFailed"] = ("{0} konnte nicht gestartet werden", "{0} could not be started"),
 
-        // ---------------------------------------------------------- Dialoge
+        // ---------------------------------------------------------- Dialogs
         ["Dlg.OK"] = ("OK", "OK"),
         ["Dlg.Cancel"] = ("Abbrechen", "Cancel"),
         ["Dlg.Yes"] = ("Ja", "Yes"),
@@ -238,7 +238,7 @@ public static class Loc
         ["Monitor.Name"] = ("Monitor", "Monitor"),
         ["Monitor.Primary"] = ("Hauptmonitor", "primary"),
 
-        // ---------------------------------------------------------- Hinweise
+        // ---------------------------------------------------------- Notes
         ["Hint.Borderless"] = ("Das Overlay funktioniert nur, wenn das Spiel im Modus „Randloses Fenster“ (Borderless/Fenster-Vollbild) läuft – nicht im exklusiven Vollbildmodus.",
                                "The overlay only works when the game runs in “Borderless window” (windowed fullscreen) mode – not in exclusive fullscreen."),
         ["Hint.AntiCheat"] = ("Bei Spielen mit strengem Anti-Cheat (z. B. Valorant/Vanguard, FACEIT, ESEA) oder in Turnieren kann ein Overlay unerwünscht oder verboten sein. Nutzung auf eigene Verantwortung.",
@@ -246,7 +246,7 @@ public static class Loc
         ["Hint.Safety"] = ("GameBoost benötigt keine Administratorrechte. Es beendet ausschließlich Programme deines Benutzerkontos, die du selbst ausgewählt hast, und stellt Energieplan und Benachrichtigungen beim Deaktivieren (auch nach einem Absturz) wieder her.",
                            "GameBoost needs no admin rights. It only closes programs of your user account that you selected yourself, and restores power plan and notifications on deactivation (even after a crash)."),
 
-        // ---------------------------------------------------------- Einstellungen
+        // ---------------------------------------------------------- Settings
         ["ST.Title"] = ("Einstellungen", "Settings"),
         ["ST.Subtitle"] = ("Sprache, Autostart, Hotkeys und mehr.", "Language, autostart, hotkeys and more."),
         ["ST.General"] = ("Allgemein", "General"),
@@ -282,7 +282,7 @@ public static class Loc
         ["ST.AutostartFailed"] = ("Autostart konnte nicht geändert werden. Details stehen in der Logdatei.", "Autostart could not be changed. See the log file for details."),
         ["ST.Version"] = ("GameBoost Version {0}", "GameBoost version {0}"),
 
-        // ---------------------------------------------------------- Hotkey-Eingabe
+        // ---------------------------------------------------------- Hotkey input
         ["Hotkey.None"] = ("– nicht belegt –", "– not set –"),
         ["Hotkey.Press"] = ("Tastenkombination drücken…", "Press a key combination…"),
         ["Hotkey.NeedModifier"] = ("Bitte mit Strg, Alt, Umschalt oder Win kombinieren", "Please combine with Ctrl, Alt, Shift or Win"),

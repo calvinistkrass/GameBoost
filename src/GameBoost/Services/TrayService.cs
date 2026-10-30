@@ -5,7 +5,7 @@ using WinForms = System.Windows.Forms;
 
 namespace GameBoost.Services;
 
-/// <summary>Symbol im Infobereich (System-Tray) mit Kontextmenü.</summary>
+/// <summary>System tray icon with context menu.</summary>
 public sealed class TrayService : IDisposable
 {
     private WinForms.NotifyIcon? _icon;
@@ -91,7 +91,7 @@ public sealed class TrayService : IDisposable
         }
         catch (Exception ex)
         {
-            Logger.Warn("Tray konnte nicht aktualisiert werden", ex);
+            Logger.Warn("Could not update tray", ex);
         }
     }
 
@@ -103,7 +103,7 @@ public sealed class TrayService : IDisposable
         }
         catch (Exception ex)
         {
-            Logger.Warn("Tray-Hinweis konnte nicht angezeigt werden", ex);
+            Logger.Warn("Could not show tray balloon", ex);
         }
     }
 
@@ -115,11 +115,11 @@ public sealed class TrayService : IDisposable
         }
         catch (Exception ex)
         {
-            Logger.Error("Fehler bei Tray-Aktion", ex);
+            Logger.Error("Error in tray action", ex);
         }
     }
 
-    /// <summary>Zeichnet das Tray-Symbol (Fadenkreuz; grün = Gaming-Modus aktiv).</summary>
+    /// <summary>Draws the tray icon (crosshair; green = game mode active).</summary>
     private static Drawing.Icon CreateIcon(bool active, out IntPtr handle)
     {
         using var bmp = new Drawing.Bitmap(32, 32, Drawing.Imaging.PixelFormat.Format32bppArgb);
@@ -178,12 +178,12 @@ public sealed class TrayService : IDisposable
         }
         catch (Exception ex)
         {
-            Logger.Warn("Tray konnte nicht freigegeben werden", ex);
+            Logger.Warn("Could not dispose tray", ex);
         }
         _icon = null;
     }
 
-    /// <summary>Dunkles Design für das Tray-Kontextmenü.</summary>
+    /// <summary>Dark theme for the tray context menu.</summary>
     private sealed class DarkMenuRenderer : WinForms.ToolStripProfessionalRenderer
     {
         private static readonly Drawing.Color Text = Drawing.Color.FromArgb(232, 236, 244);

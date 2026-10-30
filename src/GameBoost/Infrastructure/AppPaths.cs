@@ -2,12 +2,12 @@ using System.Reflection;
 
 namespace GameBoost.Infrastructure;
 
-/// <summary>Zentrale Pfade und Versionsinfos der Anwendung.</summary>
+/// <summary>Central application paths and version info.</summary>
 public static class AppPaths
 {
     private static string? _dataDirectory;
 
-    /// <summary>%AppData%\GameBoost (per Umgebungsvariable GAMEBOOST_DATA_DIR überschreibbar, z. B. für Tests).</summary>
+    /// <summary>%AppData%\GameBoost (can be overridden via the GAMEBOOST_DATA_DIR environment variable, e.g. for tests).</summary>
     public static string DataDirectory
     {
         get

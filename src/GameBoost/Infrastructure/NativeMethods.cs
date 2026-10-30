@@ -3,10 +3,10 @@ using System.Text;
 
 namespace GameBoost.Infrastructure;
 
-/// <summary>Win32-API-Deklarationen.</summary>
+/// <summary>Win32 API declarations.</summary>
 internal static class NativeMethods
 {
-    // Fensterstile
+    // Window styles
     public const int GWL_EXSTYLE = -20;
     public const int WS_EX_TRANSPARENT = 0x00000020;
     public const int WS_EX_TOOLWINDOW = 0x00000080;
@@ -26,12 +26,12 @@ internal static class NativeMethods
     public const int WM_HOTKEY = 0x0312;
     public const uint MOD_NOREPEAT = 0x4000;
 
-    // Prozesse
+    // Processes
     public const uint PROCESS_QUERY_LIMITED_INFORMATION = 0x1000;
     public const uint TOKEN_QUERY = 0x0008;
     public const int TokenUser = 1;
 
-    // Monitore
+    // Monitors
     public const int MDT_EFFECTIVE_DPI = 0;
     public const uint MONITORINFOF_PRIMARY = 1;
     public const uint MAPVK_VK_TO_CHAR = 2;
@@ -97,7 +97,7 @@ internal static class NativeMethods
     [return: MarshalAs(UnmanagedType.Bool)]
     public static extern bool GetTokenInformation(IntPtr tokenHandle, int tokenInformationClass, IntPtr tokenInformation, int tokenInformationLength, out int returnLength);
 
-    // Energie-Overlay (Windows 10 1709+, "Beste Leistung" im Energiemodus-Regler)
+    // Power overlay (Windows 10 1709+, "Best performance" in the power mode slider)
     [DllImport("powrprof.dll", EntryPoint = "PowerGetEffectiveOverlayScheme")]
     public static extern uint PowerGetEffectiveOverlayScheme(out Guid effectiveOverlayGuid);
 

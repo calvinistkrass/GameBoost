@@ -3,7 +3,7 @@ using Microsoft.Win32;
 
 namespace GameBoost.Services;
 
-/// <summary>Autostart über HKCU\...\Run (keine Adminrechte nötig).</summary>
+/// <summary>Autostart via HKCU\...\Run (no admin rights needed).</summary>
 public static class AutostartService
 {
     private const string RunKey = @"Software\Microsoft\Windows\CurrentVersion\Run";
@@ -20,7 +20,7 @@ public static class AutostartService
         }
         catch (Exception ex)
         {
-            Logger.Warn("Autostart-Status konnte nicht gelesen werden", ex);
+            Logger.Warn("Could not read autostart state", ex);
             return false;
         }
     }
@@ -35,23 +35,23 @@ public static class AutostartService
                 var path = ExecutablePath;
                 if (string.IsNullOrEmpty(path)) return false;
                 key.SetValue(ValueName, $"\"{path}\" --minimized");
-                Logger.Info($"Autostart aktiviert: {path}");
+                Logger.Info($"Autostart enabled: {path}");
             }
             else
             {
                 key.DeleteValue(ValueName, throwOnMissingValue: false);
-                Logger.Info("Autostart deaktiviert");
+                Logger.Info("Autostart disabled");
             }
             return true;
         }
         catch (Exception ex)
         {
-            Logger.Error("Autostart konnte nicht geändert werden", ex);
+            Logger.Error("Could not change autostart", ex);
             return false;
         }
     }
 
-    /// <summary>Gleicht den Registry-Eintrag mit der Einstellung ab (aktualisiert z. B. den Pfad nach Verschieben der .exe).</summary>
+    /// <summary>Syncs the registry entry with the setting (e.g. updates the path after the .exe was moved).</summary>
     public static void Sync(bool desired)
     {
         if (desired) SetEnabled(true);

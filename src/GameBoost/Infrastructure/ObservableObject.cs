@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace GameBoost.Infrastructure;
 
-/// <summary>Basisklasse für ViewModels und bindbare Modelle.</summary>
+/// <summary>Base class for view models and bindable models.</summary>
 public abstract class ObservableObject : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;

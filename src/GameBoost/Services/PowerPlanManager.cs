@@ -4,13 +4,13 @@ using GameBoost.Infrastructure;
 
 namespace GameBoost.Services;
 
-/// <summary>Steuert Windows-Energiepläne über powercfg.exe (keine Adminrechte nötig).</summary>
+/// <summary>Controls Windows power plans via powercfg.exe (no admin rights needed).</summary>
 public static partial class PowerPlanManager
 {
     public const string HighPerformanceGuid = "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c";
     public const string UltimatePerformanceGuid = "e9a42b02-d5df-448d-aa00-03f14749eb61";
 
-    /// <summary>Overlay "Beste Leistung" (Energiemodus-Regler auf Systemen ohne klassische Pläne).</summary>
+    /// <summary>"Best performance" overlay (power mode slider on systems without classic plans).</summary>
     public static readonly Guid BestPerformanceOverlay = new("ded574b5-45a0-4f42-8737-46345c09c238");
 
     [GeneratedRegex(@"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")]
@@ -44,12 +44,12 @@ public static partial class PowerPlanManager
     public static bool SetActive(string guid)
     {
         var (code, output) = Run($"/setactive {guid}");
-        if (code != 0) Logger.Warn($"powercfg /setactive {guid} fehlgeschlagen ({code}): {output.Trim()}");
+        if (code != 0) Logger.Warn($"powercfg /setactive {guid} failed ({code}): {output.Trim()}");
         return code == 0;
     }
 
     /// <summary>
-    /// Liefert die GUID eines Höchstleistungs-Plans. Existiert keiner, wird einer aus der Windows-Vorlage dupliziert.
+    /// Returns the GUID of a High performance plan. If none exists, one is duplicated from the Windows template.
     /// </summary>
     public static string? EnsureHighPerformanceScheme(string? cachedGuid, out string? createdGuid)
     {
@@ -66,16 +66,16 @@ public static partial class PowerPlanManager
             createdGuid = ParseFirstGuid(output);
             if (createdGuid != null)
             {
-                Logger.Info($"Höchstleistungs-Plan angelegt: {createdGuid}");
+                Logger.Info($"Created High performance plan: {createdGuid}");
                 return createdGuid;
             }
         }
 
-        Logger.Warn($"Kein Höchstleistungs-Plan verfügbar (powercfg: {output.Trim()})");
+        Logger.Warn($"No High performance plan available (powercfg: {output.Trim()})");
         return null;
     }
 
-    /// <summary>Setzt den Energiemodus-Regler auf "Beste Leistung" (Fallback für Modern-Standby-Geräte).</summary>
+    /// <summary>Sets the power mode slider to "Best performance" (fallback for Modern Standby devices).</summary>
     public static bool TrySetBestPerformanceOverlay(out Guid previous)
     {
         previous = Guid.Empty;
@@ -87,7 +87,7 @@ public static partial class PowerPlanManager
         }
         catch (Exception ex)
         {
-            Logger.Warn("Energiemodus-Overlay wird nicht unterstützt", ex);
+            Logger.Warn("Power mode overlay not supported", ex);
             return false;
         }
     }
@@ -100,7 +100,7 @@ public static partial class PowerPlanManager
         }
         catch (Exception ex)
         {
-            Logger.Warn("Energiemodus-Overlay konnte nicht wiederhergestellt werden", ex);
+            Logger.Warn("Could not restore power mode overlay", ex);
         }
     }
 
@@ -118,20 +118,20 @@ public static partial class PowerPlanManager
                 RedirectStandardError = true
             };
             using var process = Process.Start(psi);
-            if (process == null) return (-1, "Prozess konnte nicht gestartet werden");
+            if (process == null) return (-1, "Could not start process");
 
             var stdout = process.StandardOutput.ReadToEndAsync();
             var stderr = process.StandardError.ReadToEndAsync();
             if (!process.WaitForExit(10000))
             {
-                try { process.Kill(); } catch { /* ignorieren */ }
-                return (-1, "Zeitüberschreitung");
+                try { process.Kill(); } catch { /* ignore */ }
+                return (-1, "Timeout");
             }
             return (process.ExitCode, stdout.Result + stderr.Result);
         }
         catch (Exception ex)
         {
-            Logger.Error($"powercfg {arguments} fehlgeschlagen", ex);
+            Logger.Error($"powercfg {arguments} failed", ex);
             return (-1, ex.Message);
         }
     }

@@ -6,7 +6,7 @@ using System.Windows.Data;
 
 namespace GameBoost.Controls;
 
-/// <summary>Beschriftung + Slider + Wertanzeige in einer Zeile.</summary>
+/// <summary>Label + slider + value display in one row.</summary>
 public sealed class SliderRow : UserControl
 {
     public static readonly DependencyProperty LabelProperty = DependencyProperty.Register(

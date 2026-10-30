@@ -2,11 +2,13 @@ using System.Collections.ObjectModel;
 
 namespace GameBoost.Models;
 
-/// <summary>Alle persistenten Einstellungen (settings.json).</summary>
+/// <summary>All persisted settings (settings.json).</summary>
 public sealed class AppSettings
 {
-    public int SchemaVersion { get; set; } = 1;
-    public string Language { get; set; } = "de";
+    public const int CurrentSchemaVersion = 2;
+
+    public int SchemaVersion { get; set; } = CurrentSchemaVersion;
+    public string Language { get; set; } = "en";
     public bool StartWithWindows { get; set; }
     public bool StartMinimized { get; set; }
     public bool CloseToTray { get; set; } = true;
@@ -19,14 +21,14 @@ public sealed class AppSettings
     public CrosshairSettings Crosshair { get; set; } = new();
     public HotkeySettings Hotkeys { get; set; } = new();
 
-    /// <summary>GUID eines von GameBoost angelegten Höchstleistungs-Plans (falls Windows keinen anbietet).</summary>
+    /// <summary>GUID of a High performance plan created by GameBoost (if Windows doesn't offer one).</summary>
     public string? CachedHighPerformanceSchemeGuid { get; set; }
 
     public static AppSettings CreateDefault()
     {
         var settings = new AppSettings();
 
-        var standard = new GameModeProfile { Name = "Standard" };
+        var standard = new GameModeProfile { Name = "Default" };
         var valorant = new GameModeProfile { Name = "Valorant" };
         valorant.TriggerExecutables.Add("valorant-win64-shipping");
         var fortnite = new GameModeProfile { Name = "Fortnite" };
@@ -45,17 +47,18 @@ public sealed class AppSettings
         return settings;
     }
 
-    /// <summary>Repariert unvollständige oder manuell bearbeitete Einstellungen.</summary>
+    /// <summary>Repairs incomplete or hand-edited settings.</summary>
     public void Normalize()
     {
-        if (Language is not ("de" or "en")) Language = "de";
+        Migrate();
+        if (Language is not ("de" or "en")) Language = "en";
 
         Profiles ??= new();
         foreach (var bad in Profiles.Where(p => p == null).ToList()) Profiles.Remove(bad);
         foreach (var p in Profiles) p.Normalize();
         var duplicateIds = Profiles.GroupBy(p => p.Id).Where(g => g.Count() > 1).SelectMany(g => g.Skip(1));
         foreach (var dup in duplicateIds.ToList()) dup.Id = GameModeProfile.NewId();
-        if (Profiles.Count == 0) Profiles.Add(new GameModeProfile { Name = "Standard" });
+        if (Profiles.Count == 0) Profiles.Add(new GameModeProfile { Name = "Default" });
         if (Profiles.All(p => p.Id != ActiveProfileId)) ActiveProfileId = Profiles[0].Id;
 
         Crosshair ??= new();
@@ -66,18 +69,54 @@ public sealed class AppSettings
 
         Hotkeys ??= new();
     }
+
+    /// <summary>Schema 1 → 2: English becomes the default language; German default names are renamed.</summary>
+    private void Migrate()
+    {
+        if (SchemaVersion >= CurrentSchemaVersion) return;
+
+        Language = "en";
+        var presetNames = new Dictionary<string, string>
+        {
+            ["Klassisch Grün"] = "Classic Green",
+            ["Präzision Cyan"] = "Precision Cyan",
+            ["Roter Punkt"] = "Red Dot",
+            ["Kreis Weiß"] = "White Circle",
+            ["T-Form Gelb"] = "Yellow T"
+        };
+
+        foreach (var p in Profiles ?? new())
+        {
+            if (p == null) continue;
+            if (p.Name == "Standard") p.Name = "Default";
+            if (p.CrosshairPresetName != null && presetNames.TryGetValue(p.CrosshairPresetName, out var renamedForProfile))
+                p.CrosshairPresetName = renamedForProfile;
+        }
+
+        if (Crosshair != null)
+        {
+            foreach (var preset in Crosshair.Presets ?? new())
+            {
+                if (preset != null && presetNames.TryGetValue(preset.Name, out var renamed)) preset.Name = renamed;
+            }
+            if (Crosshair.ActivePresetName != null && presetNames.TryGetValue(Crosshair.ActivePresetName, out var active))
+                Crosshair.ActivePresetName = active;
+        }
+
+        SchemaVersion = CurrentSchemaVersion;
+    }
 }
 
-/// <summary>Crosshair-bezogene Einstellungen.</summary>
+/// <summary>Crosshair-related settings.</summary>
 public sealed class CrosshairSettings
 {
     public CrosshairConfig Current { get; set; } = new();
     public ObservableCollection<CrosshairPreset> Presets { get; set; } = new();
     public string? ActivePresetName { get; set; }
 
-    /// <summary>Gerätename des Zielmonitors (z. B. \\.\DISPLAY1). null = Hauptmonitor.</summary>
+    /// <summary>Device name of the target monitor (e.g. \\.\DISPLAY1). null = primary monitor.</summary>
     public string? MonitorDeviceName { get; set; }
 
-    /// <summary>War das Overlay beim letzten Beenden sichtbar?</summary>
+    /// <summary>Was the overlay visible when the app last exited?</summary>
     public bool OverlayVisible { get; set; }
 }

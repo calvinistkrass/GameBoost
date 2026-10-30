@@ -3,10 +3,10 @@ using System.Windows.Media;
 
 namespace GameBoost.Infrastructure;
 
-/// <summary>Hilfsfunktionen für Farben im Format #RRGGBB.</summary>
+/// <summary>Helpers for colors in #RRGGBB format.</summary>
 public static class ColorUtil
 {
-    /// <summary>Normalisiert "#RGB", "RRGGBB", "#RRGGBB" oder "#AARRGGBB" zu "#RRGGBB". Liefert null bei ungültiger Eingabe.</summary>
+    /// <summary>Normalizes "#RGB", "RRGGBB", "#RRGGBB" or "#AARRGGBB" to "#RRGGBB". Returns null for invalid input.</summary>
     public static string? Normalize(string? input)
     {
         if (string.IsNullOrWhiteSpace(input)) return null;

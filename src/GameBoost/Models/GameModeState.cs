@@ -1,8 +1,8 @@
 namespace GameBoost.Models;
 
 /// <summary>
-/// Laufzeitzustand des Gaming-Modus. Wird während der Aktivierung auf die Platte geschrieben,
-/// damit nach einem Absturz/Stromausfall Energieplan und Benachrichtigungen wiederhergestellt werden können.
+/// Runtime state of game mode. Written to disk during activation so that power plan and
+/// notifications can be restored after a crash or power loss.
 /// </summary>
 public sealed class GameModeState
 {
@@ -21,7 +21,7 @@ public sealed class GameModeState
     public bool NotificationsChanged { get; set; }
     public Dictionary<string, int?> PreviousNotificationValues { get; set; } = new();
 
-    /// <summary>Vollständige Pfade der beendeten Programme (für den Neustart).</summary>
+    /// <summary>Full paths of the closed programs (for restarting them).</summary>
     public List<string> KilledPrograms { get; set; } = new();
 }
 

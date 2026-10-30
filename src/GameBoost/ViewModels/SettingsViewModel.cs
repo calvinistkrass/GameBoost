@@ -8,7 +8,7 @@ namespace GameBoost.ViewModels;
 
 public sealed record LanguageOption(string Code, string Name);
 
-/// <summary>Seite "Einstellungen".</summary>
+/// <summary>"Settings" page.</summary>
 public sealed class SettingsViewModel : ObservableObject, IDisposable, INavigationAware
 {
     private readonly AppController _controller;
@@ -32,12 +32,12 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable, INavigati
     public AsyncRelayCommand ResetCommand { get; }
     public RelayCommand ResetHotkeysCommand { get; }
 
-    // ------------------------------------------------------------------ Allgemein
+    // ------------------------------------------------------------------ General
 
     public IReadOnlyList<LanguageOption> Languages { get; } = new[]
     {
-        new LanguageOption("de", "Deutsch"),
-        new LanguageOption("en", "English")
+        new LanguageOption("en", "English"),
+        new LanguageOption("de", "Deutsch")
     };
 
     public LanguageOption SelectedLanguage
@@ -187,7 +187,7 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable, INavigati
         }
         catch (Exception ex)
         {
-            ErrorReporter.Report("Ordner konnte nicht geöffnet werden", ex);
+            ErrorReporter.Report("Could not open folder", ex);
         }
     }
 

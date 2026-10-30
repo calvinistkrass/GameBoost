@@ -5,8 +5,8 @@ using GameBoost.Models;
 namespace GameBoost.Services;
 
 /// <summary>
-/// Erkennt den Start eines Spiels (.exe) und aktiviert das zugehörige Profil automatisch.
-/// Wird das Spiel beendet, kann der Gaming-Modus automatisch wieder deaktiviert werden.
+/// Detects when a game (.exe) starts and activates the matching profile automatically.
+/// When the game exits, game mode can be deactivated automatically.
 /// </summary>
 public sealed class ProcessWatcherService : IDisposable
 {
@@ -32,8 +32,8 @@ public sealed class ProcessWatcherService : IDisposable
     }
 
     /// <summary>
-    /// Nach manuellem Deaktivieren darf das Profil nicht sofort wieder automatisch starten,
-    /// solange das Spiel noch läuft.
+    /// After a manual deactivation the profile must not restart automatically
+    /// while the game is still running.
     /// </summary>
     public void SuppressUntilExit(string profileId) => _suppressedProfileId = profileId;
 
@@ -47,7 +47,7 @@ public sealed class ProcessWatcherService : IDisposable
         }
         catch (Exception ex)
         {
-            Logger.Error("Prozessüberwachung fehlgeschlagen", ex);
+            Logger.Error("Process monitoring failed", ex);
         }
         finally
         {
@@ -75,7 +75,7 @@ public sealed class ProcessWatcherService : IDisposable
                 var active = gameMode.ActiveProfile;
                 if (gameMode.ActivatedAutomatically && active is { AutoDeactivateOnExit: true } && !AnyTriggerRunning(active, running))
                 {
-                    Logger.Info($"Spiel für Profil '{active.Name}' beendet – Gaming-Modus wird automatisch deaktiviert");
+                    Logger.Info($"Game for profile '{active.Name}' exited – deactivating game mode automatically");
                     _ = _controller.DeactivateGameModeAsync(manual: false);
                 }
                 return;
@@ -88,14 +88,14 @@ public sealed class ProcessWatcherService : IDisposable
                 if (profile.Id == _suppressedProfileId) continue;
                 if (!AnyTriggerRunning(profile, running)) continue;
 
-                Logger.Info($"Spiel erkannt – Profil '{profile.Name}' wird automatisch aktiviert");
+                Logger.Info($"Game detected – activating profile '{profile.Name}' automatically");
                 _ = _controller.ActivateGameModeAsync(profile, automatic: true);
                 return;
             }
         }
         catch (Exception ex)
         {
-            Logger.Error("Auswertung der Spielerkennung fehlgeschlagen", ex);
+            Logger.Error("Game detection evaluation failed", ex);
         }
     }
 

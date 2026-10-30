@@ -11,7 +11,7 @@ public enum HotkeyAction
     NextPreset = 3
 }
 
-/// <summary>Eine globale Tastenkombination (Win32-Modifier + Virtual-Key).</summary>
+/// <summary>A global key combination (Win32 modifiers + virtual key).</summary>
 public sealed class HotkeyBinding
 {
     public const int ModAlt = 0x1;
@@ -66,17 +66,17 @@ public sealed class HotkeyBinding
     }
 }
 
-/// <summary>Belegung aller globalen Hotkeys.</summary>
+/// <summary>Assignment of all global hotkeys.</summary>
 public sealed class HotkeySettings
 {
     public HotkeyBinding? ToggleCrosshair { get; set; } =
-        new() { Modifiers = HotkeyBinding.ModControl | HotkeyBinding.ModAlt, Key = 0x43 }; // Strg+Alt+C
+        new() { Modifiers = HotkeyBinding.ModControl | HotkeyBinding.ModAlt, Key = 0x43 }; // Ctrl+Alt+C
 
     public HotkeyBinding? ToggleGameMode { get; set; } =
-        new() { Modifiers = HotkeyBinding.ModControl | HotkeyBinding.ModAlt, Key = 0x47 }; // Strg+Alt+G
+        new() { Modifiers = HotkeyBinding.ModControl | HotkeyBinding.ModAlt, Key = 0x47 }; // Ctrl+Alt+G
 
     public HotkeyBinding? NextPreset { get; set; } =
-        new() { Modifiers = HotkeyBinding.ModControl | HotkeyBinding.ModAlt, Key = 0x4E }; // Strg+Alt+N
+        new() { Modifiers = HotkeyBinding.ModControl | HotkeyBinding.ModAlt, Key = 0x4E }; // Ctrl+Alt+N
 
     public HotkeyBinding? Get(HotkeyAction action) => action switch
     {

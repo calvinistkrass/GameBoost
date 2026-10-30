@@ -17,7 +17,7 @@
                 <TextBlock Text="{DynamicResource ST.Subtitle}" Style="{StaticResource Text.Muted}" Margin="0,4,0,0" />
             </StackPanel>
 
-            <!-- Allgemein -->
+            <!-- General -->
             <Border Style="{StaticResource Card}" Margin="0,0,0,16">
                 <StackPanel>
                     <TextBlock Text="{DynamicResource ST.General}" Style="{StaticResource Text.H2}" Margin="0,0,0,16" />
@@ -130,7 +130,7 @@
                 </StackPanel>
             </Border>
 
-            <!-- Hinweise -->
+            <!-- Notes -->
             <Border Style="{StaticResource Card}" Margin="0,0,0,16">
                 <StackPanel>
                     <TextBlock Text="{DynamicResource ST.Notes}" Style="{StaticResource Text.H2}" Margin="0,0,0,14" />
@@ -167,7 +167,7 @@
                 </StackPanel>
             </Border>
 
-            <!-- Daten -->
+            <!-- Data -->
             <Border Style="{StaticResource Card}">
                 <StackPanel>
                     <TextBlock Text="{DynamicResource ST.Data}" Style="{StaticResource Text.H2}" Margin="0,0,0,8" />

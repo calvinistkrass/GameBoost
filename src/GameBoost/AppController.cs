@@ -8,7 +8,7 @@ using GameBoost.Views;
 
 namespace GameBoost;
 
-/// <summary>Startoptionen aus der Kommandozeile.</summary>
+/// <summary>Command line start options.</summary>
 public sealed record StartupOptions(bool Minimized, string? Page)
 {
     public static StartupOptions Parse(string[] args)
@@ -20,7 +20,7 @@ public sealed record StartupOptions(bool Minimized, string? Page)
 }
 
 /// <summary>
-/// Verbindet alle Services miteinander (Hotkeys, Tray, Gaming-Modus, Overlay) und verwaltet das Hauptfenster.
+/// Wires all services together (hotkeys, tray, game mode, overlay) and manages the main window.
 /// </summary>
 public sealed class AppController : IDisposable
 {
@@ -52,7 +52,7 @@ public sealed class AppController : IDisposable
 
     public AppSettings Settings => SettingsService.Settings;
 
-    /// <summary>Wird ausgelöst, wenn ein Crosshair-Preset angewendet wurde (z. B. per Hotkey).</summary>
+    /// <summary>Raised when a crosshair preset was applied (e.g. via hotkey).</summary>
     public event EventHandler<CrosshairPreset>? PresetApplied;
 
     public void Start(StartupOptions options)
@@ -88,10 +88,10 @@ public sealed class AppController : IDisposable
         if (!(options.Minimized || Settings.StartMinimized)) ShowMainWindow();
 
         if (recovered) Tray.ShowBalloon(Loc.T("Tray.Recovered.Title"), Loc.T("Tray.Recovered.Text"));
-        Logger.Info("GameBoost gestartet");
+        Logger.Info("GameBoost started");
     }
 
-    // ------------------------------------------------------------------ Fenster
+    // ------------------------------------------------------------------ Window
 
     public void ShowMainWindow()
     {
@@ -106,13 +106,13 @@ public sealed class AppController : IDisposable
             if (!_window.IsVisible) _window.Show();
             if (_window.WindowState == WindowState.Minimized) _window.WindowState = WindowState.Normal;
             _window.Activate();
-            _window.Topmost = true;  // zuverlässig in den Vordergrund holen
+            _window.Topmost = true;  // reliably bring to front
             _window.Topmost = false;
             _window.Focus();
         }
         catch (Exception ex)
         {
-            Logger.Error("Hauptfenster konnte nicht angezeigt werden", ex);
+            Logger.Error("Could not show main window", ex);
         }
     }
 
@@ -136,7 +136,7 @@ public sealed class AppController : IDisposable
         }
     }
 
-    // ------------------------------------------------------------------ Aktionen
+    // ------------------------------------------------------------------ Actions
 
     public GameModeProfile SelectedProfile =>
         Settings.Profiles.FirstOrDefault(p => p.Id == Settings.ActiveProfileId) ?? Settings.Profiles[0];
@@ -170,7 +170,7 @@ public sealed class AppController : IDisposable
         }
         catch (Exception ex)
         {
-            ErrorReporter.Report("Gaming-Modus konnte nicht aktiviert werden", ex);
+            ErrorReporter.Report("Could not activate game mode", ex);
         }
     }
 
@@ -191,7 +191,7 @@ public sealed class AppController : IDisposable
         }
         catch (Exception ex)
         {
-            ErrorReporter.Report("Gaming-Modus konnte nicht deaktiviert werden", ex);
+            ErrorReporter.Report("Could not deactivate game mode", ex);
         }
     }
 
@@ -219,7 +219,7 @@ public sealed class AppController : IDisposable
         Settings.Crosshair.Current.CopyFrom(preset.Config);
         Settings.Crosshair.ActivePresetName = preset.Name;
         SettingsService.RequestSave();
-        Logger.Info($"Crosshair-Preset angewendet: {preset.Name}");
+        Logger.Info($"Crosshair preset applied: {preset.Name}");
         PresetApplied?.Invoke(this, preset);
     }
 
@@ -240,7 +240,7 @@ public sealed class AppController : IDisposable
         }
     }
 
-    /// <summary>Setzt alle Einstellungen auf den Auslieferungszustand zurück.</summary>
+    /// <summary>Resets all settings to factory defaults.</summary>
     public async Task ResetAllAsync()
     {
         if (GameMode.IsActive) await DeactivateGameModeAsync(manual: true);
@@ -258,36 +258,36 @@ public sealed class AppController : IDisposable
 
     private void UpdateTray() => Tray.UpdateState(GameMode.IsActive, Overlay.IsVisible, GameMode.ActiveProfile?.Name);
 
-    // ------------------------------------------------------------------ Beenden
+    // ------------------------------------------------------------------ Exit
 
     public void Exit()
     {
         if (_exiting) return;
         _exiting = true;
-        Logger.Info("GameBoost wird beendet");
+        Logger.Info("GameBoost is shutting down");
 
-        try { Watcher.Stop(); } catch (Exception ex) { Logger.Warn("Watcher-Stopp fehlgeschlagen", ex); }
-        try { GameMode.DeactivateForShutdown(restartPrograms: true); } catch (Exception ex) { Logger.Warn("Zurücksetzen fehlgeschlagen", ex); }
-        try { SettingsService.Save(); } catch (Exception ex) { Logger.Warn("Speichern fehlgeschlagen", ex); }
-        try { _window?.Close(); } catch (Exception ex) { Logger.Warn("Fenster schließen fehlgeschlagen", ex); }
+        try { Watcher.Stop(); } catch (Exception ex) { Logger.Warn("Stopping watcher failed", ex); }
+        try { GameMode.DeactivateForShutdown(restartPrograms: true); } catch (Exception ex) { Logger.Warn("Restore failed", ex); }
+        try { SettingsService.Save(); } catch (Exception ex) { Logger.Warn("Saving failed", ex); }
+        try { _window?.Close(); } catch (Exception ex) { Logger.Warn("Closing window failed", ex); }
 
         _app.Shutdown();
     }
 
-    /// <summary>Windows wird heruntergefahren oder der Benutzer meldet sich ab.</summary>
+    /// <summary>Windows is shutting down or the user signs out.</summary>
     public void OnSessionEnding()
     {
-        Logger.Info("Windows-Sitzung endet – Zustand wird wiederhergestellt");
+        Logger.Info("Windows session ending – restoring state");
         GameMode.DeactivateForShutdown(restartPrograms: false);
         SettingsService.Save();
     }
 
     public void Dispose()
     {
-        try { Watcher.Dispose(); } catch { /* ignorieren */ }
-        try { Hotkeys.Dispose(); } catch { /* ignorieren */ }
-        try { Overlay.Dispose(); } catch { /* ignorieren */ }
-        try { Tray.Dispose(); } catch { /* ignorieren */ }
-        try { MainViewModel?.Dispose(); } catch { /* ignorieren */ }
+        try { Watcher.Dispose(); } catch { /* ignore */ }
+        try { Hotkeys.Dispose(); } catch { /* ignore */ }
+        try { Overlay.Dispose(); } catch { /* ignore */ }
+        try { Tray.Dispose(); } catch { /* ignore */ }
+        try { MainViewModel?.Dispose(); } catch { /* ignore */ }
     }
 }

@@ -4,10 +4,10 @@ using GameBoost.Infrastructure;
 
 namespace GameBoost.Models;
 
-/// <summary>Ein Gaming-Modus-Profil (z. B. "Valorant").</summary>
+/// <summary>A game mode profile (e.g. "Valorant").</summary>
 public sealed class GameModeProfile : ObservableObject
 {
-    private string _name = "Profil";
+    private string _name = "Profile";
     private bool _switchPowerPlan = true;
     private bool _disableNotifications = true;
     private bool _restartKilledOnDeactivate = true;
@@ -23,13 +23,13 @@ public sealed class GameModeProfile : ObservableObject
         set => SetProperty(ref _name, string.IsNullOrWhiteSpace(value) ? _name : value.Trim());
     }
 
-    /// <summary>Prozessnamen (klein, ohne .exe), die beim Aktivieren beendet werden.</summary>
+    /// <summary>Process names (lowercase, without .exe) closed on activation.</summary>
     public List<string> ProcessesToKill { get; set; } = new();
 
-    /// <summary>Programme, die beim Aktivieren gestartet werden.</summary>
+    /// <summary>Programs started on activation.</summary>
     public ObservableCollection<StartProgram> ProgramsToStart { get; set; } = new();
 
-    /// <summary>Prozessnamen (klein, ohne .exe), deren Start dieses Profil automatisch aktiviert.</summary>
+    /// <summary>Process names (lowercase, without .exe) whose start activates this profile automatically.</summary>
     public ObservableCollection<string> TriggerExecutables { get; set; } = new();
 
     public bool SwitchPowerPlan
@@ -56,7 +56,7 @@ public sealed class GameModeProfile : ObservableObject
         set => SetProperty(ref _showCrosshair, value);
     }
 
-    /// <summary>Optionales Preset, das beim Aktivieren geladen wird (null = aktuelles Crosshair).</summary>
+    /// <summary>Optional preset loaded on activation (null = current crosshair).</summary>
     public string? CrosshairPresetName
     {
         get => _crosshairPresetName;
@@ -103,7 +103,7 @@ public sealed class GameModeProfile : ObservableObject
     }
 }
 
-/// <summary>Ein Programm, das beim Aktivieren des Gaming-Modus gestartet wird.</summary>
+/// <summary>A program started when game mode is activated.</summary>
 public sealed class StartProgram
 {
     public string Path { get; set; } = "";
@@ -113,7 +113,7 @@ public sealed class StartProgram
     public string DisplayName => System.IO.Path.GetFileNameWithoutExtension(Path);
 }
 
-/// <summary>Normalisierung von Prozessnamen ("C:\x\Discord.EXE" → "discord").</summary>
+/// <summary>Process name normalization ("C:\x\Discord.EXE" → "discord").</summary>
 public static class ProcessNames
 {
     public static string Normalize(string? name)
@@ -126,7 +126,7 @@ public static class ProcessNames
         }
         catch (ArgumentException)
         {
-            // Ungültige Pfadzeichen – Namen unverändert verwenden.
+            // Invalid path characters – use the name as is.
         }
         if (n.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)) n = n[..^4];
         return n.Trim().ToLowerInvariant();

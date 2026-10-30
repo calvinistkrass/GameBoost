@@ -3,7 +3,7 @@ using Microsoft.Win32;
 
 namespace GameBoost.Services;
 
-/// <summary>Schaltet Windows-Benachrichtigungen (Toasts) für den aktuellen Benutzer ab und wieder an.</summary>
+/// <summary>Turns Windows notifications (toasts) off and back on for the current user.</summary>
 public static class NotificationManager
 {
     private static readonly (string KeyPath, string ValueName)[] Values =
@@ -14,7 +14,7 @@ public static class NotificationManager
 
     private static string Id((string KeyPath, string ValueName) v) => v.KeyPath + "|" + v.ValueName;
 
-    /// <summary>Deaktiviert Toasts und liefert die vorherigen Werte (null = Wert existierte nicht).</summary>
+    /// <summary>Disables toasts and returns the previous values (null = value did not exist).</summary>
     public static Dictionary<string, int?> Disable()
     {
         var previous = new Dictionary<string, int?>();
@@ -25,7 +25,7 @@ public static class NotificationManager
             {
                 var old = Read(v.KeyPath, v.ValueName);
                 Write(v.KeyPath, v.ValueName, 0);
-                previous[Id(v)] = old; // nur tatsächlich geänderte Werte merken
+                previous[Id(v)] = old; // only remember values that were actually changed
             }
             catch (Exception ex)
             {
@@ -63,7 +63,7 @@ public static class NotificationManager
         }
         catch (Exception ex)
         {
-            Logger.Warn($"Registry-Wert {keyPath}\\{name} konnte nicht geschrieben werden", ex);
+            Logger.Warn($"Could not write registry value {keyPath}\\{name}", ex);
             throw;
         }
     }

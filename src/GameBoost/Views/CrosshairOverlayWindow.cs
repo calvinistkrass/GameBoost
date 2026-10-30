@@ -10,12 +10,12 @@ using GameBoost.Services;
 namespace GameBoost.Views;
 
 /// <summary>
-/// Randloses, transparentes, durchklickbares Fenster, das immer im Vordergrund liegt und
-/// nicht in Taskleiste oder Alt+Tab erscheint. Wird pixelgenau mittig auf einem Monitor platziert.
+/// Borderless, transparent, click-through window that is always on top and
+/// does not appear in the taskbar or Alt+Tab. Placed pixel-exact in the center of a monitor.
 /// </summary>
 public sealed class CrosshairOverlayWindow : Window
 {
-    /// <summary>Kantenlänge des Overlays in physischen Pixeln (gerade Zahl → exakte Mitte).</summary>
+    /// <summary>Overlay edge length in physical pixels (even number → exact center).</summary>
     public const int SizePx = 640;
 
     private readonly CrosshairRenderer _renderer;
@@ -47,7 +47,7 @@ public sealed class CrosshairOverlayWindow : Window
         SourceInitialized += (_, _) => ApplyClickThroughStyles();
         DpiChanged += (_, _) => Dispatcher.BeginInvoke(DispatcherPriority.Background, Reposition);
 
-        // Manche Spiele/Fenster drängen sich nach vorne – Topmost regelmäßig erneuern.
+        // Some games/windows push themselves to the front – re-assert topmost regularly.
         _topmostTimer = new DispatcherTimer(TimeSpan.FromSeconds(2), DispatcherPriority.Background, (_, _) => EnsureTopmost(), Dispatcher);
         IsVisibleChanged += (_, _) =>
         {
@@ -65,7 +65,7 @@ public sealed class CrosshairOverlayWindow : Window
 
     public IntPtr Handle => new WindowInteropHelper(this).EnsureHandle();
 
-    /// <summary>Platziert das Overlay exakt mittig auf dem angegebenen Monitor.</summary>
+    /// <summary>Places the overlay exactly in the center of the given monitor.</summary>
     public void PlaceOn(MonitorInfo monitor)
     {
         _monitor = monitor;
@@ -79,7 +79,7 @@ public sealed class CrosshairOverlayWindow : Window
             if (_monitor == null) return;
             var hwnd = Handle;
 
-            // WPF-Größe passend zur DPI des Zielmonitors setzen, damit Layout und physische Größe übereinstimmen.
+            // Set the WPF size for the target monitor's DPI so layout and physical size match.
             var scale = _monitor.DpiScale > 0 ? _monitor.DpiScale : 1;
             Width = SizePx / scale;
             Height = SizePx / scale;
@@ -91,7 +91,7 @@ public sealed class CrosshairOverlayWindow : Window
         }
         catch (Exception ex)
         {
-            Logger.Error("Overlay konnte nicht positioniert werden", ex);
+            Logger.Error("Could not position overlay", ex);
         }
     }
 
@@ -104,7 +104,7 @@ public sealed class CrosshairOverlayWindow : Window
         }
         catch (Exception ex)
         {
-            Logger.Warn("Topmost konnte nicht erneuert werden", ex);
+            Logger.Warn("Could not re-assert topmost", ex);
         }
     }
 
@@ -120,7 +120,7 @@ public sealed class CrosshairOverlayWindow : Window
         }
         catch (Exception ex)
         {
-            Logger.Error("Overlay-Fensterstile konnten nicht gesetzt werden", ex);
+            Logger.Error("Could not set overlay window styles", ex);
         }
     }
 }

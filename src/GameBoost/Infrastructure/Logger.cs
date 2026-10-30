@@ -3,8 +3,8 @@ using System.Text;
 namespace GameBoost.Infrastructure;
 
 /// <summary>
-/// Einfacher, threadsicherer Datei-Logger. Schreibt nach %AppData%\GameBoost\logs\gameboost-JJJJ-MM-TT.log.
-/// Wirft selbst niemals Ausnahmen.
+/// Simple thread-safe file logger. Writes to %AppData%\GameBoost\logs\gameboost-YYYY-MM-DD.log.
+/// Never throws.
 /// </summary>
 public static class Logger
 {
@@ -39,11 +39,11 @@ public static class Logger
         }
         catch
         {
-            // Logging darf die App unter keinen Umständen zum Absturz bringen.
+            // Logging must never crash the app.
         }
     }
 
-    /// <summary>Löscht Logdateien, die älter als <paramref name="keepDays"/> Tage sind.</summary>
+    /// <summary>Deletes log files older than <paramref name="keepDays"/> days.</summary>
     public static void CleanupOldLogs(int keepDays = 14)
     {
         try
@@ -57,7 +57,7 @@ public static class Logger
         }
         catch (Exception ex)
         {
-            Warn("Alte Logdateien konnten nicht gelöscht werden", ex);
+            Warn("Could not delete old log files", ex);
         }
     }
 }

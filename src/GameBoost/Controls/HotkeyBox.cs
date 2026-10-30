@@ -7,8 +7,8 @@ using GameBoost.Models;
 namespace GameBoost.Controls;
 
 /// <summary>
-/// Eingabefeld zum Aufnehmen einer Tastenkombination.
-/// Entf/Rücktaste = Hotkey entfernen, Esc = abbrechen.
+/// Input box that records a key combination.
+/// Del/Backspace = remove hotkey, Esc = cancel.
 /// </summary>
 public sealed class HotkeyBox : TextBox
 {
@@ -16,7 +16,7 @@ public sealed class HotkeyBox : TextBox
         nameof(Hotkey), typeof(HotkeyBinding), typeof(HotkeyBox),
         new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, (d, _) => ((HotkeyBox)d).UpdateText()));
 
-    /// <summary>true, solange irgendeine HotkeyBox Eingaben aufnimmt (globale Hotkeys werden dann pausiert).</summary>
+    /// <summary>true while any HotkeyBox is recording (global hotkeys are paused meanwhile).</summary>
     public static event EventHandler<bool>? CaptureStateChanged;
 
     public HotkeyBox()
@@ -79,7 +79,7 @@ public sealed class HotkeyBox : TextBox
         var isFunctionKey = key is >= Key.F1 and <= Key.F24;
         if (modifiers == ModifierKeys.None && !isFunctionKey)
         {
-            // Einzelne Buchstaben ohne Modifier würden das Tippen in anderen Programmen blockieren.
+            // Single letters without a modifier would block typing in other programs.
             Text = Loc.T("Hotkey.NeedModifier");
             return;
         }

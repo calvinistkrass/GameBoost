@@ -2,7 +2,7 @@ using GameBoost.Infrastructure;
 
 namespace GameBoost.ViewModels;
 
-/// <summary>Hauptfenster: Navigation und Statusanzeige in der Seitenleiste.</summary>
+/// <summary>Main window: navigation and status display in the sidebar.</summary>
 public sealed class MainViewModel : ObservableObject, IDisposable
 {
     private readonly AppController _controller;
@@ -65,7 +65,7 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         (CurrentPage as INavigationAware)?.OnNavigatedTo();
     }
 
-    /// <summary>Erzeugt alle Seiten neu (nach "Alles zurücksetzen").</summary>
+    /// <summary>Recreates all pages (after "Reset everything").</summary>
     public void Rebuild()
     {
         DisposePages();

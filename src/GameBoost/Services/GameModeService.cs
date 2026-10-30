@@ -6,8 +6,8 @@ using GameBoost.Models;
 namespace GameBoost.Services;
 
 /// <summary>
-/// Aktiviert/deaktiviert den Gaming-Modus: Programme beenden/starten, Energieplan, Benachrichtigungen.
-/// Der Zustand wird persistiert, damit nach einem Absturz alles wiederhergestellt werden kann.
+/// Activates/deactivates game mode: close/start programs, power plan, notifications.
+/// The state is persisted so everything can be restored after a crash.
 /// </summary>
 public sealed class GameModeService
 {
@@ -33,7 +33,7 @@ public sealed class GameModeService
 
     public event EventHandler? StateChanged;
 
-    /// <summary>Unveränderliche Momentaufnahme eines Profils für die Ausführung im Hintergrund.</summary>
+    /// <summary>Immutable snapshot of a profile for background execution.</summary>
     private sealed record ActivationPlan(
         string ProfileName,
         bool SwitchPowerPlan,
@@ -69,12 +69,12 @@ public sealed class GameModeService
 
         try
         {
-            Logger.Info($"Gaming-Modus wird aktiviert (Profil '{profile.Name}', automatisch: {automatic})");
+            Logger.Info($"Activating game mode (profile '{profile.Name}', automatic: {automatic})");
             createdGuid = await Task.Run(() => ActivateCore(plan, state, entries, cachedGuid));
         }
         catch (Exception ex)
         {
-            Logger.Error("Fehler beim Aktivieren des Gaming-Modus", ex);
+            Logger.Error("Error while activating game mode", ex);
             entries.Add(new StatusEntry(StatusKind.Error, Loc.T("GMS.Unexpected")));
         }
         finally
@@ -85,7 +85,7 @@ public sealed class GameModeService
                 _settings.RequestSave();
             }
 
-            // Auch bei Teilfehlern als aktiv markieren, damit "Deaktivieren" alles Geänderte zurücksetzt.
+            // Mark as active even on partial failure so "deactivate" restores everything that was changed.
             _state = state;
             ActiveProfile = profile;
             _entries = entries;
@@ -110,12 +110,12 @@ public sealed class GameModeService
 
         try
         {
-            Logger.Info("Gaming-Modus wird deaktiviert");
+            Logger.Info("Deactivating game mode");
             await Task.Run(() => RestoreCore(state, restart, entries));
         }
         catch (Exception ex)
         {
-            Logger.Error("Fehler beim Deaktivieren des Gaming-Modus", ex);
+            Logger.Error("Error while deactivating game mode", ex);
         }
         finally
         {
@@ -130,7 +130,7 @@ public sealed class GameModeService
         return true;
     }
 
-    /// <summary>Synchrones Zurücksetzen beim Beenden der App oder beim Abmelden von Windows.</summary>
+    /// <summary>Synchronous restore when the app exits or the user signs out of Windows.</summary>
     public void DeactivateForShutdown(bool restartPrograms)
     {
         if (!IsActive || IsBusy) return;
@@ -141,13 +141,13 @@ public sealed class GameModeService
         }
         catch (Exception ex)
         {
-            Logger.Error("Fehler beim Zurücksetzen während des Beendens", ex);
+            Logger.Error("Error while restoring during shutdown", ex);
         }
         _state = null;
         ActiveProfile = null;
     }
 
-    /// <summary>Stellt nach einem Absturz den ursprünglichen Zustand wieder her. Liefert true, wenn etwas zu tun war.</summary>
+    /// <summary>Restores the original state after a crash. Returns true if anything had to be done.</summary>
     public bool RecoverFromPreviousSession()
     {
         try
@@ -160,19 +160,19 @@ public sealed class GameModeService
                 return false;
             }
 
-            Logger.Warn($"Gaming-Modus war beim letzten Beenden noch aktiv (Profil '{state.ProfileName}') – stelle wieder her.");
+            Logger.Warn($"Game mode was still active at last exit (profile '{state.ProfileName}') – restoring.");
             RestoreCore(state, restartPrograms: false, new List<StatusEntry>());
             return true;
         }
         catch (Exception ex)
         {
-            Logger.Error("Wiederherstellung nach Absturz fehlgeschlagen", ex);
+            Logger.Error("Crash recovery failed", ex);
             DeleteState();
             return false;
         }
     }
 
-    // ------------------------------------------------------------------ Kernlogik (Hintergrundthread)
+    // ------------------------------------------------------------------ Core logic (background thread)
 
     private string? ActivateCore(ActivationPlan plan, GameModeState state, List<StatusEntry> entries, string? cachedGuid)
     {
@@ -195,7 +195,7 @@ public sealed class GameModeService
                     state.PowerSchemeChanged = true;
                     state.PreviousPowerScheme = previous ?? BalancedGuid;
                     entries.Add(new StatusEntry(StatusKind.Ok, Loc.T("GMS.PowerSet")));
-                    Logger.Info($"Energieplan {previous} → {target}");
+                    Logger.Info($"Power plan {previous} → {target}");
                 }
                 else
                 {
@@ -207,7 +207,7 @@ public sealed class GameModeService
                 state.PowerOverlayChanged = true;
                 state.PreviousPowerOverlay = previousOverlay;
                 entries.Add(new StatusEntry(StatusKind.Ok, Loc.T("GMS.PowerOverlay")));
-                Logger.Info($"Energiemodus-Overlay {previousOverlay} → Beste Leistung");
+                Logger.Info($"Power mode overlay {previousOverlay} → best performance");
             }
             else
             {
@@ -226,7 +226,7 @@ public sealed class GameModeService
             }
             catch (Exception ex)
             {
-                Logger.Warn("Benachrichtigungen konnten nicht deaktiviert werden", ex);
+                Logger.Warn("Could not disable notifications", ex);
                 entries.Add(new StatusEntry(StatusKind.Warning, Loc.T("GMS.NotifFailed")));
             }
             SaveState(state);
@@ -253,7 +253,7 @@ public sealed class GameModeService
             }
             catch (Exception ex)
             {
-                Logger.Warn($"Prozesse '{name}' konnten nicht gelesen werden", ex);
+                Logger.Warn($"Could not read processes '{name}'", ex);
                 continue;
             }
 
@@ -278,7 +278,7 @@ public sealed class GameModeService
                     }
                     else
                     {
-                        Logger.Info($"Prozess {p.ProcessName} ({p.Id}) übersprungen: {check.Reason}");
+                        Logger.Info($"Skipped process {p.ProcessName} ({p.Id}): {check.Reason}");
                     }
                 }
 
@@ -288,10 +288,10 @@ public sealed class GameModeService
                     continue;
                 }
 
-                // Erst höflich schließen, dann hart beenden.
+                // Ask politely first, then kill.
                 foreach (var p in allowed)
                 {
-                    try { p.CloseMainWindow(); } catch { /* kein Fenster */ }
+                    try { p.CloseMainWindow(); } catch { /* no window */ }
                 }
 
                 var deadline = DateTime.UtcNow.AddMilliseconds(1500);
@@ -302,7 +302,7 @@ public sealed class GameModeService
                         var remaining = (int)Math.Max(0, (deadline - DateTime.UtcNow).TotalMilliseconds);
                         if (!p.HasExited) p.WaitForExit(remaining);
                     }
-                    catch { /* ignorieren */ }
+                    catch { /* ignore */ }
                 }
 
                 var failed = 0;
@@ -317,7 +317,7 @@ public sealed class GameModeService
                     catch (Exception ex)
                     {
                         failed++;
-                        Logger.Warn($"{p.ProcessName} ({p.Id}) konnte nicht beendet werden: {ex.Message}");
+                        Logger.Warn($"Could not close {p.ProcessName} ({p.Id}): {ex.Message}");
                     }
                 }
 
@@ -326,7 +326,7 @@ public sealed class GameModeService
                     if (path != null && !state.KilledPrograms.Contains(path, StringComparer.OrdinalIgnoreCase))
                         state.KilledPrograms.Add(path);
                     entries.Add(new StatusEntry(StatusKind.Ok, Loc.F("GMS.Killed", display)));
-                    Logger.Info($"{display} beendet ({allowed.Count - failed}/{allowed.Count} Instanzen)");
+                    Logger.Info($"Closed {display} ({allowed.Count - failed}/{allowed.Count} instances)");
                 }
                 else
                 {
@@ -362,11 +362,11 @@ public sealed class GameModeService
 
                 StartDetached(program.Path, program.Arguments);
                 entries.Add(new StatusEntry(StatusKind.Ok, Loc.F("GMS.Started", display)));
-                Logger.Info($"Programm gestartet: {program.Path}");
+                Logger.Info($"Started program: {program.Path}");
             }
             catch (Exception ex)
             {
-                Logger.Warn($"Programm konnte nicht gestartet werden: {program.Path}", ex);
+                Logger.Warn($"Could not start program: {program.Path}", ex);
                 entries.Add(new StatusEntry(StatusKind.Warning, Loc.F("GMS.StartFailed", display)));
             }
         }
@@ -378,13 +378,13 @@ public sealed class GameModeService
         {
             var target = state.PreviousPowerScheme ?? BalancedGuid;
             if (!PowerPlanManager.SetActive(target)) PowerPlanManager.SetActive(BalancedGuid);
-            Logger.Info($"Energieplan wiederhergestellt: {target}");
+            Logger.Info($"Power plan restored: {target}");
         }
 
         if (state.PowerOverlayChanged)
         {
             PowerPlanManager.RestoreOverlay(state.PreviousPowerOverlay);
-            Logger.Info("Energiemodus-Overlay wiederhergestellt");
+            Logger.Info("Power mode overlay restored");
         }
 
         if (state.NotificationsChanged)
@@ -392,11 +392,11 @@ public sealed class GameModeService
             try
             {
                 NotificationManager.Restore(state.PreviousNotificationValues);
-                Logger.Info("Benachrichtigungen wiederhergestellt");
+                Logger.Info("Notifications restored");
             }
             catch (Exception ex)
             {
-                Logger.Warn("Benachrichtigungen konnten nicht wiederhergestellt werden", ex);
+                Logger.Warn("Could not restore notifications", ex);
             }
         }
 
@@ -409,11 +409,11 @@ public sealed class GameModeService
                     if (!File.Exists(path) || ProcessService.IsRunning(ProcessNames.Normalize(path))) continue;
                     StartDetached(path, "");
                     entries.Add(new StatusEntry(StatusKind.Ok, Loc.F("GMS.Started", Path.GetFileNameWithoutExtension(path))));
-                    Logger.Info($"Beendetes Programm neu gestartet: {path}");
+                    Logger.Info($"Restarted closed program: {path}");
                 }
                 catch (Exception ex)
                 {
-                    Logger.Warn($"Neustart fehlgeschlagen: {path}", ex);
+                    Logger.Warn($"Restart failed: {path}", ex);
                 }
             }
         }
@@ -432,7 +432,7 @@ public sealed class GameModeService
         Process.Start(psi)?.Dispose();
     }
 
-    // ------------------------------------------------------------------ Persistenz
+    // ------------------------------------------------------------------ Persistence
 
     private void SaveState(GameModeState state)
     {
@@ -448,7 +448,7 @@ public sealed class GameModeService
         }
         catch (Exception ex)
         {
-            Logger.Warn("Gaming-Modus-Zustand konnte nicht gespeichert werden", ex);
+            Logger.Warn("Could not save game mode state", ex);
         }
     }
 
@@ -472,7 +472,7 @@ public sealed class GameModeService
         }
         catch (Exception ex)
         {
-            Logger.Warn("Gaming-Modus-Zustand konnte nicht gelöscht werden", ex);
+            Logger.Warn("Could not delete game mode state", ex);
         }
     }
 
@@ -484,7 +484,7 @@ public sealed class GameModeService
         }
         catch (Exception ex)
         {
-            Logger.Error("Fehler in StateChanged-Handler", ex);
+            Logger.Error("Error in StateChanged handler", ex);
         }
     }
 }

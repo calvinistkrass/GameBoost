@@ -3,7 +3,7 @@ using GameBoost.Infrastructure;
 
 namespace GameBoost.ViewModels;
 
-/// <summary>Eine Zeile in der Liste "Programme beenden".</summary>
+/// <summary>A row in the "Close programs" list.</summary>
 public sealed class ProcessItemViewModel : ObservableObject
 {
     private readonly Action<ProcessItemViewModel> _onSelectionChanged;
@@ -22,7 +22,7 @@ public sealed class ProcessItemViewModel : ObservableObject
         _onSelectionChanged = onSelectionChanged;
     }
 
-    /// <summary>Normalisierter Prozessname (klein, ohne .exe).</summary>
+    /// <summary>Normalized process name (lowercase, without .exe).</summary>
     public string Name { get; }
     public string DisplayName { get; }
     public string? Path { get; }
@@ -44,7 +44,7 @@ public sealed class ProcessItemViewModel : ObservableObject
         }
     }
 
-    /// <summary>Setzt die Auswahl ohne Rückmeldung (beim Profilwechsel).</summary>
+    /// <summary>Sets the selection without callback (when switching profiles).</summary>
     public void SetSelectedSilently(bool value)
     {
         if (_isSelected == value) return;

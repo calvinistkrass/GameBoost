@@ -11,7 +11,7 @@ public enum HotkeyRegistrationState
     Conflict
 }
 
-/// <summary>Registriert globale Hotkeys über RegisterHotKey auf einem unsichtbaren Nachrichtenfenster.</summary>
+/// <summary>Registers global hotkeys via RegisterHotKey on an invisible message-only window.</summary>
 public sealed class HotkeyService : IDisposable
 {
     private static readonly HotkeyAction[] AllActions = Enum.GetValues<HotkeyAction>();
@@ -31,7 +31,7 @@ public sealed class HotkeyService : IDisposable
     {
         var parameters = new HwndSourceParameters("GameBoostHotkeyWindow")
         {
-            ParentWindow = new IntPtr(-3), // HWND_MESSAGE: reines Nachrichtenfenster
+            ParentWindow = new IntPtr(-3), // HWND_MESSAGE: message-only window
             Width = 0,
             Height = 0,
             WindowStyle = 0
@@ -46,7 +46,7 @@ public sealed class HotkeyService : IDisposable
         Reregister();
     }
 
-    /// <summary>Während der Nutzer einen Hotkey neu belegt, werden alle Hotkeys vorübergehend freigegeben.</summary>
+    /// <summary>While the user records a new hotkey, all hotkeys are temporarily released.</summary>
     public bool Suspended
     {
         get => _suspended;
@@ -83,7 +83,7 @@ public sealed class HotkeyService : IDisposable
             else
             {
                 _states[action] = HotkeyRegistrationState.Conflict;
-                Logger.Warn($"Hotkey {binding} für {action} konnte nicht registriert werden (bereits belegt?)");
+                Logger.Warn($"Could not register hotkey {binding} for {action} (already in use?)");
             }
         }
 
@@ -93,7 +93,7 @@ public sealed class HotkeyService : IDisposable
         }
         catch (Exception ex)
         {
-            Logger.Error("Fehler in StatesChanged-Handler", ex);
+            Logger.Error("Error in StatesChanged handler", ex);
         }
     }
 
@@ -118,7 +118,7 @@ public sealed class HotkeyService : IDisposable
             }
             catch (Exception ex)
             {
-                Logger.Error($"Fehler bei Hotkey-Aktion {(HotkeyAction)id}", ex);
+                Logger.Error($"Error in hotkey action {(HotkeyAction)id}", ex);
             }
         }
         return IntPtr.Zero;
@@ -134,7 +134,7 @@ public sealed class HotkeyService : IDisposable
         }
         catch (Exception ex)
         {
-            Logger.Warn("Hotkeys konnten nicht freigegeben werden", ex);
+            Logger.Warn("Could not release hotkeys", ex);
         }
         _source = null;
     }

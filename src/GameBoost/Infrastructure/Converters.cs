@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 namespace GameBoost.Infrastructure;
 
-/// <summary>bool → Visibility. ConverterParameter "invert" kehrt die Logik um.</summary>
+/// <summary>bool → Visibility. ConverterParameter "invert" inverts the logic.</summary>
 public sealed class BoolToVisibilityConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -26,7 +26,7 @@ public sealed class InverseBoolConverter : IValueConverter
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => value is not true;
 }
 
-/// <summary>Vergleicht den Wert mit dem ConverterParameter (für RadioButtons mit Enums/Zahlen/Strings).</summary>
+/// <summary>Compares the value with the ConverterParameter (for RadioButtons bound to enums/numbers/strings).</summary>
 public sealed class EqualsToBoolConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -74,7 +74,7 @@ public sealed class HexToBrushConverter : IValueConverter
         => Binding.DoNothing;
 }
 
-/// <summary>Anzahl/Liste → Visibility. Sichtbar wenn leer; mit "invert" sichtbar wenn nicht leer.</summary>
+/// <summary>Count/collection → Visibility. Visible when empty; with "invert" visible when not empty.</summary>
 public sealed class CountToVisibilityConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -94,7 +94,7 @@ public sealed class CountToVisibilityConverter : IValueConverter
         => Binding.DoNothing;
 }
 
-/// <summary>Dateipfad → Programmsymbol.</summary>
+/// <summary>File path → program icon.</summary>
 public sealed class PathToIconConverter : IValueConverter
 {
     public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
