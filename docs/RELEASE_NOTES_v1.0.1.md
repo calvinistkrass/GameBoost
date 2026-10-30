@@ -1,9 +1,9 @@
-## GameBoost 1.0.0 – first release 🎮
+## GameBoost 1.0.1 – first release 🎮
 
 Game mode and crosshair overlay for Windows 10/11. No installation, no admin rights, a single `.exe`.
 
 ### Download
-Download **`GameBoost-1.0.0-win-x64.zip`**, unzip it and run `GameBoost.exe`. .NET does not need to be installed.
+Download **`GameBoost-1.0.1-win-x64.zip`**, unzip it and run `GameBoost.exe`. .NET does not need to be installed.
 
 > Windows SmartScreen warns on first launch because the `.exe` is not signed → **More info → Run anyway**.
 

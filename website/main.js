@@ -3,8 +3,8 @@
 // version, size, date and link are taken from the latest release automatically.
 const RELEASE = {
   repo: "calvinistkrass/GameBoost",
-  version: "1.0.0",
-  file: "GameBoost-1.0.0-win-x64.zip",
+  version: "1.0.1",
+  file: "GameBoost-1.0.1-win-x64.zip",
   size: "approx. 58 MB",
 };
 
