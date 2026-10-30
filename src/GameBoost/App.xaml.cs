@@ -20,6 +20,21 @@ public partial class App : Application
         RegisterGlobalExceptionHandlers();
         Logger.Info($"GameBoost {AppPaths.Version} starting (args: {string.Join(' ', e.Args)})");
 
+        // When restarted as administrator, wait until the previous instance has exited.
+        var options = StartupOptions.Parse(e.Args);
+        if (options.WaitForPid is { } previousPid)
+        {
+            try
+            {
+                using var previous = System.Diagnostics.Process.GetProcessById(previousPid);
+                previous.WaitForExit(15000);
+            }
+            catch (ArgumentException)
+            {
+                // already exited
+            }
+        }
+
         // Single instance: a second instance brings the existing window to front and exits.
         _mutex = new Mutex(true, MutexName, out var createdNew);
         if (!createdNew)
@@ -47,7 +62,7 @@ public partial class App : Application
         try
         {
             _controller = new AppController(this);
-            _controller.Start(StartupOptions.Parse(e.Args));
+            _controller.Start(options);
         }
         catch (Exception ex)
         {

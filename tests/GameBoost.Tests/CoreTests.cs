@@ -289,7 +289,7 @@ public class SettingsServiceTests : IDisposable
         var s = new SettingsService();
         s.Load();
         Assert.True(File.Exists(AppPaths.SettingsFile));
-        Assert.Equal(3, s.Settings.Profiles.Count);
+        Assert.Equal(2, s.Settings.Profiles.Count);
         Assert.Equal(5, s.Settings.Crosshair.Presets.Count);
 
         s.Settings.Profiles[0].ProcessesToKill.Add("discord");

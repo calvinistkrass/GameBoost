@@ -5,7 +5,7 @@ namespace GameBoost.Models;
 /// <summary>All persisted settings (settings.json).</summary>
 public sealed class AppSettings
 {
-    public const int CurrentSchemaVersion = 2;
+    public const int CurrentSchemaVersion = 3;
 
     public int SchemaVersion { get; set; } = CurrentSchemaVersion;
     public string Language { get; set; } = "en";
@@ -19,7 +19,11 @@ public sealed class AppSettings
     public ObservableCollection<GameModeProfile> Profiles { get; set; } = new();
 
     public CrosshairSettings Crosshair { get; set; } = new();
+    public HudSettings Hud { get; set; } = new();
     public HotkeySettings Hotkeys { get; set; } = new();
+
+    /// <summary>Original values of Windows settings changed by the PC check (per check id), used for "Undo".</summary>
+    public Dictionary<string, Dictionary<string, string?>> TweakBackups { get; set; } = new();
 
     /// <summary>GUID of a High performance plan created by GameBoost (if Windows doesn't offer one).</summary>
     public string? CachedHighPerformanceSchemeGuid { get; set; }
@@ -29,13 +33,10 @@ public sealed class AppSettings
         var settings = new AppSettings();
 
         var standard = new GameModeProfile { Name = "Default" };
-        var valorant = new GameModeProfile { Name = "Valorant" };
-        valorant.TriggerExecutables.Add("valorant-win64-shipping");
         var fortnite = new GameModeProfile { Name = "Fortnite" };
         fortnite.TriggerExecutables.Add("fortniteclient-win64-shipping");
 
         settings.Profiles.Add(standard);
-        settings.Profiles.Add(valorant);
         settings.Profiles.Add(fortnite);
         settings.ActiveProfileId = standard.Id;
 
@@ -68,13 +69,32 @@ public sealed class AppSettings
             Crosshair.Presets.Remove(bad);
 
         Hotkeys ??= new();
+        Hud ??= new();
+        TweakBackups ??= new();
     }
 
     /// <summary>Schema 1 → 2: English becomes the default language; German default names are renamed.</summary>
     private void Migrate()
     {
         if (SchemaVersion >= CurrentSchemaVersion) return;
+        if (SchemaVersion < 2) MigrateToEnglish();
+        if (SchemaVersion < 3) RemoveDefaultValorantProfile();
+        SchemaVersion = CurrentSchemaVersion;
+    }
 
+    /// <summary>Schema 3: the Valorant example profile is no longer shipped. Only removed if the user never changed it.</summary>
+    private void RemoveDefaultValorantProfile()
+    {
+        if (Profiles == null) return;
+        var untouched = Profiles.Where(p => p != null && p.Name == "Valorant"
+                                              && p.ProcessesToKill.Count == 0 && p.ProgramsToStart.Count == 0
+                                              && p.TriggerExecutables.Count == 1
+                                              && ProcessNames.Normalize(p.TriggerExecutables[0]) == "valorant-win64-shipping").ToList();
+        foreach (var p in untouched) Profiles.Remove(p);
+    }
+
+    private void MigrateToEnglish()
+    {
         Language = "en";
         var presetNames = new Dictionary<string, string>
         {
@@ -102,8 +122,6 @@ public sealed class AppSettings
             if (Crosshair.ActivePresetName != null && presetNames.TryGetValue(Crosshair.ActivePresetName, out var active))
                 Crosshair.ActivePresetName = active;
         }
-
-        SchemaVersion = CurrentSchemaVersion;
     }
 }
 

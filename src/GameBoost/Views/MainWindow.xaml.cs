@@ -30,6 +30,7 @@ public partial class MainWindow : Window
         var off = (Brush)FindResource("B.TextFaint");
         GmDot.Fill = vm.IsGameModeActive ? on : off;
         ChDot.Fill = vm.IsCrosshairVisible ? on : off;
+        HudDot.Fill = vm.IsHudVisible ? on : off;
     }
 
     private void UpdateMaximizedState()

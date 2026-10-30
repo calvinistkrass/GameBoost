@@ -3,30 +3,34 @@ using GameBoost.Controls;
 using GameBoost.Infrastructure;
 using GameBoost.Models;
 using GameBoost.Services;
+using GameBoost.Services.Performance;
+using GameBoost.Services.SystemCheck;
 using GameBoost.ViewModels;
 using GameBoost.Views;
 
 namespace GameBoost;
 
 /// <summary>Command line start options.</summary>
-public sealed record StartupOptions(bool Minimized, string? Page)
+public sealed record StartupOptions(bool Minimized, string? Page, int? WaitForPid)
 {
     public static StartupOptions Parse(string[] args)
     {
         var minimized = args.Any(a => a.Equals("--minimized", StringComparison.OrdinalIgnoreCase));
         var page = args.FirstOrDefault(a => a.StartsWith("--page=", StringComparison.OrdinalIgnoreCase))?["--page=".Length..];
-        return new StartupOptions(minimized, page);
+        var wait = args.FirstOrDefault(a => a.StartsWith("--after-pid=", StringComparison.OrdinalIgnoreCase))?["--after-pid=".Length..];
+        return new StartupOptions(minimized, page, int.TryParse(wait, out var pid) ? pid : null);
     }
 }
 
 /// <summary>
-/// Wires all services together (hotkeys, tray, game mode, overlay) and manages the main window.
+/// Wires all services together (hotkeys, tray, game mode, overlays, performance, PC check) and manages the main window.
 /// </summary>
 public sealed class AppController : IDisposable
 {
     private readonly Application _app;
     private MainWindow? _window;
     private bool _overlayShownByGameMode;
+    private bool _hudShownByGameMode;
     private bool _exiting;
 
     public AppController(Application app)
@@ -37,6 +41,9 @@ public sealed class AppController : IDisposable
 
         GameMode = new GameModeService(SettingsService);
         Overlay = new OverlayService(SettingsService);
+        Performance = new PerformanceMonitorService();
+        Hud = new HudService(SettingsService, Performance);
+        SystemCheck = new SystemCheckService(SettingsService);
         Hotkeys = new HotkeyService();
         Tray = new TrayService();
         Watcher = new ProcessWatcherService(this);
@@ -45,6 +52,9 @@ public sealed class AppController : IDisposable
     public SettingsService SettingsService { get; } = new();
     public GameModeService GameMode { get; }
     public OverlayService Overlay { get; }
+    public PerformanceMonitorService Performance { get; }
+    public HudService Hud { get; }
+    public SystemCheckService SystemCheck { get; }
     public HotkeyService Hotkeys { get; }
     public TrayService Tray { get; }
     public ProcessWatcherService Watcher { get; }
@@ -64,6 +74,7 @@ public sealed class AppController : IDisposable
 
         GameMode.StateChanged += (_, _) => UpdateTray();
         Overlay.VisibilityChanged += (_, _) => UpdateTray();
+        Hud.VisibilityChanged += (_, _) => UpdateTray();
 
         Hotkeys.Initialize();
         Hotkeys.HotkeyPressed += (_, action) => OnHotkey(action);
@@ -75,6 +86,7 @@ public sealed class AppController : IDisposable
         Tray.ToggleGameModeRequested += async (_, _) => await ToggleGameModeAsync();
         Tray.ToggleCrosshairRequested += (_, _) => ToggleCrosshair();
         Tray.NextPresetRequested += (_, _) => NextPreset();
+        Tray.ToggleHudRequested += (_, _) => ToggleHud();
         Tray.ExitRequested += (_, _) => Exit();
         Loc.LanguageChanged += (_, _) => UpdateTray();
         UpdateTray();
@@ -83,6 +95,7 @@ public sealed class AppController : IDisposable
         if (!string.IsNullOrEmpty(options.Page)) MainViewModel.Navigate(options.Page);
 
         if (Settings.Crosshair.OverlayVisible) Overlay.Show();
+        if (Settings.Hud.Visible) Hud.Show();
         Watcher.Start();
 
         if (!(options.Minimized || Settings.StartMinimized)) ShowMainWindow();
@@ -101,6 +114,7 @@ public sealed class AppController : IDisposable
             {
                 _window = new MainWindow { DataContext = MainViewModel };
                 _window.Closing += OnWindowClosing;
+                _window.IsVisibleChanged += (_, _) => MainViewModel?.SetWindowVisible(_window.IsVisible);
             }
 
             if (!_window.IsVisible) _window.Show();
@@ -167,6 +181,12 @@ public sealed class AppController : IDisposable
                     _overlayShownByGameMode = true;
                 }
             }
+
+            if (Settings.Hud.ShowWithGameMode && !Hud.IsVisible)
+            {
+                Hud.Show();
+                _hudShownByGameMode = true;
+            }
         }
         catch (Exception ex)
         {
@@ -188,6 +208,12 @@ public sealed class AppController : IDisposable
                 Overlay.Hide();
                 _overlayShownByGameMode = false;
             }
+
+            if (_hudShownByGameMode)
+            {
+                Hud.Hide();
+                _hudShownByGameMode = false;
+            }
         }
         catch (Exception ex)
         {
@@ -205,6 +231,42 @@ public sealed class AppController : IDisposable
     }
 
     public void ToggleCrosshair() => SetCrosshairVisible(!Overlay.IsVisible);
+
+    public void SetHudVisible(bool visible)
+    {
+        if (visible) Hud.Show();
+        else Hud.Hide();
+        _hudShownByGameMode = false;
+        Settings.Hud.Visible = Hud.IsVisible;
+        SettingsService.RequestSave();
+    }
+
+    public void ToggleHud() => SetHudVisible(!Hud.IsVisible);
+
+    /// <summary>Restarts GameBoost with administrator rights (needed for the FPS counter).</summary>
+    public void RestartAsAdministrator()
+    {
+        try
+        {
+            var exe = Environment.ProcessPath;
+            if (string.IsNullOrEmpty(exe)) return;
+            var psi = new System.Diagnostics.ProcessStartInfo(exe, $"--page=performance --after-pid={Environment.ProcessId}")
+            {
+                UseShellExecute = true,
+                Verb = "runas"
+            };
+            System.Diagnostics.Process.Start(psi)?.Dispose();
+            Exit();
+        }
+        catch (System.ComponentModel.Win32Exception)
+        {
+            Logger.Info("Restart as administrator was cancelled by the user");
+        }
+        catch (Exception ex)
+        {
+            ErrorReporter.Report("Could not restart as administrator", ex);
+        }
+    }
 
     public void NextPreset()
     {
@@ -237,6 +299,9 @@ public sealed class AppController : IDisposable
             case HotkeyAction.NextPreset:
                 NextPreset();
                 break;
+            case HotkeyAction.ToggleHud:
+                ToggleHud();
+                break;
         }
     }
 
@@ -245,18 +310,21 @@ public sealed class AppController : IDisposable
     {
         if (GameMode.IsActive) await DeactivateGameModeAsync(manual: true);
         Overlay.Hide();
+        Hud.Hide();
         _overlayShownByGameMode = false;
+        _hudShownByGameMode = false;
 
         SettingsService.ResetToDefaults();
         Loc.Apply(Settings.Language);
         AutostartService.Sync(Settings.StartWithWindows);
         Hotkeys.Apply(Settings.Hotkeys);
         Overlay.ApplySettings();
+        Hud.ApplySettings();
         MainViewModel?.Rebuild();
         UpdateTray();
     }
 
-    private void UpdateTray() => Tray.UpdateState(GameMode.IsActive, Overlay.IsVisible, GameMode.ActiveProfile?.Name);
+    private void UpdateTray() => Tray.UpdateState(GameMode.IsActive, Overlay.IsVisible, Hud.IsVisible, GameMode.ActiveProfile?.Name);
 
     // ------------------------------------------------------------------ Exit
 
@@ -287,6 +355,8 @@ public sealed class AppController : IDisposable
         try { Watcher.Dispose(); } catch { /* ignore */ }
         try { Hotkeys.Dispose(); } catch { /* ignore */ }
         try { Overlay.Dispose(); } catch { /* ignore */ }
+        try { Hud.Dispose(); } catch { /* ignore */ }
+        try { Performance.Dispose(); } catch { /* ignore */ }
         try { Tray.Dispose(); } catch { /* ignore */ }
         try { MainViewModel?.Dispose(); } catch { /* ignore */ }
     }

@@ -11,13 +11,22 @@ QUICK START
 HOW TO USE
 ----------
 Game mode
-  - Pick a profile (e.g. "Default", "Valorant") and press the big button.
+  - Pick a profile (e.g. "Default", "Fortnite") and press the big button.
   - "Close programs" tab: tick background programs to close (e.g. updaters, browser).
     System and Windows processes are never shown and never closed.
   - "Start programs" tab: programs started on activation (e.g. Discord, Steam).
   - "Options" tab: "High performance" power plan, notifications off, show crosshair automatically.
   - "Automation" tab: enter a game's .exe -> the profile starts automatically with the game.
   - When you turn it off, power plan and notifications are restored.
+
+Performance overlay (new in 1.1)
+  - Shows FPS, GPU load and temperature, VRAM, CPU and RAM on top of your game.
+  - Pick corner, size, background and values on the "Performance Overlay" page.
+  - FPS needs administrator rights: click "Restart as administrator" on that page.
+
+PC check (new in 1.1)
+  - Scores your PC and checks Windows gaming settings. "Optimize" fixes them, "Undo" restores them.
+  - Shows recommended in-game graphics settings for your hardware.
 
 Crosshair
   - Set style, color, size, thickness, gap, outline and offset – the preview updates live.
@@ -28,6 +37,7 @@ Default hotkeys (change them under Settings)
   Ctrl + Alt + C   Toggle crosshair
   Ctrl + Alt + G   Toggle game mode
   Ctrl + Alt + N   Next crosshair preset
+  Ctrl + Alt + H   Toggle performance overlay
 
 IMPORTANT
 ---------

@@ -484,4 +484,9 @@ public sealed class GameModeViewModel : ObservableObject, IDisposable, INavigati
 public interface INavigationAware
 {
     void OnNavigatedTo();
+
+    /// <summary>Called when the page is left or the window is hidden (stop live data here).</summary>
+    void OnNavigatedFrom()
+    {
+    }
 }

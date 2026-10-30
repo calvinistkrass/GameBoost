@@ -4,14 +4,15 @@
              xmlns:controls="clr-namespace:GameBoost.Controls"
              xmlns:models="clr-namespace:GameBoost.Models"
              xmlns:vm="clr-namespace:GameBoost.ViewModels">
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Style="{StaticResource PageRoot}">
         <Grid Margin="0,0,10,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <StackPanel Margin="0,0,0,18">
+            <StackPanel Margin="0,0,0,20">
+                <TextBlock Text="{DynamicResource CH.Eyebrow}" Style="{StaticResource Text.Eyebrow}" />
                 <TextBlock Text="{DynamicResource CH.Title}" Style="{StaticResource Text.H1}" />
                 <TextBlock Text="{DynamicResource CH.Subtitle}" Style="{StaticResource Text.Muted}" Margin="0,4,0,0" />
             </StackPanel>

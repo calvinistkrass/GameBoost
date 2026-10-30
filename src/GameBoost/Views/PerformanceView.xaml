@@ -1,0 +1,178 @@
+<UserControl x:Class="GameBoost.Views.PerformanceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:GameBoost.Controls">
+    <UserControl.Resources>
+        <Style x:Key="Metric" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+            <Setter Property="Margin" Value="0,0,0,12" />
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Style="{StaticResource PageRoot}">
+        <Grid Margin="0,0,10,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Margin="0,0,0,20">
+                <TextBlock Text="{DynamicResource Hud.Eyebrow}" Style="{StaticResource Text.Eyebrow}" />
+                <TextBlock Text="{DynamicResource Hud.Title}" Style="{StaticResource Text.H1}" />
+                <TextBlock Text="{DynamicResource Hud.Subtitle}" Style="{StaticResource Text.Muted}" Margin="0,4,0,0" />
+            </StackPanel>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.15*" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Left: preview + on/off + FPS -->
+                <StackPanel>
+                    <Border Style="{StaticResource Card.Glass}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource CH.Preview}" Style="{StaticResource Text.H2}" Margin="0,0,0,12" />
+                            <Border Height="300" CornerRadius="12" ClipToBounds="True" Background="{StaticResource B.PreviewScene}">
+                                <Image Source="{Binding Preview}" Stretch="None" Margin="14" RenderOptions.BitmapScalingMode="NearestNeighbor">
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Setter Property="HorizontalAlignment" Value="Left" />
+                                            <Setter Property="VerticalAlignment" Value="Top" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Options.Position}" Value="TopRight">
+                                                    <Setter Property="HorizontalAlignment" Value="Right" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Options.Position}" Value="BottomLeft">
+                                                    <Setter Property="VerticalAlignment" Value="Bottom" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Options.Position}" Value="BottomRight">
+                                                    <Setter Property="HorizontalAlignment" Value="Right" />
+                                                    <Setter Property="VerticalAlignment" Value="Bottom" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                            </Border>
+                            <TextBlock Text="{DynamicResource Hud.PreviewHint}" Style="{StaticResource Text.Muted}" FontSize="11.5" Margin="0,10,0,0" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card.Glass}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <CheckBox IsChecked="{Binding HudVisible}" Margin="0,0,0,14">
+                                <StackPanel>
+                                    <TextBlock Text="{DynamicResource Hud.Show}" FontWeight="SemiBold" FontSize="14" />
+                                    <TextBlock Style="{StaticResource Text.Muted}" Margin="0,2,0,0">
+                                        <Run Text="{DynamicResource Hud.ShowDesc}" />
+                                        <Run Text="{Binding HotkeyText, Mode=OneWay}" Foreground="{StaticResource B.Text}" FontWeight="SemiBold" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </CheckBox>
+                            <CheckBox IsChecked="{Binding Options.ShowWithGameMode}" Margin="0,0,0,14">
+                                <StackPanel>
+                                    <TextBlock Text="{DynamicResource Hud.WithGameMode}" FontWeight="SemiBold" />
+                                    <TextBlock Text="{DynamicResource Hud.WithGameModeDesc}" Style="{StaticResource Text.Muted}" Margin="0,2,0,0" />
+                                </StackPanel>
+                            </CheckBox>
+                            <CheckBox IsChecked="{Binding Options.OnlyOverFullscreen}">
+                                <StackPanel>
+                                    <TextBlock Text="{DynamicResource Hud.OnlyFullscreen}" FontWeight="SemiBold" />
+                                    <TextBlock Text="{DynamicResource Hud.OnlyFullscreenDesc}" Style="{StaticResource Text.Muted}" Margin="0,2,0,0" />
+                                </StackPanel>
+                            </CheckBox>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- FPS needs admin -->
+                    <Border Style="{StaticResource WarnBox}" Padding="16,14" Visibility="{Binding IsElevated, Converter={StaticResource BoolToVis}, ConverterParameter=invert}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="&#xE7EF;" Style="{StaticResource Text.Icon}" Foreground="{StaticResource B.Warning}" Margin="0,0,12,0" VerticalAlignment="Top" />
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="{DynamicResource Hud.Fps.Title}" FontWeight="SemiBold" />
+                                <TextBlock Text="{DynamicResource Hud.Fps.Desc}" Style="{StaticResource Text.Muted}" Margin="0,3,0,10" />
+                                <Button HorizontalAlignment="Left" Command="{Binding RestartAsAdminCommand}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="&#xE7EF;" Style="{StaticResource Text.Icon}" FontSize="13" Margin="0,0,8,0" />
+                                        <TextBlock Text="{DynamicResource Hud.Fps.Restart}" />
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    <Border Style="{StaticResource InfoBox}" Padding="16,14" Visibility="{Binding IsElevated, Converter={StaticResource BoolToVis}}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="&#xE73E;" Style="{StaticResource Text.Icon}" Foreground="{StaticResource B.Accent}" Margin="0,0,12,0" VerticalAlignment="Top" />
+                            <TextBlock Grid.Column="1" Text="{DynamicResource Hud.Fps.Active}" Style="{StaticResource Text.Muted}" />
+                        </Grid>
+                    </Border>
+                </StackPanel>
+
+                <!-- Right: layout + metrics -->
+                <StackPanel Grid.Column="2">
+                    <Border Style="{StaticResource Card.Glass}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource Hud.Layout}" Style="{StaticResource Text.H2}" Margin="0,0,0,14" />
+                            <TextBlock Text="{DynamicResource Hud.Position}" Style="{StaticResource Text.Label}" Margin="0,0,0,8" />
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                                <RadioButton Style="{StaticResource RadioButton.Corner}" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" ToolTip="{DynamicResource Hud.Pos.TopLeft}"
+                                             IsChecked="{Binding Options.Position, Converter={StaticResource EqualsToBool}, ConverterParameter=TopLeft}" />
+                                <RadioButton Style="{StaticResource RadioButton.Corner}" HorizontalContentAlignment="Right" VerticalContentAlignment="Top" ToolTip="{DynamicResource Hud.Pos.TopRight}"
+                                             IsChecked="{Binding Options.Position, Converter={StaticResource EqualsToBool}, ConverterParameter=TopRight}" />
+                                <RadioButton Style="{StaticResource RadioButton.Corner}" HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom" ToolTip="{DynamicResource Hud.Pos.BottomLeft}"
+                                             IsChecked="{Binding Options.Position, Converter={StaticResource EqualsToBool}, ConverterParameter=BottomLeft}" />
+                                <RadioButton Style="{StaticResource RadioButton.Corner}" HorizontalContentAlignment="Right" VerticalContentAlignment="Bottom" ToolTip="{DynamicResource Hud.Pos.BottomRight}"
+                                             IsChecked="{Binding Options.Position, Converter={StaticResource EqualsToBool}, ConverterParameter=BottomRight}" />
+                            </StackPanel>
+                            <controls:SliderRow Label="{DynamicResource Hud.Size}" Minimum="75" Maximum="200" Suffix=" %" Value="{Binding Options.Scale}" />
+                            <controls:SliderRow Label="{DynamicResource Hud.Background}" Minimum="0" Maximum="100" Suffix=" %" Value="{Binding Options.BackgroundOpacity}" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card.Glass}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource Hud.Metrics}" Style="{StaticResource Text.H2}" Margin="0,0,0,14" />
+                            <CheckBox Style="{StaticResource Metric}" IsChecked="{Binding Options.ShowFps}" Content="{DynamicResource Hud.M.Fps}" />
+                            <CheckBox Style="{StaticResource Metric}" IsChecked="{Binding Options.ShowGpu}" Content="{DynamicResource Hud.M.Gpu}" />
+                            <CheckBox Style="{StaticResource Metric}" IsChecked="{Binding Options.ShowGpuTemperature}" Content="{DynamicResource Hud.M.GpuTemp}" />
+                            <CheckBox Style="{StaticResource Metric}" IsChecked="{Binding Options.ShowVram}" Content="{DynamicResource Hud.M.Vram}" />
+                            <CheckBox Style="{StaticResource Metric}" IsChecked="{Binding Options.ShowCpu}" Content="{DynamicResource Hud.M.Cpu}" />
+                            <CheckBox Style="{StaticResource Metric}" IsChecked="{Binding Options.ShowRam}" Content="{DynamicResource Hud.M.Ram}" />
+                            <CheckBox Style="{StaticResource Metric}" IsChecked="{Binding Options.ShowClock}" Content="{DynamicResource Hud.M.Clock}" Margin="0" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource InfoBox}" Margin="0,0,0,8">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="&#xE7F4;" Style="{StaticResource Text.Icon}" Foreground="{StaticResource B.Accent2}" Margin="0,0,10,0" VerticalAlignment="Top" />
+                            <TextBlock Grid.Column="1" Text="{DynamicResource Hint.Borderless}" Style="{StaticResource Text.Muted}" />
+                        </Grid>
+                    </Border>
+                    <Border Style="{StaticResource WarnBox}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="&#xE7BA;" Style="{StaticResource Text.Icon}" Foreground="{StaticResource B.Warning}" Margin="0,0,10,0" VerticalAlignment="Top" />
+                            <TextBlock Grid.Column="1" Text="{DynamicResource Hint.AntiCheat}" Style="{StaticResource Text.Muted}" />
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

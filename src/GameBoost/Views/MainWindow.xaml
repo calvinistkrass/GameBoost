@@ -4,134 +4,202 @@
         xmlns:vm="clr-namespace:GameBoost.ViewModels"
         xmlns:views="clr-namespace:GameBoost.Views"
         Title="GameBoost"
-        Width="1200" Height="800"
-        MinWidth="1020" MinHeight="680"
+        Width="1240" Height="820"
+        MinWidth="1060" MinHeight="700"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         ResizeMode="CanResize"
         Background="{StaticResource B.Bg0}"
         Foreground="{StaticResource B.Text}"
-        FontFamily="Segoe UI"
+        FontFamily="Segoe UI Variable Text, Segoe UI"
         FontSize="13"
         UseLayoutRounding="True"
         TextOptions.TextFormattingMode="Display"
         Icon="pack://application:,,,/Assets/GameBoost.ico">
 
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="44" ResizeBorderThickness="6" GlassFrameThickness="0" CornerRadius="0" UseAeroCaptionButtons="False" />
+        <WindowChrome CaptionHeight="48" ResizeBorderThickness="6" GlassFrameThickness="0" CornerRadius="0" UseAeroCaptionButtons="False" />
     </WindowChrome.WindowChrome>
 
     <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
+            <views:DashboardView />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type vm:GameModeViewModel}">
             <views:GameModeView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:CrosshairViewModel}">
             <views:CrosshairView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:PerformanceViewModel}">
+            <views:PerformanceView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:PcCheckViewModel}">
+            <views:PcCheckView />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
             <views:SettingsView />
         </DataTemplate>
+
+        <Style x:Key="NavSection" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="10.5" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="{StaticResource B.TextFaint}" />
+            <Setter Property="Margin" Value="28,16,0,6" />
+        </Style>
+        <Style x:Key="NavIcon" TargetType="TextBlock" BasedOn="{StaticResource Text.Icon}">
+            <Setter Property="FontSize" Value="17" />
+            <Setter Property="Width" Value="30" />
+        </Style>
+        <Style x:Key="StatusDot" TargetType="Ellipse">
+            <Setter Property="Width" Value="8" />
+            <Setter Property="Height" Value="8" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Fill" Value="{StaticResource B.TextFaint}" />
+        </Style>
     </Window.Resources>
 
-    <Border x:Name="Root" BorderBrush="{StaticResource B.Border}" BorderThickness="1" Background="{StaticResource B.Bg0}">
+    <Border x:Name="Root" BorderBrush="{StaticResource B.Border}" BorderThickness="1" Background="{StaticResource B.WindowBackground}">
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="248" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+            <!-- soft accent glow behind everything -->
+            <Rectangle Fill="{StaticResource B.Glow}" IsHitTestVisible="False" />
 
-            <!-- ================= Sidebar ================= -->
-            <Border Background="{StaticResource B.Bg1}" BorderBrush="{StaticResource B.Border}" BorderThickness="0,0,1,0">
-                <DockPanel>
-                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="22,22,0,30">
-                        <ContentPresenter ContentTemplate="{StaticResource Logo}" />
-                        <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
-                            <TextBlock FontSize="18" FontWeight="Bold">
-                                <Run Text="GAME" /><Run Text="BOOST" Foreground="{StaticResource B.Accent}" />
-                            </TextBlock>
-                            <TextBlock Text="{DynamicResource App.Tagline}" FontSize="11" Foreground="{StaticResource B.TextFaint}" />
-                        </StackPanel>
-                    </StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="236" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-                    <!-- Status at the bottom -->
-                    <Border DockPanel.Dock="Bottom" Margin="14,0,14,16" Padding="14,12" CornerRadius="12"
-                            Background="{StaticResource B.Bg2}" BorderBrush="{StaticResource B.Border}" BorderThickness="1">
-                        <StackPanel>
-                            <TextBlock Text="{DynamicResource Status.Title}" Style="{StaticResource Text.Label}" Margin="0,0,0,8" />
-                            <Grid Margin="0,0,0,6">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Ellipse x:Name="GmDot" Width="8" Height="8" Fill="{StaticResource B.TextFaint}" VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="1" Margin="8,0,6,0" Text="{DynamicResource Nav.GameMode}" Foreground="{StaticResource B.TextDim}" />
-                                <TextBlock Grid.Column="2" Text="{Binding GameModeStatusText}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" MaxWidth="100" />
-                            </Grid>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Ellipse x:Name="ChDot" Width="8" Height="8" Fill="{StaticResource B.TextFaint}" VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="1" Margin="8,0,6,0" Text="{DynamicResource Nav.Crosshair}" Foreground="{StaticResource B.TextDim}" />
-                                <TextBlock Grid.Column="2" Text="{Binding CrosshairStatusText}" FontWeight="SemiBold" />
-                            </Grid>
-                            <TextBlock Text="{Binding VersionText}" Margin="0,10,0,0" FontSize="11" Foreground="{StaticResource B.TextFaint}" />
-                        </StackPanel>
-                    </Border>
-
-                    <!-- Navigation -->
-                    <StackPanel>
-                        <RadioButton Style="{StaticResource RadioButton.Nav}" Command="{Binding NavigateCommand}" CommandParameter="GameMode"
-                                     IsChecked="{Binding CurrentPageKey, Mode=OneWay, Converter={StaticResource EqualsToBool}, ConverterParameter=GameMode}">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="&#xE7FC;" Style="{StaticResource Text.Icon}" FontSize="18" Width="28" />
-                                <TextBlock Text="{DynamicResource Nav.GameMode}" VerticalAlignment="Center" />
+                <!-- ================= Sidebar ================= -->
+                <Border Background="#C00B0E16" BorderBrush="{StaticResource B.Border}" BorderThickness="0,0,1,0">
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="22,20,0,10">
+                            <ContentPresenter ContentTemplate="{StaticResource Logo}" />
+                            <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                                <TextBlock FontFamily="{StaticResource DisplayFont}" FontSize="19" FontWeight="Bold">
+                                    <Run Text="GAME" /><Run Text="BOOST" Foreground="{StaticResource B.Accent}" />
+                                </TextBlock>
+                                <TextBlock Text="{DynamicResource App.Tagline}" FontSize="11" Foreground="{StaticResource B.TextFaint}" />
                             </StackPanel>
-                        </RadioButton>
-                        <RadioButton Style="{StaticResource RadioButton.Nav}" Command="{Binding NavigateCommand}" CommandParameter="Crosshair"
-                                     IsChecked="{Binding CurrentPageKey, Mode=OneWay, Converter={StaticResource EqualsToBool}, ConverterParameter=Crosshair}">
-                            <StackPanel Orientation="Horizontal">
-                                <Grid Width="28">
-                                    <Viewbox Width="18" Height="18" HorizontalAlignment="Left">
-                                        <Canvas Width="20" Height="20">
-                                            <Ellipse Canvas.Left="5" Canvas.Top="5" Width="10" Height="10" StrokeThickness="1.6"
-                                                     Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
-                                            <Path Data="M10,1 V6 M10,14 V19 M1,10 H6 M14,10 H19" StrokeThickness="1.6"
-                                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
-                                        </Canvas>
-                                    </Viewbox>
+                        </StackPanel>
+
+                        <!-- Status at the bottom -->
+                        <Border DockPanel.Dock="Bottom" Margin="14,0,14,16" Padding="14,12" CornerRadius="14"
+                                Background="{StaticResource B.Bg2}" BorderBrush="{StaticResource B.Border}" BorderThickness="1">
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource Status.Title}" Style="{StaticResource Text.Label}" Margin="0,0,0,8" />
+                                <Grid Margin="0,0,0,6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Ellipse x:Name="GmDot" Style="{StaticResource StatusDot}" />
+                                    <TextBlock Grid.Column="1" Margin="8,0,6,0" Text="{DynamicResource Nav.GameMode}" Foreground="{StaticResource B.TextDim}" />
+                                    <TextBlock Grid.Column="2" Text="{Binding GameModeStatusText}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" MaxWidth="96" />
                                 </Grid>
-                                <TextBlock Text="{DynamicResource Nav.Crosshair}" VerticalAlignment="Center" />
+                                <Grid Margin="0,0,0,6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Ellipse x:Name="ChDot" Style="{StaticResource StatusDot}" />
+                                    <TextBlock Grid.Column="1" Margin="8,0,6,0" Text="{DynamicResource Nav.Crosshair}" Foreground="{StaticResource B.TextDim}" />
+                                    <TextBlock Grid.Column="2" Text="{Binding CrosshairStatusText}" FontWeight="SemiBold" />
+                                </Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Ellipse x:Name="HudDot" Style="{StaticResource StatusDot}" />
+                                    <TextBlock Grid.Column="1" Margin="8,0,6,0" Text="{DynamicResource Nav.Performance}" Foreground="{StaticResource B.TextDim}" />
+                                    <TextBlock Grid.Column="2" Text="{Binding HudStatusText}" FontWeight="SemiBold" />
+                                </Grid>
+                                <TextBlock Text="{Binding VersionText}" Margin="0,10,0,0" FontSize="11" Foreground="{StaticResource B.TextFaint}" />
                             </StackPanel>
-                        </RadioButton>
-                        <RadioButton Style="{StaticResource RadioButton.Nav}" Command="{Binding NavigateCommand}" CommandParameter="Settings"
+                        </Border>
+
+                        <RadioButton DockPanel.Dock="Bottom" Style="{StaticResource RadioButton.Nav}" Command="{Binding NavigateCommand}" CommandParameter="Settings" Margin="12,3,12,12"
                                      IsChecked="{Binding CurrentPageKey, Mode=OneWay, Converter={StaticResource EqualsToBool}, ConverterParameter=Settings}">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="&#xE713;" Style="{StaticResource Text.Icon}" FontSize="18" Width="28" />
+                                <TextBlock Text="&#xE713;" Style="{StaticResource NavIcon}" />
                                 <TextBlock Text="{DynamicResource Nav.Settings}" VerticalAlignment="Center" />
                             </StackPanel>
                         </RadioButton>
+
+                        <!-- Navigation -->
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource Nav.Section.Overview}" Style="{StaticResource NavSection}" />
+                            <RadioButton Style="{StaticResource RadioButton.Nav}" Command="{Binding NavigateCommand}" CommandParameter="Home"
+                                         IsChecked="{Binding CurrentPageKey, Mode=OneWay, Converter={StaticResource EqualsToBool}, ConverterParameter=Home}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE80F;" Style="{StaticResource NavIcon}" />
+                                    <TextBlock Text="{DynamicResource Nav.Home}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </RadioButton>
+
+                            <TextBlock Text="{DynamicResource Nav.Section.Boost}" Style="{StaticResource NavSection}" />
+                            <RadioButton Style="{StaticResource RadioButton.Nav}" Command="{Binding NavigateCommand}" CommandParameter="GameMode"
+                                         IsChecked="{Binding CurrentPageKey, Mode=OneWay, Converter={StaticResource EqualsToBool}, ConverterParameter=GameMode}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE7FC;" Style="{StaticResource NavIcon}" />
+                                    <TextBlock Text="{DynamicResource Nav.GameMode}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource RadioButton.Nav}" Command="{Binding NavigateCommand}" CommandParameter="PcCheck"
+                                         IsChecked="{Binding CurrentPageKey, Mode=OneWay, Converter={StaticResource EqualsToBool}, ConverterParameter=PcCheck}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE9D9;" Style="{StaticResource NavIcon}" />
+                                    <TextBlock Text="{DynamicResource Nav.PcCheck}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </RadioButton>
+
+                            <TextBlock Text="{DynamicResource Nav.Section.Overlays}" Style="{StaticResource NavSection}" />
+                            <RadioButton Style="{StaticResource RadioButton.Nav}" Command="{Binding NavigateCommand}" CommandParameter="Crosshair"
+                                         IsChecked="{Binding CurrentPageKey, Mode=OneWay, Converter={StaticResource EqualsToBool}, ConverterParameter=Crosshair}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Grid Width="30">
+                                        <Viewbox Width="18" Height="18" HorizontalAlignment="Left">
+                                            <Canvas Width="20" Height="20">
+                                                <Ellipse Canvas.Left="5" Canvas.Top="5" Width="10" Height="10" StrokeThickness="1.6"
+                                                         Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+                                                <Path Data="M10,1 V6 M10,14 V19 M1,10 H6 M14,10 H19" StrokeThickness="1.6"
+                                                      Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+                                            </Canvas>
+                                        </Viewbox>
+                                    </Grid>
+                                    <TextBlock Text="{DynamicResource Nav.Crosshair}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource RadioButton.Nav}" Command="{Binding NavigateCommand}" CommandParameter="Performance"
+                                         IsChecked="{Binding CurrentPageKey, Mode=OneWay, Converter={StaticResource EqualsToBool}, ConverterParameter=Performance}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE945;" Style="{StaticResource NavIcon}" />
+                                    <TextBlock Text="{DynamicResource Nav.Performance}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </RadioButton>
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
+
+                <!-- ================= Content ================= -->
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="48" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" WindowChrome.IsHitTestVisibleInChrome="True">
+                        <Button Style="{StaticResource Button.Caption}" Content="&#xE921;" Click="OnMinimize" ToolTip="{DynamicResource Caption.Minimize}" />
+                        <Button x:Name="MaxButton" Style="{StaticResource Button.Caption}" Content="&#xE922;" Click="OnMaximize" ToolTip="{DynamicResource Caption.Maximize}" />
+                        <Button Style="{StaticResource Button.CaptionClose}" Content="&#xE8BB;" Click="OnClose" ToolTip="{DynamicResource Caption.Close}" />
                     </StackPanel>
-                </DockPanel>
-            </Border>
 
-            <!-- ================= Content ================= -->
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="44" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" WindowChrome.IsHitTestVisibleInChrome="True">
-                    <Button Style="{StaticResource Button.Caption}" Content="&#xE921;" Click="OnMinimize" ToolTip="{DynamicResource Caption.Minimize}" />
-                    <Button x:Name="MaxButton" Style="{StaticResource Button.Caption}" Content="&#xE922;" Click="OnMaximize" ToolTip="{DynamicResource Caption.Maximize}" />
-                    <Button Style="{StaticResource Button.CaptionClose}" Content="&#xE8BB;" Click="OnClose" ToolTip="{DynamicResource Caption.Close}" />
-                </StackPanel>
-
-                <ContentControl Grid.Row="1" Content="{Binding CurrentPage}" Margin="30,0,30,26" Focusable="False" />
+                    <ContentControl Grid.Row="1" Content="{Binding CurrentPage}" Margin="32,0,32,26" Focusable="False" />
+                </Grid>
             </Grid>
         </Grid>
     </Border>

@@ -123,6 +123,15 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable, INavigati
         set => SetHotkey(HotkeyAction.NextPreset, value);
     }
 
+    public HotkeyBinding? HotkeyToggleHud
+    {
+        get => S.Hotkeys.ToggleHud;
+        set => SetHotkey(HotkeyAction.ToggleHud, value);
+    }
+
+    public string StatusToggleHud => StatusText(HotkeyAction.ToggleHud);
+    public bool ConflictToggleHud => IsConflict(HotkeyAction.ToggleHud);
+
     public string StatusToggleCrosshair => StatusText(HotkeyAction.ToggleCrosshair);
     public string StatusToggleGameMode => StatusText(HotkeyAction.ToggleGameMode);
     public string StatusNextPreset => StatusText(HotkeyAction.NextPreset);

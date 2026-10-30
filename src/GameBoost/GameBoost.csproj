@@ -11,7 +11,7 @@
     <RootNamespace>GameBoost</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\GameBoost.ico</ApplicationIcon>
-    <Version>1.0.1</Version>
+    <Version>1.1.0</Version>
     <Product>GameBoost</Product>
     <Description>Game mode and crosshair overlay for Windows</Description>
     <Copyright>© 2026 GameBoost</Copyright>
@@ -30,6 +30,11 @@
 
   <ItemGroup>
     <Resource Include="Assets\GameBoost.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- ETW (event tracing) for the FPS counter in the performance overlay. -->
+    <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="3.1.13" />
   </ItemGroup>
 
   <ItemGroup>

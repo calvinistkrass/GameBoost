@@ -8,7 +8,8 @@ public enum HotkeyAction
 {
     ToggleCrosshair = 1,
     ToggleGameMode = 2,
-    NextPreset = 3
+    NextPreset = 3,
+    ToggleHud = 4
 }
 
 /// <summary>A global key combination (Win32 modifiers + virtual key).</summary>
@@ -78,11 +79,15 @@ public sealed class HotkeySettings
     public HotkeyBinding? NextPreset { get; set; } =
         new() { Modifiers = HotkeyBinding.ModControl | HotkeyBinding.ModAlt, Key = 0x4E }; // Ctrl+Alt+N
 
+    public HotkeyBinding? ToggleHud { get; set; } =
+        new() { Modifiers = HotkeyBinding.ModControl | HotkeyBinding.ModAlt, Key = 0x48 }; // Ctrl+Alt+H
+
     public HotkeyBinding? Get(HotkeyAction action) => action switch
     {
         HotkeyAction.ToggleCrosshair => ToggleCrosshair,
         HotkeyAction.ToggleGameMode => ToggleGameMode,
         HotkeyAction.NextPreset => NextPreset,
+        HotkeyAction.ToggleHud => ToggleHud,
         _ => null
     };
 
@@ -93,6 +98,7 @@ public sealed class HotkeySettings
             case HotkeyAction.ToggleCrosshair: ToggleCrosshair = binding; break;
             case HotkeyAction.ToggleGameMode: ToggleGameMode = binding; break;
             case HotkeyAction.NextPreset: NextPreset = binding; break;
+            case HotkeyAction.ToggleHud: ToggleHud = binding; break;
         }
     }
 }

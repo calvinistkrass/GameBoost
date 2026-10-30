@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>GameBoost – Game Mode & Crosshair Overlay for Windows</title>
-  <meta name="description" content="GameBoost: one-click game mode and a fully customizable crosshair overlay for Windows 10/11. Free, no installation, no admin rights." />
-  <meta name="theme-color" content="#0a0d14" />
-  <meta property="og:title" content="GameBoost – Game Mode & Crosshair Overlay" />
-  <meta property="og:description" content="More performance, fewer distractions – in one click. Plus your own crosshair on top of any game." />
-  <meta property="og:image" content="/assets/crosshair.png" />
+  <title>GameBoost – Game Mode, Performance Overlay & PC Check for Windows</title>
+  <meta name="description" content="GameBoost: one-click game mode, in-game FPS & GPU temperature overlay, PC check with one-click Windows optimizations and a custom crosshair. Free, no installation." />
+  <meta name="theme-color" content="#07090f" />
+  <meta property="og:title" content="GameBoost – Your PC. Game-ready in one click." />
+  <meta property="og:description" content="Game mode, in-game performance overlay, PC check and crosshair overlay for Windows 10/11. Free and open source." />
+  <meta property="og:image" content="/assets/dashboard.png" />
   <link rel="icon" href="/assets/logo.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/styles.css" />
 </head>
@@ -21,9 +21,10 @@
         <span>GAME<b>BOOST</b></span>
       </a>
       <nav class="nav-links" aria-label="Main navigation">
+        <a href="#overlay">Overlay</a>
+        <a href="#pc-check">PC Check</a>
+        <a href="#crosshair">Crosshair</a>
         <a href="#features">Features</a>
-        <a href="#screenshots">Screenshots</a>
-        <a href="#hotkeys">Hotkeys</a>
         <a href="#faq">FAQ</a>
       </nav>
       <a class="btn btn-small btn-primary" href="#download">Download</a>
@@ -34,12 +35,12 @@
     <!-- ============================================================ Hero -->
     <section class="hero">
       <div class="container hero-grid">
-        <div>
-          <span class="badge"><span class="dot"></span> Version <span data-version>1.0.1</span> · Windows 10/11</span>
-          <h1>More performance.<br /><span class="grad">Fewer distractions.</span></h1>
+        <div class="hero-copy">
+          <a class="badge" href="#overlay"><span class="dot"></span> New in 1.1: performance overlay &amp; PC check <span class="badge-arrow">→</span></a>
+          <h1>Your PC.<br /><span class="grad">Game-ready in one click.</span></h1>
           <p class="lead">
-            GameBoost switches your PC into game mode with one click and puts a fully customizable
-            crosshair on top of any game. Free, no installation, no admin rights.
+            GameBoost tunes Windows for gaming, shows FPS and GPU temperature right in your game,
+            checks your PC and puts a custom crosshair on screen. Free, no installation needed.
           </p>
           <div class="cta">
             <a class="btn btn-primary btn-large" href="#" data-download-link>
@@ -52,104 +53,130 @@
             </a>
           </div>
           <p class="meta">
-            <span data-filename>GameBoost-1.0.1-win-x64.zip</span> · <span data-size>approx. 58 MB</span> · 64-bit · no .NET required
+            Version <span data-version>1.1.0</span><span data-date></span> · <span data-size>approx. 61 MB</span> · Windows 10/11, 64-bit · no .NET required
           </p>
         </div>
 
-        <!-- Animated crosshair preview -->
-        <div class="scene" aria-hidden="true">
-          <div class="scene-sky"></div>
-          <div class="scene-ground"></div>
-          <div class="xhair" id="xhair">
-            <i class="arm l"></i><i class="arm r"></i><i class="arm t"></i><i class="arm b"></i><i class="center"></i>
+        <div class="hero-visual">
+          <div class="shot-frame">
+            <div class="frame-bar"><i></i><i></i><i></i><span>GameBoost</span></div>
+            <img src="/assets/dashboard.png" alt="GameBoost dashboard with quick toggles, live stats and PC score" width="1240" height="820" />
           </div>
-          <div class="scene-ui">
-            <div class="chip on"><span class="dot"></span> Game mode ON</div>
-            <div class="chip">Ctrl + Alt + C</div>
+          <div class="float-hud" aria-hidden="true">
+            <div><span>FPS</span><b class="accent" id="hudFps">240</b><small>4.2 ms</small></div>
+            <div><span>GPU</span><b>97 %</b><b>64 °C</b></div>
+            <div><span>CPU</span><b>38 %</b></div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ Strip -->
+    <section class="strip">
+      <div class="container strip-inner">
+        <div><b>1 click</b><span>to game mode</span></div>
+        <div><b>1 .exe</b><span>no installation</span></div>
+        <div><b>10 checks</b><span>for a game-ready PC</span></div>
+        <div><b>100 %</b><span>free &amp; open source</span></div>
+      </div>
+    </section>
+
+    <!-- ============================================================ Showcase: overlay -->
+    <section id="overlay" class="section">
+      <div class="container showcase">
+        <div class="showcase-copy">
+          <p class="eyebrow">Performance overlay</p>
+          <h2>FPS and GPU temperature. Right in your game.</h2>
+          <p class="muted">A tiny, click-through overlay in the corner of your screen – no game hooks, no injection.</p>
+          <ul class="checks">
+            <li>FPS and frame time for DirectX 9–12 games</li>
+            <li>GPU load and temperature for NVIDIA, AMD and Intel – no extra drivers</li>
+            <li>VRAM, CPU and RAM usage, optional clock</li>
+            <li>Choose corner, size, background and which values to show</li>
+            <li>Toggle with <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>H</kbd> or show it automatically with game mode</li>
+          </ul>
+        </div>
+        <div class="shot-frame tilt-left">
+          <img src="/assets/performance.png" alt="Performance overlay settings with live preview" loading="lazy" width="1240" height="820" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ Showcase: PC check -->
+    <section id="pc-check" class="section alt">
+      <div class="container showcase reverse">
+        <div class="showcase-copy">
+          <p class="eyebrow">PC check</p>
+          <h2>Find the settings that cost you FPS.</h2>
+          <p class="muted">GameBoost analyzes your hardware and Windows, scores your PC and fixes what it can – every change can be undone.</p>
+          <ul class="checks">
+            <li>Windows Game Mode, background recording, mouse acceleration</li>
+            <li>Refresh rate, optimizations for windowed games, power plan</li>
+            <li>Hints for GPU scheduling, old graphics drivers, RAM and disk space</li>
+            <li>Recommended in-game settings for <em>your</em> GPU and monitor: preset, textures, shadows, DLSS/FSR, Reflex, FPS limit</li>
+          </ul>
+        </div>
+        <div class="shot-frame tilt-right">
+          <img src="/assets/pccheck.png" alt="PC check with score, hardware and one-click optimizations" loading="lazy" width="1240" height="820" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ Showcase: crosshair -->
+    <section id="crosshair" class="section">
+      <div class="container showcase">
+        <div class="showcase-copy">
+          <p class="eyebrow">Crosshair overlay</p>
+          <h2>Your crosshair. Pixel-perfect in the center.</h2>
+          <ul class="checks">
+            <li>Cross, dot, circle, cross + dot and T-shape</li>
+            <li>Color, opacity, length, thickness, gap, outline and offset with live preview</li>
+            <li>Exactly centered – multi-monitor and display scaling handled</li>
+            <li>Presets, and share crosshairs with friends via code <code>GB1-…</code></li>
+          </ul>
+        </div>
+        <div class="shot-frame tilt-left">
+          <img src="/assets/crosshair.png" alt="Crosshair editor with live preview" loading="lazy" width="1240" height="820" />
         </div>
       </div>
     </section>
 
     <!-- ============================================================ Features -->
-    <section id="features" class="section">
+    <section id="features" class="section alt">
       <div class="container">
-        <p class="eyebrow">Features</p>
-        <h2>Everything you'd otherwise do by hand before playing.</h2>
-
+        <p class="eyebrow">And everything else</p>
+        <h2>One app instead of five little tools.</h2>
         <div class="features">
           <article class="card">
             <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 2v10M6.3 6.3a8 8 0 1 0 11.4 0" /></svg></div>
             <h3>One-click game mode</h3>
-            <p>One button (or hotkey) – GameBoost does the rest. Everything is restored automatically when you turn it off.</p>
-          </article>
-          <article class="card">
-            <div class="icon"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 13h12l1-13M9 7V4h6v3" /></svg></div>
-            <h3>Close background programs</h3>
-            <p>Tick whatever gets in the way while gaming – updaters, browsers, tools. Your selection is saved and can be restarted afterwards.</p>
-          </article>
-          <article class="card">
-            <div class="icon"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z" /></svg></div>
-            <h3>“High performance” power plan</h3>
-            <p>Switches to High performance and remembers your previous plan. On laptops without that plan, “Best performance” mode is used.</p>
-          </article>
-          <article class="card">
-            <div class="icon"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0M2 2l20 20" /></svg></div>
-            <h3>No notifications</h3>
-            <p>Windows toasts are suppressed while you play – no pop-ups in the middle of a round.</p>
+            <p>Closes the background apps you pick, switches to High performance, mutes notifications and starts Discord & co. Everything is restored afterwards.</p>
           </article>
           <article class="card">
             <div class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3" /><path d="M8 10l3 2-3 2M13 15h3" /></svg></div>
             <h3>Profiles & automation</h3>
-            <p>One profile per game. Add the game's .exe – the profile starts automatically with the game and ends when you close it.</p>
+            <p>One profile per game. GameBoost notices when the game starts and turns game mode on – and off again when you quit.</p>
+          </article>
+          <article class="card">
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M3 12h4l3 8 4-16 3 8h4" /></svg></div>
+            <h3>Live dashboard</h3>
+            <p>CPU, GPU, temperature and RAM in real time, your PC score and hardware at a glance – plus quick toggles for everything.</p>
+          </article>
+          <article class="card">
+            <div class="icon"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="3" /><path d="M6 10h2M10 10h2M14 10h2M7 14h10" /></svg></div>
+            <h3>Global hotkeys</h3>
+            <p>Toggle game mode, crosshair and overlay mid-game. All shortcuts are fully customizable.</p>
           </article>
           <article class="card">
             <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 2l8 3v6c0 5-3.5 9.5-8 11-4.5-1.5-8-6-8-11V5l8-3z" /><path d="M8.5 12l2.5 2.5 4.5-5" /></svg></div>
             <h3>Safe by design</h3>
-            <p>System, Windows, security and anti-cheat processes are never closed. After a crash, GameBoost restores everything.</p>
+            <p>System, Windows, security and anti-cheat processes are never closed. After a crash GameBoost restores your settings.</p>
           </article>
-        </div>
-
-        <!-- Crosshair highlight -->
-        <div class="split">
-          <div>
-            <p class="eyebrow">Crosshair overlay</p>
-            <h2>Your crosshair. Pixel-perfect in the center.</h2>
-            <ul class="checks">
-              <li>Five styles: cross, dot, circle, cross + dot, T-shape</li>
-              <li>Color, opacity, length, thickness, gap, outline and offset</li>
-              <li>Live preview with zoom – see every change instantly</li>
-              <li>Exactly centered, even with multiple monitors and Windows display scaling</li>
-              <li>Always on top and click-through – never blocks your input</li>
-              <li>Save presets and share crosshairs with friends via code <code>GB1-…</code></li>
-            </ul>
-          </div>
-          <div class="styles" aria-label="Crosshair styles">
-            <div class="style-tile"><div class="mini cross"></div><span>Cross</span></div>
-            <div class="style-tile"><div class="mini m-dot"></div><span>Dot</span></div>
-            <div class="style-tile"><div class="mini circle"></div><span>Circle</span></div>
-            <div class="style-tile"><div class="mini cross withdot"></div><span>Cross + dot</span></div>
-            <div class="style-tile"><div class="mini cross tshape"></div><span>T-shape</span></div>
-            <div class="style-tile accent"><span class="big">∞</span><span>Your own presets</span></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================================================ Screenshots -->
-    <section id="screenshots" class="section alt">
-      <div class="container">
-        <p class="eyebrow">Screenshots</p>
-        <h2>Dark, clean and to the point.</h2>
-        <div class="shots">
-          <figure>
-            <img src="/assets/crosshair.png" alt="Crosshair editor with live preview" loading="lazy" width="1200" height="800" />
-            <figcaption>Crosshair editor with live preview</figcaption>
-          </figure>
-          <figure>
-            <img src="/assets/settings.png" alt="Settings with hotkeys and autostart" loading="lazy" width="1200" height="800" />
-            <figcaption>Settings: autostart, tray, hotkeys</figcaption>
-          </figure>
+          <article class="card">
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10" /></svg></div>
+            <h3>Lightweight</h3>
+            <p>A single .exe, runs quietly in the tray and only measures while you actually look at the stats.</p>
+          </article>
         </div>
       </div>
     </section>
@@ -163,7 +190,7 @@
           <ol class="steps">
             <li><b>Download</b> and unzip the ZIP file.</li>
             <li><b>Run GameBoost.exe</b> – no installation needed.</li>
-            <li><b>Set up a profile</b>: tick programs, design your crosshair.</li>
+            <li><b>Run the PC check</b> and click “Optimize all”.</li>
             <li><b>Play.</b> GameBoost runs quietly in the system tray.</li>
           </ol>
         </div>
@@ -171,8 +198,9 @@
           <p class="eyebrow">Global hotkeys</p>
           <h2>Even mid-game</h2>
           <table class="keys">
-            <tr><td>Toggle crosshair</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>C</kbd></td></tr>
             <tr><td>Toggle game mode</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>G</kbd></td></tr>
+            <tr><td>Toggle performance overlay</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>H</kbd></td></tr>
+            <tr><td>Toggle crosshair</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>C</kbd></td></tr>
             <tr><td>Next crosshair preset</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>N</kbd></td></tr>
           </table>
           <p class="muted">All shortcuts can be changed freely in the settings.</p>
@@ -186,11 +214,11 @@
         <div class="notes">
           <div class="note info">
             <h3>Borderless window</h3>
-            <p>The overlay is only visible when the game runs in <b>borderless window</b> (windowed fullscreen) mode – not in exclusive fullscreen.</p>
+            <p>Overlays are only visible when the game runs in <b>borderless window</b> (windowed fullscreen) mode – not in exclusive fullscreen.</p>
           </div>
           <div class="note warn">
             <h3>Anti-cheat</h3>
-            <p>Games with strict anti-cheat (e.g. Valorant/Vanguard, FACEIT) or tournaments may disallow overlays. <b>Use at your own risk.</b> GameBoost does not touch games – it only draws its own transparent window.</p>
+            <p>Games with strict anti-cheat or tournaments may disallow overlays. <b>Use at your own risk.</b> GameBoost never touches game files or game memory – it only draws its own transparent windows.</p>
           </div>
         </div>
 
@@ -199,19 +227,23 @@
         <div class="faq">
           <details>
             <summary>Windows shows a warning on launch – is that normal?</summary>
-            <p>Yes. The .exe is not digitally signed, so SmartScreen shows “Windows protected your PC” on first launch. Click <b>More info → Run anyway</b>. The full source code is available on GitHub.</p>
+            <p>Yes. The .exe is not digitally signed, so SmartScreen shows “Windows protected your PC” on first launch. Click <b>More info → Run anyway</b>. The full source code is on GitHub.</p>
+          </details>
+          <details>
+            <summary>Why does the FPS counter need administrator rights?</summary>
+            <p>GameBoost counts frames with Windows event tracing – the same technique as PresentMon – and Windows only allows that for administrators. Everything else (GPU temperature, load, VRAM, CPU, RAM) works without admin rights. In the app, one click restarts GameBoost as administrator.</p>
+          </details>
+          <details>
+            <summary>What does the PC check change – and can I undo it?</summary>
+            <p>Only per-user Windows settings such as Game Mode, background recording, mouse acceleration, refresh rate and windowed-game optimizations. Every change shows an <b>Undo</b> button that restores the original value. Game files are never touched.</p>
           </details>
           <details>
             <summary>Does GameBoost need admin rights?</summary>
-            <p>No. Everything runs with normal user rights. Only programs of your own user account are closed – and only the ones you selected.</p>
+            <p>No. Everything except the optional FPS counter runs with normal user rights. Only programs of your own user account are closed – and only the ones you selected.</p>
           </details>
           <details>
             <summary>What happens if my PC crashes while game mode is on?</summary>
             <p>On the next start GameBoost automatically restores your previous power plan and notification settings.</p>
-          </details>
-          <details>
-            <summary>Where are my settings stored?</summary>
-            <p>In <code>%AppData%\GameBoost</code> – together with the log files. To uninstall, quit GameBoost and delete the .exe and that folder.</p>
           </details>
           <details>
             <summary>Does GameBoost cost anything?</summary>
@@ -226,12 +258,12 @@
       <div class="container download-box">
         <img src="/assets/logo.svg" alt="" width="64" height="64" />
         <h2>Ready for the next round?</h2>
-        <p class="muted">Version <b data-version>1.0.1</b><span data-date></span> · Windows 10 (1809+) / 11 · 64-bit</p>
+        <p class="muted">Version <b data-version>1.1.0</b><span data-date></span> · Windows 10 (1809+) / 11 · 64-bit</p>
         <a class="btn btn-primary btn-large" href="#" data-download-link>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5 10.5 4.5v7H3zM11.5 4.4 21 3v8.5h-9.5zM3 12.5h7.5v7L3 18.5zM11.5 12.5H21V21l-9.5-1.4z" fill="currentColor"/></svg>
           Download GameBoost for Windows
         </a>
-        <p class="meta"><a href="https://github.com/calvinistkrass/GameBoost/releases" target="_blank" rel="noopener">All versions & changelog</a></p>
+        <p class="meta"><span data-filename>GameBoost-1.1.0-win-x64.zip</span> · <a href="https://github.com/calvinistkrass/GameBoost/releases" target="_blank" rel="noopener">All versions & changelog</a></p>
       </div>
     </section>
   </main>

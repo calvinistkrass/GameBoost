@@ -3,9 +3,9 @@
 // version, size, date and link are taken from the latest release automatically.
 const RELEASE = {
   repo: "calvinistkrass/GameBoost",
-  version: "1.0.1",
-  file: "GameBoost-1.0.1-win-x64.zip",
-  size: "approx. 58 MB",
+  version: "1.1.0",
+  file: "GameBoost-1.1.0-win-x64.zip",
+  size: "approx. 61 MB",
 };
 
 const fallbackUrl = `https://github.com/${RELEASE.repo}/releases/download/v${RELEASE.version}/${RELEASE.file}`;
@@ -37,14 +37,13 @@ fetch(`https://api.github.com/repos/${RELEASE.repo}/releases/latest`, { headers:
   })
   .catch(() => { /* keep the fallback values */ });
 
-// Small crosshair animation in the hero
-const xhair = document.getElementById("xhair");
-if (xhair && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-  const colors = ["#00FF7F", "#00FFFF", "#FFE14D", "#FF3B3B", "#FFFFFF"];
-  let i = 0;
+// Lively FPS counter in the floating overlay mock-up
+const hudFps = document.getElementById("hudFps");
+if (hudFps && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
   setInterval(() => {
-    i = (i + 1) % colors.length;
-    xhair.style.setProperty("--xc", colors[i]);
-    xhair.classList.toggle("wide", i % 2 === 1);
-  }, 2200);
+    const fps = 232 + Math.round(Math.random() * 14);
+    hudFps.textContent = fps;
+    const ms = hudFps.nextElementSibling;
+    if (ms) ms.textContent = (1000 / fps).toFixed(1) + " ms";
+  }, 1000);
 }

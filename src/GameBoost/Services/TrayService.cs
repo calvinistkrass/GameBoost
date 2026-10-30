@@ -10,16 +10,17 @@ public sealed class TrayService : IDisposable
 {
     private WinForms.NotifyIcon? _icon;
     private WinForms.ContextMenuStrip? _menu;
-    private WinForms.ToolStripMenuItem? _openItem, _gameModeItem, _crosshairItem, _nextPresetItem, _exitItem;
+    private WinForms.ToolStripMenuItem? _openItem, _gameModeItem, _crosshairItem, _hudItem, _nextPresetItem, _exitItem;
     private Drawing.Icon? _idleIcon, _activeIcon;
     private IntPtr _idleHandle, _activeHandle;
-    private bool _gameModeActive, _crosshairVisible;
+    private bool _gameModeActive, _crosshairVisible, _hudVisible;
     private string? _profileName;
 
     public event EventHandler? OpenRequested;
     public event EventHandler? ToggleGameModeRequested;
     public event EventHandler? ToggleCrosshairRequested;
     public event EventHandler? NextPresetRequested;
+    public event EventHandler? ToggleHudRequested;
     public event EventHandler? ExitRequested;
 
     public void Initialize()
@@ -38,6 +39,7 @@ public sealed class TrayService : IDisposable
         _openItem = new WinForms.ToolStripMenuItem("", null, (_, _) => Raise(OpenRequested)) { Font = new Drawing.Font("Segoe UI", 9.5f, Drawing.FontStyle.Bold) };
         _gameModeItem = new WinForms.ToolStripMenuItem("", null, (_, _) => Raise(ToggleGameModeRequested));
         _crosshairItem = new WinForms.ToolStripMenuItem("", null, (_, _) => Raise(ToggleCrosshairRequested));
+        _hudItem = new WinForms.ToolStripMenuItem("", null, (_, _) => Raise(ToggleHudRequested));
         _nextPresetItem = new WinForms.ToolStripMenuItem("", null, (_, _) => Raise(NextPresetRequested));
         _exitItem = new WinForms.ToolStripMenuItem("", null, (_, _) => Raise(ExitRequested));
 
@@ -45,6 +47,7 @@ public sealed class TrayService : IDisposable
         _menu.Items.Add(new WinForms.ToolStripSeparator());
         _menu.Items.Add(_gameModeItem);
         _menu.Items.Add(_crosshairItem);
+        _menu.Items.Add(_hudItem);
         _menu.Items.Add(_nextPresetItem);
         _menu.Items.Add(new WinForms.ToolStripSeparator());
         _menu.Items.Add(_exitItem);
@@ -64,10 +67,11 @@ public sealed class TrayService : IDisposable
         RefreshTexts();
     }
 
-    public void UpdateState(bool gameModeActive, bool crosshairVisible, string? profileName)
+    public void UpdateState(bool gameModeActive, bool crosshairVisible, bool hudVisible, string? profileName)
     {
         _gameModeActive = gameModeActive;
         _crosshairVisible = crosshairVisible;
+        _hudVisible = hudVisible;
         _profileName = profileName;
         RefreshTexts();
     }
@@ -82,6 +86,8 @@ public sealed class TrayService : IDisposable
             _gameModeItem.Checked = _gameModeActive;
             _crosshairItem!.Text = Loc.T("Tray.Crosshair");
             _crosshairItem.Checked = _crosshairVisible;
+            _hudItem!.Text = Loc.T("Tray.Hud");
+            _hudItem.Checked = _hudVisible;
             _nextPresetItem!.Text = Loc.T("Tray.NextPreset");
             _exitItem!.Text = Loc.T("Tray.Exit");
 

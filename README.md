@@ -1,104 +1,115 @@
 # GameBoost
 
-**Game mode and crosshair overlay for Windows 10/11** – one click for more performance and fewer distractions, plus a fully customizable crosshair on top of any game.
+**Game mode, in-game performance overlay, PC check and crosshair overlay for Windows 10/11.**
+One click for more performance and fewer distractions – plus FPS and GPU temperature right in your game.
 
-No installation, no admin rights, a single `.exe`.
+No installation, a single `.exe`, free and open source.
 
-![Crosshair editor](docs/screenshots/crosshair.png)
+![Dashboard](docs/screenshots/dashboard.png)
 
 ---
 
 ## Features
 
+### 📊 Performance overlay (new in 1.1)
+- **FPS and frame time**, **GPU load and temperature**, **VRAM**, **CPU** and **RAM** – always visible on top of your game
+- GPU temperature for NVIDIA, AMD and Intel **without extra drivers** (same source as Task Manager)
+- Choose the **corner**, **size**, **background** and which values to show – with live preview
+- Toggle with `Ctrl` + `Alt` + `H`, or show it **automatically with game mode**
+- Optional: only show while a fullscreen/borderless game is in front
+- Click-through, always on top, never in the taskbar or Alt+Tab
+
+> FPS counting uses Windows event tracing (like PresentMon) and needs **administrator rights** – the app offers a one-click “Restart as administrator”. All other values work without admin. Supports DirectX 9–12 games.
+
+![Performance overlay](docs/screenshots/performance.png)
+
+### 🩺 PC check (new in 1.1)
+- Reads your **CPU, GPU, VRAM, RAM, display and Windows version** and gives your PC a **score**
+- Checks the Windows settings that matter for gaming and fixes them **with one click** – every change has an **Undo** button:
+  - Windows Game Mode · background recording (Xbox Game Bar) · mouse acceleration · refresh rate · optimizations for windowed games · power plan
+- Hints for hardware-accelerated GPU scheduling, outdated graphics drivers, RAM and free disk space
+- **Recommended in-game settings** matched to your hardware class: graphics preset, textures, shadows, anti-aliasing, DLSS/FSR, NVIDIA Reflex / AMD Anti-Lag, FPS limit, V-Sync …
+- GameBoost **never changes game files** (important because of anti-cheat) – you apply the game settings in the game's menu
+
+![PC check](docs/screenshots/pccheck.png)
+
 ### 🎮 Game mode
-- **One button** turns everything on and off.
-- **Close background programs** – pick them with checkboxes from a list of running programs. Your selection is saved.
-- **Built-in safety:** system, Windows, security and anti-cheat processes are never listed and never closed. Only programs of your own user account are considered.
-- **“High performance” power plan** is activated; your previous plan is remembered and restored afterwards.
-- **Windows notifications** are suppressed while you play.
-- **Start programs** – e.g. launch Discord, Steam or a game launcher automatically.
-- **Restart closed programs** when game mode is turned off (optional).
-- **Profiles** for different games (e.g. “Valorant”, “Fortnite”).
-- **Automation:** a profile turns on by itself as soon as the configured game `.exe` is running – and turns off when the game closes.
-- **Crash-safe:** if your PC or GameBoost crashes, power plan and notifications are restored automatically on the next start.
+- **One button** (or `Ctrl` + `Alt` + `G`) turns everything on and off
+- **Close background programs** you select from a list of running programs
+- **Built-in safety:** system, Windows, security and anti-cheat processes are never listed and never closed
+- **“High performance” power plan** while you play, previous plan restored afterwards
+- **Windows notifications** suppressed while you play
+- **Start programs** like Discord or a launcher automatically, and **restart closed programs** afterwards
+- **Profiles** per game with **automation**: a profile turns on when the game starts and off when it closes
+- **Crash-safe:** power plan and notifications are restored on the next start if anything goes wrong
 
 ### ✛ Crosshair overlay
 - Styles: **cross, dot, circle, cross + dot, T-shape**
-- Color, opacity, length, thickness, gap, dot size, outline (on/off, color, width), offset X/Y
-- **Live preview** with zoom (1×/3×/6×)
-- **Pixel-exact center** of the selected monitor – multi-monitor and Windows display scaling (DPI) are handled
-- Always on top, **click-through**, not shown in the taskbar or Alt+Tab
-- **Presets**: save, load, overwrite, delete
-- **Share by code** (`GB1-…`) – copy it, send it to friends, import theirs
+- Color, opacity, length, thickness, gap, dot size, outline, offset – with live preview and zoom
+- **Pixel-exact center** of the selected monitor (multi-monitor and display scaling handled)
+- **Presets** and **sharing by code** (`GB1-…`)
 
-### ⌨️ Hotkeys & comfort
-- Global, fully customizable hotkeys – they also work in-game
-- Keeps running in the **system tray** when the window is closed
-- Tray menu: game mode, crosshair, next preset, open, exit
-- Optional **start with Windows**
+![Crosshair editor](docs/screenshots/crosshair.png)
+
+### ⌨️ Dashboard, hotkeys & comfort
+- **Dashboard** with quick toggles, live system stats, PC score and hardware summary
+- Global, customizable hotkeys that work in-game
+- Keeps running in the **system tray**, optional **start with Windows**
 - English UI (German available in Settings)
-
-![Settings](docs/screenshots/settings.png)
 
 ---
 
 ## Download & run
 
-1. Download the latest `GameBoost-x.y.z-win-x64.zip` from **[Releases](../../releases)**.
+1. Download the latest `GameBoost-x.y.z-win-x64.zip` from **[Releases](../../releases/latest)**.
 2. Unzip it and run `GameBoost.exe` – done.
 
-> **Windows SmartScreen:** the `.exe` is not digitally signed, so on first launch Windows may show “Windows protected your PC”. Click **More info → Run anyway**.
+> **Windows SmartScreen:** the `.exe` is not digitally signed, so Windows may show “Windows protected your PC” on first launch. Click **More info → Run anyway**.
 
-**Requirements:** Windows 10 (1809+) or Windows 11, 64-bit. .NET does not need to be installed.
+**Requirements:** Windows 10 (1809+) or Windows 11, 64-bit. .NET does not need to be installed. GPU temperature needs Windows 10 2004 or newer.
 
 ---
 
-## Usage
-
-| Area | How to |
-|---|---|
-| **Game mode** | Pick a profile → press the big button. The panel on the right shows what will happen / what happened. |
-| **Close programs** | “Close programs” tab → tick the programs you want closed. Selected programs stay in the list even when they are not running. |
-| **Start programs** | “Start programs” tab → “Add program” (`.exe` or shortcut). |
-| **Automation** | “Automation” tab → enter the game's `.exe` name (Task Manager → “Details” shows it while the game runs) or pick it with “Browse…”. |
-| **Crosshair** | “Crosshair” page → choose style and values → turn on “Show crosshair overlay”. |
-| **Share** | Copy the code under “Your crosshair code”; paste codes from others under “Import code”. |
-
-### Default hotkeys
+## Default hotkeys
 
 | Action | Shortcut |
 |---|---|
-| Toggle crosshair | `Ctrl` + `Alt` + `C` |
 | Toggle game mode | `Ctrl` + `Alt` + `G` |
+| Toggle performance overlay | `Ctrl` + `Alt` + `H` |
+| Toggle crosshair | `Ctrl` + `Alt` + `C` |
 | Next crosshair preset | `Ctrl` + `Alt` + `N` |
 
-Change them under **Settings → Hotkeys**: click the field and press the new combination (`Del` = remove, `Esc` = cancel). If a combination is already used by another program, GameBoost tells you.
+Change them under **Settings → Hotkeys**: click the field and press the new combination (`Del` = remove, `Esc` = cancel).
+
+![Settings](docs/screenshots/settings.png)
 
 ---
 
 ## ⚠️ Important notes
 
-- **Borderless window:** the overlay is only visible when the game runs in **borderless window / windowed fullscreen** mode – **not in exclusive fullscreen**.
-- **Anti-cheat:** games with strict anti-cheat (e.g. Valorant/Vanguard, FACEIT, ESEA) or tournaments may disallow overlays. **Use at your own risk.** GameBoost does not touch games (no injection, no memory access) – it only draws its own transparent window.
+- **Borderless window:** overlays are only visible when the game runs in **borderless window / windowed fullscreen** mode – **not in exclusive fullscreen**.
+- **Anti-cheat:** games with strict anti-cheat (e.g. Valorant/Vanguard, FACEIT, ESEA) or tournaments may disallow overlays. **Use at your own risk.** GameBoost does not touch games (no injection, no memory access) – it only draws its own transparent windows.
 - **Closing programs:** unsaved data in closed programs is lost. Only select programs you don't need while gaming.
-- **Notifications:** GameBoost turns off the Windows “Notifications” setting for your user. On some Windows versions this only applies to new notifications.
-- **High performance on laptops:** if the “High performance” plan is missing, GameBoost creates a copy. If that isn't possible (some Modern Standby devices), the “Best performance” power mode is used instead.
+- **PC check changes** only affect your own Windows user account and can be undone at any time.
 
 ---
 
 ## FAQ
 
 **Does GameBoost need admin rights?**
-No. Everything runs with normal user rights. Programs running as administrator can therefore not be closed.
+No – only the optional FPS counter does. Programs running as administrator can therefore not be closed by game mode.
+
+**Why is there no CPU temperature?**
+Reading CPU temperatures needs a kernel driver, which anti-cheat systems often block or flag. GameBoost deliberately avoids that.
 
 **Where are my settings stored?**
 In `%AppData%\GameBoost\settings.json`. Log files are in `%AppData%\GameBoost\logs`. Both can be opened from *Settings → Data & troubleshooting*.
 
-**I can't see the crosshair.**
+**I can't see the overlay or crosshair.**
 Set the game to borderless window mode, and pick the right screen under *Crosshair → Monitor*.
 
 **How do I uninstall GameBoost?**
-Turn off “Start with Windows”, quit GameBoost from the tray menu, then delete `GameBoost.exe` and the folder `%AppData%\GameBoost`.
+Turn off “Start with Windows”, quit GameBoost from the tray menu, then delete `GameBoost.exe` and the folder `%AppData%\GameBoost`. Use *Undo* in the PC check first if you want to restore changed Windows settings.
 
 ---
 
@@ -125,20 +136,24 @@ dotnet run --project src/GameBoost
 src/GameBoost/
 ├── App.xaml(.cs)          startup, single instance, global error handling
 ├── AppController.cs       wires services, tray, hotkeys and windows together
-├── Models/                settings, profiles, crosshair, hotkeys
-├── Services/              GameModeService, OverlayService, SettingsService, HotkeyService,
-│                          TrayService, ProcessGuard (safety rules), PowerPlanManager, …
-├── ViewModels/            MVVM view models for the three pages
-├── Views/                 XAML UI + overlay window
+├── Models/                settings, profiles, crosshair, HUD, hotkeys
+├── Services/              GameModeService, OverlayService, HudService, SettingsService, HotkeyService,
+│   │                      TrayService, ProcessGuard (safety rules), PowerPlanManager, …
+│   ├── Performance/       FPS (ETW), CPU/GPU/VRAM counters (PDH), GPU temperature (D3DKMT)
+│   └── SystemCheck/       hardware detection, Windows checks + fixes, game setting recommendations
+├── Rendering/             performance overlay renderer
+├── ViewModels/            MVVM view models for the six pages
+├── Views/                 XAML UI, crosshair overlay and native layered overlay window
 ├── Controls/              CrosshairRenderer, HotkeyBox, SliderRow
 ├── Infrastructure/        logger, localization (EN/DE), Win32 interop, converters
 └── Themes/Theme.xaml      dark theme
 tests/GameBoost.Tests/     xUnit tests
-tools/make-icon.ps1        generates the app icon
-website/                   landing page (static, deployable to Vercel)
+website/                   landing page (static, deployable to Vercel – root directory: website)
 ```
 
-**Tech:** C# 12, WPF, .NET 8, MVVM without external dependencies.
+**Tech:** C# 12, WPF, .NET 8, MVVM. Only dependency: `Microsoft.Diagnostics.Tracing.TraceEvent` for the FPS counter.
+
+See [CHANGELOG.md](CHANGELOG.md) for all changes.
 
 ---
 

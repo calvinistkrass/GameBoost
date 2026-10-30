@@ -4,7 +4,7 @@ using GameBoost.Infrastructure;
 
 namespace GameBoost.Models;
 
-/// <summary>A game mode profile (e.g. "Valorant").</summary>
+/// <summary>A game mode profile (e.g. "Fortnite").</summary>
 public sealed class GameModeProfile : ObservableObject
 {
     private string _name = "Profile";
