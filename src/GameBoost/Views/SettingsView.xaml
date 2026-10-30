@@ -1,0 +1,203 @@
+<UserControl x:Class="GameBoost.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:GameBoost.Controls">
+    <UserControl.Resources>
+        <Style x:Key="HotkeyStatus" TargetType="TextBlock" BasedOn="{StaticResource Text.Muted}">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="14,0,0,0" />
+            <Setter Property="Foreground" Value="{StaticResource B.Accent}" />
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="0,0,10,0" MaxWidth="900" HorizontalAlignment="Left">
+            <StackPanel Margin="0,0,0,18">
+                <TextBlock Text="{DynamicResource ST.Title}" Style="{StaticResource Text.H1}" />
+                <TextBlock Text="{DynamicResource ST.Subtitle}" Style="{StaticResource Text.Muted}" Margin="0,4,0,0" />
+            </StackPanel>
+
+            <!-- Allgemein -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="{DynamicResource ST.General}" Style="{StaticResource Text.H2}" Margin="0,0,0,16" />
+
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="220" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="{DynamicResource ST.Language}" FontWeight="SemiBold" />
+                            <TextBlock Text="{DynamicResource ST.LanguageDesc}" Style="{StaticResource Text.Muted}" Margin="0,2,0,0" />
+                        </StackPanel>
+                        <ComboBox Grid.Column="1" ItemsSource="{Binding Languages}" SelectedItem="{Binding SelectedLanguage}" DisplayMemberPath="Name" />
+                    </Grid>
+
+                    <CheckBox IsChecked="{Binding StartWithWindows}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource ST.Autostart}" FontWeight="SemiBold" />
+                            <TextBlock Text="{DynamicResource ST.AutostartDesc}" Style="{StaticResource Text.Muted}" Margin="0,2,0,0" />
+                        </StackPanel>
+                    </CheckBox>
+                    <CheckBox IsChecked="{Binding StartMinimized}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource ST.StartMin}" FontWeight="SemiBold" />
+                            <TextBlock Text="{DynamicResource ST.StartMinDesc}" Style="{StaticResource Text.Muted}" Margin="0,2,0,0" />
+                        </StackPanel>
+                    </CheckBox>
+                    <CheckBox IsChecked="{Binding CloseToTray}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource ST.CloseToTray}" FontWeight="SemiBold" />
+                            <TextBlock Text="{DynamicResource ST.CloseToTrayDesc}" Style="{StaticResource Text.Muted}" Margin="0,2,0,0" />
+                        </StackPanel>
+                    </CheckBox>
+                    <CheckBox IsChecked="{Binding AutoProfileSwitch}">
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource ST.AutoProfile}" FontWeight="SemiBold" />
+                            <TextBlock Text="{DynamicResource ST.AutoProfileDesc}" Style="{StaticResource Text.Muted}" Margin="0,2,0,0" />
+                        </StackPanel>
+                    </CheckBox>
+                </StackPanel>
+            </Border>
+
+            <!-- Hotkeys -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <Grid Margin="0,0,0,6">
+                        <TextBlock Text="{DynamicResource ST.Hotkeys}" Style="{StaticResource Text.H2}" VerticalAlignment="Center" />
+                        <Button HorizontalAlignment="Right" Style="{StaticResource Button.Ghost}" Padding="8,4"
+                                Content="{DynamicResource ST.Hk.Reset}" Command="{Binding ResetHotkeysCommand}" />
+                    </Grid>
+                    <TextBlock Text="{DynamicResource ST.HotkeysDesc}" Style="{StaticResource Text.Muted}" Margin="0,0,0,16" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="240" />
+                            <ColumnDefinition Width="230" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="10" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="10" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="{DynamicResource ST.Hk.Crosshair}" VerticalAlignment="Center" FontWeight="SemiBold" />
+                        <controls:HotkeyBox Grid.Column="1" Hotkey="{Binding HotkeyToggleCrosshair}" />
+                        <TextBlock Grid.Column="2" Text="{Binding StatusToggleCrosshair}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource HotkeyStatus}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ConflictToggleCrosshair}" Value="True">
+                                            <Setter Property="Foreground" Value="{StaticResource B.Warning}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+
+                        <TextBlock Grid.Row="2" Text="{DynamicResource ST.Hk.GameMode}" VerticalAlignment="Center" FontWeight="SemiBold" />
+                        <controls:HotkeyBox Grid.Row="2" Grid.Column="1" Hotkey="{Binding HotkeyToggleGameMode}" />
+                        <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding StatusToggleGameMode}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource HotkeyStatus}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ConflictToggleGameMode}" Value="True">
+                                            <Setter Property="Foreground" Value="{StaticResource B.Warning}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+
+                        <TextBlock Grid.Row="4" Text="{DynamicResource ST.Hk.NextPreset}" VerticalAlignment="Center" FontWeight="SemiBold" />
+                        <controls:HotkeyBox Grid.Row="4" Grid.Column="1" Hotkey="{Binding HotkeyNextPreset}" />
+                        <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding StatusNextPreset}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource HotkeyStatus}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ConflictNextPreset}" Value="True">
+                                            <Setter Property="Foreground" Value="{StaticResource B.Warning}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Hinweise -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="{DynamicResource ST.Notes}" Style="{StaticResource Text.H2}" Margin="0,0,0,14" />
+                    <Border Style="{StaticResource InfoBox}" Margin="0,0,0,8">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="&#xE7F4;" Style="{StaticResource Text.Icon}" Foreground="{StaticResource B.Accent2}" Margin="0,0,10,0" VerticalAlignment="Top" />
+                            <TextBlock Grid.Column="1" Text="{DynamicResource Hint.Borderless}" Style="{StaticResource Text.Muted}" />
+                        </Grid>
+                    </Border>
+                    <Border Style="{StaticResource WarnBox}" Margin="0,0,0,8">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="&#xE7BA;" Style="{StaticResource Text.Icon}" Foreground="{StaticResource B.Warning}" Margin="0,0,10,0" VerticalAlignment="Top" />
+                            <TextBlock Grid.Column="1" Text="{DynamicResource Hint.AntiCheat}" Style="{StaticResource Text.Muted}" />
+                        </Grid>
+                    </Border>
+                    <Border Style="{StaticResource InfoBox}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="&#xE83D;" Style="{StaticResource Text.Icon}" Foreground="{StaticResource B.Accent2}" Margin="0,0,10,0" VerticalAlignment="Top" />
+                            <TextBlock Grid.Column="1" Text="{DynamicResource Hint.Safety}" Style="{StaticResource Text.Muted}" />
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!-- Daten -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="{DynamicResource ST.Data}" Style="{StaticResource Text.H2}" Margin="0,0,0,8" />
+                    <TextBlock Style="{StaticResource Text.Muted}" Margin="0,0,0,14">
+                        <Run Text="{DynamicResource ST.DataDesc}" />
+                        <Run Text="{Binding DataPath, Mode=OneWay}" Foreground="{StaticResource B.Text}" FontFamily="Consolas" />
+                    </TextBlock>
+                    <WrapPanel>
+                        <Button Command="{Binding OpenDataFolderCommand}" Margin="0,0,8,8">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE8B7;" Style="{StaticResource Text.Icon}" FontSize="13" Margin="0,0,8,0" />
+                                <TextBlock Text="{DynamicResource ST.OpenData}" />
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding OpenLogFolderCommand}" Margin="0,0,8,8">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE9F9;" Style="{StaticResource Text.Icon}" FontSize="13" Margin="0,0,8,0" />
+                                <TextBlock Text="{DynamicResource ST.OpenLogs}" />
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource Button.Danger}" Command="{Binding ResetCommand}" Margin="0,0,8,8">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE777;" Style="{StaticResource Text.Icon}" FontSize="13" Margin="0,0,8,0" />
+                                <TextBlock Text="{DynamicResource ST.Reset}" />
+                            </StackPanel>
+                        </Button>
+                    </WrapPanel>
+                    <TextBlock Text="{Binding VersionText}" Style="{StaticResource Text.Muted}" Margin="0,8,0,0" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>GameBoost</AssemblyName>
+    <RootNamespace>GameBoost</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\GameBoost.ico</ApplicationIcon>
+    <Version>1.0.0</Version>
+    <Product>GameBoost</Product>
+    <Description>Gaming-Modus und Crosshair-Overlay für Windows</Description>
+    <Copyright>© 2026 GameBoost</Copyright>
+    <SatelliteResourceLanguages>de;en</SatelliteResourceLanguages>
+    <!-- WFAC010 betrifft nur reine WinForms-Apps; für WPF ist das DPI-Manifest korrekt. -->
+    <NoWarn>$(NoWarn);WFAC010</NoWarn>
+  </PropertyGroup>
+
+  <!-- WinForms wird nur für das Tray-Icon und den Farbdialog genutzt;
+       die globalen Usings würden sonst mit WPF-Typen kollidieren. -->
+  <ItemGroup>
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+    <Using Include="System.IO" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\GameBoost.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="GameBoost.Tests" />
+  </ItemGroup>
+
+</Project>

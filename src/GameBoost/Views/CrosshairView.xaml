@@ -1,0 +1,337 @@
+<UserControl x:Class="GameBoost.Views.CrosshairView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:GameBoost.Controls"
+             xmlns:models="clr-namespace:GameBoost.Models"
+             xmlns:vm="clr-namespace:GameBoost.ViewModels">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid Margin="0,0,10,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Margin="0,0,0,18">
+                <TextBlock Text="{DynamicResource CH.Title}" Style="{StaticResource Text.H1}" />
+                <TextBlock Text="{DynamicResource CH.Subtitle}" Style="{StaticResource Text.Muted}" Margin="0,4,0,0" />
+            </StackPanel>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- ================= Linke Spalte ================= -->
+                <StackPanel>
+                    <!-- Vorschau -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,12">
+                                <TextBlock Text="{DynamicResource CH.Preview}" Style="{StaticResource Text.H2}" VerticalAlignment="Center" />
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" ToolTip="{DynamicResource CH.Zoom}">
+                                    <RadioButton Style="{StaticResource RadioButton.Tab}" Content="1×" Padding="10,5"
+                                                 IsChecked="{Binding PreviewZoom, Converter={StaticResource EqualsToBool}, ConverterParameter=1}" />
+                                    <RadioButton Style="{StaticResource RadioButton.Tab}" Content="3×" Padding="10,5"
+                                                 IsChecked="{Binding PreviewZoom, Converter={StaticResource EqualsToBool}, ConverterParameter=3}" />
+                                    <RadioButton Style="{StaticResource RadioButton.Tab}" Content="6×" Padding="10,5" Margin="0"
+                                                 IsChecked="{Binding PreviewZoom, Converter={StaticResource EqualsToBool}, ConverterParameter=6}" />
+                                </StackPanel>
+                            </Grid>
+                            <Border Height="300" CornerRadius="10" ClipToBounds="True" Background="{StaticResource B.PreviewScene}">
+                                <Grid>
+                                    <controls:CrosshairRenderer Config="{Binding Config}" Zoom="{Binding PreviewZoom}" />
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Overlay -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <CheckBox IsChecked="{Binding OverlayVisible}" Margin="0,0,0,16">
+                                <StackPanel>
+                                    <TextBlock Text="{DynamicResource CH.Overlay.Show}" FontWeight="SemiBold" FontSize="14" />
+                                    <TextBlock Text="{DynamicResource CH.Overlay.ShowDesc}" Style="{StaticResource Text.Muted}" Margin="0,2,0,0" />
+                                </StackPanel>
+                            </CheckBox>
+                            <TextBlock Text="{DynamicResource CH.Monitor}" Style="{StaticResource Text.Label}" Margin="0,0,0,6" />
+                            <Grid Margin="0,0,0,16">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ComboBox ItemsSource="{Binding Monitors}" SelectedItem="{Binding SelectedMonitor}" DisplayMemberPath="DisplayName" />
+                                <Button Grid.Column="1" Style="{StaticResource Button.Icon}" Content="&#xE72C;" Margin="8,0,0,0"
+                                        Command="{Binding RefreshMonitorsCommand}" ToolTip="{DynamicResource CH.Monitor.Refresh}" />
+                            </Grid>
+                            <Border Style="{StaticResource InfoBox}" Margin="0,0,0,8">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="&#xE7F4;" Style="{StaticResource Text.Icon}" Foreground="{StaticResource B.Accent2}" Margin="0,0,10,0" VerticalAlignment="Top" />
+                                    <TextBlock Grid.Column="1" Text="{DynamicResource Hint.Borderless}" Style="{StaticResource Text.Muted}" />
+                                </Grid>
+                            </Border>
+                            <Border Style="{StaticResource WarnBox}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="&#xE7BA;" Style="{StaticResource Text.Icon}" Foreground="{StaticResource B.Warning}" Margin="0,0,10,0" VerticalAlignment="Top" />
+                                    <TextBlock Grid.Column="1" Text="{DynamicResource Hint.AntiCheat}" Style="{StaticResource Text.Muted}" />
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Teilen -->
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource CH.Share}" Style="{StaticResource Text.H2}" Margin="0,0,0,12" />
+                            <TextBlock Text="{DynamicResource CH.Share.Export}" Style="{StaticResource Text.Label}" Margin="0,0,0,6" />
+                            <Grid Margin="0,0,0,14">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox Text="{Binding ExportCode, Mode=OneWay}" IsReadOnly="True" FontFamily="Consolas" />
+                                <Button Grid.Column="1" Margin="8,0,0,0" Command="{Binding CopyCodeCommand}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="&#xE8C8;" Style="{StaticResource Text.Icon}" FontSize="13" Margin="0,0,8,0" />
+                                        <TextBlock Text="{DynamicResource CH.Share.Copy}" />
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+                            <TextBlock Text="{DynamicResource CH.Share.Import}" Style="{StaticResource Text.Label}" Margin="0,0,0,6" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox Text="{Binding ImportCode, UpdateSourceTrigger=PropertyChanged}" Tag="{DynamicResource CH.Share.ImportPlaceholder}" FontFamily="Consolas">
+                                    <TextBox.InputBindings>
+                                        <KeyBinding Key="Enter" Command="{Binding ImportCommand}" />
+                                    </TextBox.InputBindings>
+                                </TextBox>
+                                <Button Grid.Column="1" Margin="8,0,0,0" Style="{StaticResource Button.Primary}" Command="{Binding ImportCommand}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="&#xE896;" Style="{StaticResource Text.Icon}" FontSize="13" Margin="0,0,8,0" />
+                                        <TextBlock Text="{DynamicResource CH.Share.ImportBtn}" />
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+                            <TextBlock Text="{Binding ShareMessage}" Margin="0,10,0,0" TextWrapping="Wrap">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="{StaticResource B.Accent}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ShareMessageIsError}" Value="True">
+                                                <Setter Property="Foreground" Value="{StaticResource B.Danger}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ShareMessage}" Value="">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- ================= Rechte Spalte ================= -->
+                <StackPanel Grid.Column="2">
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,12">
+                                <TextBlock Text="{DynamicResource CH.Editor}" Style="{StaticResource Text.H2}" VerticalAlignment="Center" />
+                                <Button HorizontalAlignment="Right" Style="{StaticResource Button.Ghost}" Command="{Binding ResetCommand}" Padding="8,4">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="&#xE777;" Style="{StaticResource Text.Icon}" FontSize="12" Margin="0,0,6,0" />
+                                        <TextBlock Text="{DynamicResource CH.Reset}" />
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+
+                            <!-- Stil -->
+                            <TextBlock Text="{DynamicResource CH.Style}" Style="{StaticResource Text.Label}" Margin="0,0,0,8" />
+                            <WrapPanel Margin="0,0,0,8">
+                                <RadioButton Style="{StaticResource RadioButton.Tile}" IsChecked="{Binding Config.Style, Converter={StaticResource EqualsToBool}, ConverterParameter=Cross}">
+                                    <StackPanel>
+                                        <controls:CrosshairRenderer Config="{x:Static models:CrosshairSamples.Cross}" Width="40" Height="40" Zoom="1" ApplyOffset="False" />
+                                        <TextBlock Text="{DynamicResource CH.Style.Cross}" FontSize="11.5" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                                    </StackPanel>
+                                </RadioButton>
+                                <RadioButton Style="{StaticResource RadioButton.Tile}" IsChecked="{Binding Config.Style, Converter={StaticResource EqualsToBool}, ConverterParameter=Dot}">
+                                    <StackPanel>
+                                        <controls:CrosshairRenderer Config="{x:Static models:CrosshairSamples.Dot}" Width="40" Height="40" Zoom="1" ApplyOffset="False" />
+                                        <TextBlock Text="{DynamicResource CH.Style.Dot}" FontSize="11.5" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                                    </StackPanel>
+                                </RadioButton>
+                                <RadioButton Style="{StaticResource RadioButton.Tile}" IsChecked="{Binding Config.Style, Converter={StaticResource EqualsToBool}, ConverterParameter=Circle}">
+                                    <StackPanel>
+                                        <controls:CrosshairRenderer Config="{x:Static models:CrosshairSamples.Circle}" Width="40" Height="40" Zoom="1" ApplyOffset="False" />
+                                        <TextBlock Text="{DynamicResource CH.Style.Circle}" FontSize="11.5" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                                    </StackPanel>
+                                </RadioButton>
+                                <RadioButton Style="{StaticResource RadioButton.Tile}" IsChecked="{Binding Config.Style, Converter={StaticResource EqualsToBool}, ConverterParameter=CrossWithDot}">
+                                    <StackPanel>
+                                        <controls:CrosshairRenderer Config="{x:Static models:CrosshairSamples.CrossWithDot}" Width="40" Height="40" Zoom="1" ApplyOffset="False" />
+                                        <TextBlock Text="{DynamicResource CH.Style.CrossDot}" FontSize="11.5" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                                    </StackPanel>
+                                </RadioButton>
+                                <RadioButton Style="{StaticResource RadioButton.Tile}" IsChecked="{Binding Config.Style, Converter={StaticResource EqualsToBool}, ConverterParameter=TShape}">
+                                    <StackPanel>
+                                        <controls:CrosshairRenderer Config="{x:Static models:CrosshairSamples.TShape}" Width="40" Height="40" Zoom="1" ApplyOffset="False" />
+                                        <TextBlock Text="{DynamicResource CH.Style.T}" FontSize="11.5" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                                    </StackPanel>
+                                </RadioButton>
+                            </WrapPanel>
+
+                            <!-- Farbe -->
+                            <TextBlock Text="{DynamicResource CH.Color}" Style="{StaticResource Text.Label}" Margin="0,0,0,8" />
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ItemsControl ItemsSource="{x:Static vm:CrosshairViewModel.ColorSwatches}" VerticalAlignment="Center">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Button Style="{StaticResource Button.Swatch}" Background="{Binding Converter={StaticResource HexToBrush}}" ToolTip="{Binding}"
+                                                    CommandParameter="{Binding}"
+                                                    Command="{Binding DataContext.SetColorCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <Border Grid.Column="1" Width="34" Height="34" CornerRadius="8" Margin="8,0,8,8" BorderBrush="{StaticResource B.BorderStrong}" BorderThickness="1"
+                                        Background="{Binding Config.Color, Converter={StaticResource HexToBrush}}" />
+                                <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="0,0,0,8">
+                                    <TextBox Width="96" Text="{Binding ColorText, UpdateSourceTrigger=LostFocus}" FontFamily="Consolas" />
+                                    <Button Style="{StaticResource Button.Icon}" Content="&#xE790;" Margin="8,0,0,0" Command="{Binding PickColorCommand}" ToolTip="{DynamicResource CH.ColorPick}" />
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Werte -->
+                            <controls:SliderRow Label="{DynamicResource CH.Opacity}" Minimum="5" Maximum="100" Suffix=" %" Value="{Binding OpacityPercent}" />
+                            <controls:SliderRow Label="{Binding LengthLabel}" Minimum="1" Maximum="60" Value="{Binding Config.Length}"
+                                                Visibility="{Binding ShowLength, Converter={StaticResource BoolToVis}}" />
+                            <controls:SliderRow Label="{DynamicResource CH.Thickness}" Minimum="1" Maximum="12" Value="{Binding Config.Thickness}"
+                                                Visibility="{Binding ShowThickness, Converter={StaticResource BoolToVis}}" />
+                            <controls:SliderRow Label="{DynamicResource CH.Gap}" Minimum="0" Maximum="40" Value="{Binding Config.Gap}"
+                                                Visibility="{Binding ShowGap, Converter={StaticResource BoolToVis}}" />
+                            <controls:SliderRow Label="{DynamicResource CH.DotSize}" Minimum="1" Maximum="12" Value="{Binding Config.DotSize}"
+                                                Visibility="{Binding ShowDotSize, Converter={StaticResource BoolToVis}}" />
+
+                            <!-- Outline -->
+                            <Border Height="1" Background="{StaticResource B.Border}" Margin="0,12" />
+                            <CheckBox IsChecked="{Binding Config.Outline}" Margin="0,0,0,10">
+                                <TextBlock Text="{DynamicResource CH.Outline}" FontWeight="SemiBold" />
+                            </CheckBox>
+                            <StackPanel Visibility="{Binding Config.Outline, Converter={StaticResource BoolToVis}}">
+                                <Grid Margin="0,0,0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="130" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{DynamicResource CH.OutlineColor}" Foreground="{StaticResource B.TextDim}" VerticalAlignment="Center" Margin="0,0,0,8" />
+                                    <ItemsControl Grid.Column="1" ItemsSource="{x:Static vm:CrosshairViewModel.OutlineSwatches}" VerticalAlignment="Center">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Button Style="{StaticResource Button.Swatch}" Background="{Binding Converter={StaticResource HexToBrush}}" ToolTip="{Binding}"
+                                                        CommandParameter="{Binding}"
+                                                        Command="{Binding DataContext.SetOutlineColorCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="0,0,0,8">
+                                        <TextBox Width="96" Text="{Binding OutlineColorText, UpdateSourceTrigger=LostFocus}" FontFamily="Consolas" />
+                                        <Button Style="{StaticResource Button.Icon}" Content="&#xE790;" Margin="8,0,0,0" Command="{Binding PickOutlineColorCommand}" ToolTip="{DynamicResource CH.ColorPick}" />
+                                    </StackPanel>
+                                </Grid>
+                                <controls:SliderRow Label="{DynamicResource CH.OutlineThickness}" Minimum="1" Maximum="4" Value="{Binding Config.OutlineThickness}" />
+                            </StackPanel>
+
+                            <!-- Offset -->
+                            <Border Height="1" Background="{StaticResource B.Border}" Margin="0,12" />
+                            <Grid Margin="0,0,0,4">
+                                <TextBlock Text="{DynamicResource CH.Offset}" Style="{StaticResource Text.Label}" VerticalAlignment="Center" />
+                                <Button HorizontalAlignment="Right" Style="{StaticResource Button.Ghost}" Padding="8,4" Content="{DynamicResource CH.ResetOffset}" Command="{Binding ResetOffsetCommand}" />
+                            </Grid>
+                            <controls:SliderRow Label="{DynamicResource CH.OffsetX}" Minimum="-200" Maximum="200" Value="{Binding Config.OffsetX}" />
+                            <controls:SliderRow Label="{DynamicResource CH.OffsetY}" Minimum="-200" Maximum="200" Value="{Binding Config.OffsetY}" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Presets -->
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource CH.Presets}" Style="{StaticResource Text.H2}" Margin="0,0,0,12" />
+                            <Border Background="{StaticResource B.Bg1}" CornerRadius="10" Padding="6" Height="200" BorderBrush="{StaticResource B.Border}" BorderThickness="1">
+                                <ListBox ItemsSource="{Binding Presets}" SelectedItem="{Binding SelectedPreset}">
+                                    <ListBox.InputBindings>
+                                        <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding LoadPresetCommand}" />
+                                    </ListBox.InputBindings>
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type models:CrosshairPreset}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Border Width="30" Height="30" CornerRadius="6" Background="#FF3A4656" Margin="0,0,12,0" ClipToBounds="True">
+                                                    <controls:CrosshairRenderer Config="{Binding Config}" ApplyOffset="False" />
+                                                </Border>
+                                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontWeight="SemiBold" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </Border>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,14">
+                                <Button Style="{StaticResource Button.Primary}" Command="{Binding LoadPresetCommand}" Margin="0,0,8,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="&#xE768;" Style="{StaticResource Text.Icon}" FontSize="12" Margin="0,0,8,0" />
+                                        <TextBlock Text="{DynamicResource CH.Preset.Load}" />
+                                    </StackPanel>
+                                </Button>
+                                <Button Command="{Binding OverwritePresetCommand}" Content="{DynamicResource CH.Preset.Overwrite}" Margin="0,0,8,0" />
+                                <Button Style="{StaticResource Button.Danger}" Command="{Binding DeletePresetCommand}" Content="{DynamicResource CH.Preset.Delete}" />
+                            </StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox Text="{Binding NewPresetName, UpdateSourceTrigger=PropertyChanged}" Tag="{DynamicResource CH.Preset.NamePlaceholder}">
+                                    <TextBox.InputBindings>
+                                        <KeyBinding Key="Enter" Command="{Binding SavePresetCommand}" />
+                                    </TextBox.InputBindings>
+                                </TextBox>
+                                <Button Grid.Column="1" Margin="8,0,0,0" Command="{Binding SavePresetCommand}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="&#xE74E;" Style="{StaticResource Text.Icon}" FontSize="13" Margin="0,0,8,0" />
+                                        <TextBlock Text="{DynamicResource CH.Preset.SaveNew}" />
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

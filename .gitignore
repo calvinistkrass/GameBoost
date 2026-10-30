@@ -1,0 +1,23 @@
+# Build-Ausgaben
+bin/
+obj/
+publish/
+*.zip
+
+# Visual Studio / Rider / VS Code
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+*.DotSettings.user
+
+# Tests
+TestResults/
+*.trx
+coverage*/
+
+# Sonstiges
+*.log
+Thumbs.db
+.DS_Store

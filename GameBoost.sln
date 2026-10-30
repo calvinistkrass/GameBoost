@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E552EA80-6F85-4ECF-85B5-0C58E2051707}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameBoost", "src\GameBoost\GameBoost.csproj", "{EFCD9493-8410-4D70-8A48-FD4917BEDE21}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B90174A8-A01A-431E-AF4B-499F4E8C3911}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameBoost.Tests", "tests\GameBoost.Tests\GameBoost.Tests.csproj", "{BE2A0591-D93A-4194-8FDB-3D0EF7B1F783}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EFCD9493-8410-4D70-8A48-FD4917BEDE21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFCD9493-8410-4D70-8A48-FD4917BEDE21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFCD9493-8410-4D70-8A48-FD4917BEDE21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFCD9493-8410-4D70-8A48-FD4917BEDE21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE2A0591-D93A-4194-8FDB-3D0EF7B1F783}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE2A0591-D93A-4194-8FDB-3D0EF7B1F783}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE2A0591-D93A-4194-8FDB-3D0EF7B1F783}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE2A0591-D93A-4194-8FDB-3D0EF7B1F783}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EFCD9493-8410-4D70-8A48-FD4917BEDE21} = {E552EA80-6F85-4ECF-85B5-0C58E2051707}
+		{BE2A0591-D93A-4194-8FDB-3D0EF7B1F783} = {B90174A8-A01A-431E-AF4B-499F4E8C3911}
+	EndGlobalSection
+EndGlobal
