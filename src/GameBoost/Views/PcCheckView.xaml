@@ -7,7 +7,6 @@
             <!-- Header -->
             <Grid Margin="0,0,0,20">
                 <StackPanel>
-                    <TextBlock Text="{DynamicResource PC.Eyebrow}" Style="{StaticResource Text.Eyebrow}" />
                     <TextBlock Text="{DynamicResource PC.Title}" Style="{StaticResource Text.H1}" />
                     <TextBlock Text="{DynamicResource PC.Subtitle}" Style="{StaticResource Text.Muted}" Margin="0,4,0,0" />
                 </StackPanel>
@@ -31,7 +30,7 @@
                     <StackPanel>
                         <TextBlock Text="{DynamicResource Home.ScoreTitle}" Style="{StaticResource Text.H2}" />
                         <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
-                            <TextBlock Text="{Binding ScoreText}" FontFamily="{StaticResource DisplayFont}" FontSize="58" FontWeight="Bold" Foreground="{StaticResource B.Accent}" />
+                            <TextBlock Text="{Binding ScoreText}" FontFamily="{StaticResource DisplayFont}" FontSize="44" FontWeight="SemiBold" Foreground="{StaticResource B.Accent}" />
                             <TextBlock Text="/100" FontFamily="{StaticResource DisplayFont}" FontSize="18" Foreground="{StaticResource B.TextDim}" VerticalAlignment="Bottom" Margin="4,0,0,13" />
                         </StackPanel>
                         <ProgressBar Style="{StaticResource Meter}" Value="{Binding ScoreValue, Mode=OneWay}" Margin="0,0,0,10" />

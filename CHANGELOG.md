@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.0
+- Simpler design: flat colors, no gradients or glow effects, cleaner sidebar and headings.
+- Leaner dashboard (toggles, live stats, PC score).
+- New flat accent color for app, overlay, tray icon and app icon.
+- Simpler one-page website.
+
 ## 1.1.0
 - New in-game **performance overlay**: FPS/frame time (admin), GPU load & temperature, VRAM, CPU, RAM, clock – position, size, background and values configurable, hotkey `Ctrl+Alt+H`, optional auto-show with game mode and "only over fullscreen games".
 - New **PC check**: hardware analysis, PC score, one-click Windows gaming optimizations with undo, recommended in-game settings per hardware class.

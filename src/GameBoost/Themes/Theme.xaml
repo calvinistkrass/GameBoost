@@ -5,19 +5,19 @@
                     xmlns:controls="clr-namespace:GameBoost.Controls">
 
     <!-- ============================================================ Colors -->
-    <Color x:Key="C.Bg0">#FF07090F</Color>
-    <Color x:Key="C.Bg1">#FF0B0E16</Color>
-    <Color x:Key="C.Bg2">#FF10141E</Color>
-    <Color x:Key="C.Bg3">#FF171D2A</Color>
-    <Color x:Key="C.Bg4">#FF202839</Color>
-    <Color x:Key="C.Border">#FF1C2331</Color>
-    <Color x:Key="C.BorderStrong">#FF2B3447</Color>
+    <Color x:Key="C.Bg0">#FF0E1015</Color>
+    <Color x:Key="C.Bg1">#FF121419</Color>
+    <Color x:Key="C.Bg2">#FF17191F</Color>
+    <Color x:Key="C.Bg3">#FF1E2128</Color>
+    <Color x:Key="C.Bg4">#FF272A33</Color>
+    <Color x:Key="C.Border">#FF23262E</Color>
+    <Color x:Key="C.BorderStrong">#FF30343E</Color>
     <Color x:Key="C.Text">#FFF0F3F9</Color>
-    <Color x:Key="C.TextDim">#FF8D97AB</Color>
-    <Color x:Key="C.TextFaint">#FF5D6679</Color>
-    <Color x:Key="C.Accent">#FF00F0A8</Color>
-    <Color x:Key="C.Accent2">#FF00C2FF</Color>
-    <Color x:Key="C.OnAccent">#FF04110C</Color>
+    <Color x:Key="C.TextDim">#FF9097A3</Color>
+    <Color x:Key="C.TextFaint">#FF60666F</Color>
+    <Color x:Key="C.Accent">#FF2ED497</Color>
+    <Color x:Key="C.Accent2">#FF5AA9F0</Color>
+    <Color x:Key="C.OnAccent">#FF06130D</Color>
     <Color x:Key="C.Danger">#FFFF4D6A</Color>
     <Color x:Key="C.Warning">#FFFFB547</Color>
 
@@ -36,15 +36,12 @@
     <SolidColorBrush x:Key="B.OnAccent" Color="{StaticResource C.OnAccent}" />
     <SolidColorBrush x:Key="B.Danger" Color="{StaticResource C.Danger}" />
     <SolidColorBrush x:Key="B.Warning" Color="{StaticResource C.Warning}" />
-    <SolidColorBrush x:Key="B.AccentSoft" Color="#1A00F0A8" />
+    <SolidColorBrush x:Key="B.AccentSoft" Color="#1A2ED497" />
     <SolidColorBrush x:Key="B.DangerSoft" Color="#1FFF4D6A" />
     <SolidColorBrush x:Key="B.WarningSoft" Color="#1AFFB547" />
-    <SolidColorBrush x:Key="B.InfoSoft" Color="#1400C2FF" />
+    <SolidColorBrush x:Key="B.InfoSoft" Color="#125AA9F0" />
 
-    <LinearGradientBrush x:Key="B.AccentGradient" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Color="{StaticResource C.Accent}" Offset="0" />
-        <GradientStop Color="{StaticResource C.Accent2}" Offset="1" />
-    </LinearGradientBrush>
+    <SolidColorBrush x:Key="B.AccentGradient" Color="{StaticResource C.Accent}" />
 
     <!-- Crosshair preview background (stylized game scene) -->
     <LinearGradientBrush x:Key="B.PreviewScene" StartPoint="0,0" EndPoint="0,1">
@@ -55,19 +52,11 @@
     </LinearGradientBrush>
 
     <FontFamily x:Key="IconFont">Segoe Fluent Icons, Segoe MDL2 Assets</FontFamily>
-    <FontFamily x:Key="DisplayFont">Bahnschrift, Segoe UI</FontFamily>
+    <FontFamily x:Key="DisplayFont">Segoe UI Variable Display, Segoe UI</FontFamily>
 
     <!-- Window background: deep navy with a soft accent glow -->
-    <LinearGradientBrush x:Key="B.WindowBackground" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Color="#FF0A0E17" Offset="0" />
-        <GradientStop Color="#FF07090F" Offset="0.55" />
-        <GradientStop Color="#FF060810" Offset="1" />
-    </LinearGradientBrush>
-    <RadialGradientBrush x:Key="B.Glow" Center="0.85,0" GradientOrigin="0.85,0" RadiusX="0.7" RadiusY="0.55">
-        <GradientStop Color="#2200C2FF" Offset="0" />
-        <GradientStop Color="#0A00F0A8" Offset="0.45" />
-        <GradientStop Color="#0000F0A8" Offset="1" />
-    </RadialGradientBrush>
+    <SolidColorBrush x:Key="B.WindowBackground" Color="{StaticResource C.Bg0}" />
+    <SolidColorBrush x:Key="B.Glow" Color="Transparent" />
     <LinearGradientBrush x:Key="B.CardHighlight" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Color="#0CFFFFFF" Offset="0" />
         <GradientStop Color="#00FFFFFF" Offset="0.35" />
@@ -85,7 +74,7 @@
     <!-- ============================================================ Text -->
     <Style x:Key="Text.H1" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{StaticResource DisplayFont}" />
-        <Setter Property="FontSize" Value="30" />
+        <Setter Property="FontSize" Value="24" />
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="Foreground" Value="{StaticResource B.Text}" />
     </Style>
@@ -116,7 +105,7 @@
         <Setter Property="Background" Value="{StaticResource B.Bg2}" />
         <Setter Property="BorderBrush" Value="{StaticResource B.Border}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="CornerRadius" Value="10" />
         <Setter Property="Padding" Value="20" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
@@ -285,10 +274,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid Width="168" Height="168">
-                        <Ellipse x:Name="Glow" Fill="{StaticResource B.Bg1}" Opacity="0">
-                            <Ellipse.Effect>
-                                <DropShadowEffect Color="{StaticResource C.Accent}" BlurRadius="46" ShadowDepth="0" Opacity="0.9" />
-                            </Ellipse.Effect>
+                        <Ellipse x:Name="Glow" Fill="Transparent" Opacity="0">
                         </Ellipse>
                         <Ellipse x:Name="Ring" StrokeThickness="4" Stroke="{StaticResource B.BorderStrong}" Fill="{StaticResource B.Bg1}" />
                         <Ellipse x:Name="Inner" Margin="12" Fill="{StaticResource B.Bg3}" />
@@ -302,7 +288,7 @@
                             </Trigger.Value>
                             <Setter TargetName="Glow" Property="Opacity" Value="1" />
                             <Setter TargetName="Ring" Property="Stroke" Value="{StaticResource B.AccentGradient}" />
-                            <Setter TargetName="Inner" Property="Fill" Value="#FF0E2620" />
+                            <Setter TargetName="Inner" Property="Fill" Value="#FF15291F" />
                             <Setter Property="Foreground" Value="{StaticResource B.Accent}" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
@@ -323,8 +309,8 @@
     <!-- ============================================================ RadioButtons -->
     <Style x:Key="RadioButton.Nav" TargetType="RadioButton">
         <Setter Property="Foreground" Value="{StaticResource B.TextDim}" />
-        <Setter Property="Height" Value="46" />
-        <Setter Property="Margin" Value="12,3" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="Margin" Value="10,1" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -344,7 +330,7 @@
                         </Trigger>
                         <Trigger Property="IsChecked" Value="True">
                             <Setter TargetName="Bd" Property="Background" Value="{StaticResource B.Bg3}" />
-                            <Setter TargetName="Bar" Property="Visibility" Value="Visible" />
+                            
                             <Setter Property="Foreground" Value="{StaticResource B.Text}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -879,6 +865,7 @@
     </Style>
 
     <Style x:Key="Text.Eyebrow" TargetType="TextBlock">
+        <Setter Property="Visibility" Value="Collapsed" />
         <Setter Property="FontSize" Value="11" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="Foreground" Value="{StaticResource B.Accent}" />
@@ -899,30 +886,10 @@
     </Style>
 
     <!-- Card with a subtle top highlight -->
-    <Style x:Key="Card.Glass" TargetType="Border" BasedOn="{StaticResource Card}">
-        <Setter Property="Background">
-            <Setter.Value>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#FF141A26" Offset="0" />
-                    <GradientStop Color="#FF0F131C" Offset="1" />
-                </LinearGradientBrush>
-            </Setter.Value>
-        </Setter>
-    </Style>
+    <Style x:Key="Card.Glass" TargetType="Border" BasedOn="{StaticResource Card}" />
 
     <!-- Accent hero card -->
-    <Style x:Key="Card.Accent" TargetType="Border" BasedOn="{StaticResource Card}">
-        <Setter Property="BorderBrush" Value="#3300F0A8" />
-        <Setter Property="Background">
-            <Setter.Value>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="#FF0F2A26" Offset="0" />
-                    <GradientStop Color="#FF0E1A28" Offset="0.6" />
-                    <GradientStop Color="#FF10141E" Offset="1" />
-                </LinearGradientBrush>
-            </Setter.Value>
-        </Setter>
-    </Style>
+    <Style x:Key="Card.Accent" TargetType="Border" BasedOn="{StaticResource Card}" />
 
     <!-- Small rounded status chip -->
     <Style x:Key="Chip" TargetType="Border">
@@ -961,19 +928,11 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid>
-                        <Border x:Name="Bd" CornerRadius="16" BorderThickness="1" BorderBrush="{StaticResource B.Border}" Padding="18,16">
-                            <Border.Background>
-                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                    <GradientStop Color="#FF141A26" Offset="0" />
-                                    <GradientStop Color="#FF0F131C" Offset="1" />
-                                </LinearGradientBrush>
-                            </Border.Background>
+                        <Border x:Name="Bd" CornerRadius="10" BorderThickness="1" BorderBrush="{StaticResource B.Border}" Background="{StaticResource B.Bg2}" Padding="18,16">
+                            
                             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
                         </Border>
-                        <Border x:Name="Glow" CornerRadius="16" BorderThickness="1.5" BorderBrush="{StaticResource B.AccentGradient}" Opacity="0" IsHitTestVisible="False">
-                            <Border.Effect>
-                                <DropShadowEffect Color="{StaticResource C.Accent}" BlurRadius="24" ShadowDepth="0" Opacity="0.35" />
-                            </Border.Effect>
+                        <Border x:Name="Glow" CornerRadius="10" BorderThickness="1.5" BorderBrush="{StaticResource B.AccentGradient}" Opacity="0" IsHitTestVisible="False">
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>

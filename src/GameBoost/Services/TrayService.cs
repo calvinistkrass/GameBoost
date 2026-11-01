@@ -135,12 +135,12 @@ public sealed class TrayService : IDisposable
             g.Clear(Drawing.Color.Transparent);
 
             using (var path = RoundedRect(new Drawing.RectangleF(1, 1, 30, 30), 8))
-            using (var bg = new Drawing.SolidBrush(Drawing.Color.FromArgb(255, 16, 21, 33)))
+            using (var bg = new Drawing.SolidBrush(Drawing.Color.FromArgb(255, 23, 25, 31)))
             {
                 g.FillPath(bg, path);
             }
 
-            var accent = active ? Drawing.Color.FromArgb(0, 240, 168) : Drawing.Color.FromArgb(0, 194, 255);
+            var accent = active ? Drawing.Color.FromArgb(46, 212, 151) : Drawing.Color.FromArgb(160, 166, 176);
             using var pen = new Drawing.Pen(accent, 2.6f);
             g.DrawEllipse(pen, 8.5f, 8.5f, 15f, 15f);
             g.DrawLine(pen, 16f, 4f, 16f, 11f);
@@ -193,7 +193,7 @@ public sealed class TrayService : IDisposable
     private sealed class DarkMenuRenderer : WinForms.ToolStripProfessionalRenderer
     {
         private static readonly Drawing.Color Text = Drawing.Color.FromArgb(232, 236, 244);
-        private static readonly Drawing.Color Accent = Drawing.Color.FromArgb(0, 240, 168);
+        private static readonly Drawing.Color Accent = Drawing.Color.FromArgb(46, 212, 151);
 
         public DarkMenuRenderer() : base(new DarkColors())
         {

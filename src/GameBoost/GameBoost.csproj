@@ -11,7 +11,7 @@
     <RootNamespace>GameBoost</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\GameBoost.ico</ApplicationIcon>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <Product>GameBoost</Product>
     <Description>Game mode and crosshair overlay for Windows</Description>
     <Copyright>© 2026 GameBoost</Copyright>

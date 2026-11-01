@@ -12,7 +12,6 @@
             </Grid.RowDefinitions>
 
             <StackPanel Margin="0,0,0,20">
-                <TextBlock Text="{DynamicResource CH.Eyebrow}" Style="{StaticResource Text.Eyebrow}" />
                 <TextBlock Text="{DynamicResource CH.Title}" Style="{StaticResource Text.H1}" />
                 <TextBlock Text="{DynamicResource CH.Subtitle}" Style="{StaticResource Text.Muted}" Margin="0,4,0,0" />
             </StackPanel>

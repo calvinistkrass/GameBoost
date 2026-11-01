@@ -3,9 +3,9 @@
 // version, size, date and link are taken from the latest release automatically.
 const RELEASE = {
   repo: "calvinistkrass/GameBoost",
-  version: "1.1.0",
-  file: "GameBoost-1.1.0-win-x64.zip",
-  size: "approx. 61 MB",
+  version: "1.2.0",
+  file: "GameBoost-1.2.0-win-x64.zip",
+  size: "approx. 60 MB",
 };
 
 const fallbackUrl = `https://github.com/${RELEASE.repo}/releases/download/v${RELEASE.version}/${RELEASE.file}`;
@@ -21,7 +21,7 @@ function apply({ version, file, size, url, date }) {
 apply({ ...RELEASE, url: fallbackUrl });
 document.getElementById("year").textContent = new Date().getFullYear();
 
-// Fetch the latest release from GitHub (public API, no login)
+// Latest release from GitHub (public API, no login)
 fetch(`https://api.github.com/repos/${RELEASE.repo}/releases/latest`, { headers: { Accept: "application/vnd.github+json" } })
   .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
   .then((rel) => {
@@ -36,14 +36,3 @@ fetch(`https://api.github.com/repos/${RELEASE.repo}/releases/latest`, { headers:
     });
   })
   .catch(() => { /* keep the fallback values */ });
-
-// Lively FPS counter in the floating overlay mock-up
-const hudFps = document.getElementById("hudFps");
-if (hudFps && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-  setInterval(() => {
-    const fps = 232 + Math.round(Math.random() * 14);
-    hudFps.textContent = fps;
-    const ms = hudFps.nextElementSibling;
-    if (ms) ms.textContent = (1000 / fps).toFixed(1) + " ms";
-  }, 1000);
-}

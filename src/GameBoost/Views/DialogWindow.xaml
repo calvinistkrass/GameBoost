@@ -19,9 +19,6 @@
             BorderThickness="1"
             CornerRadius="14"
             MouseLeftButtonDown="OnDragArea">
-        <Border.Effect>
-            <DropShadowEffect BlurRadius="24" ShadowDepth="0" Opacity="0.6" Color="Black" />
-        </Border.Effect>
         <StackPanel Margin="24,22,24,20">
             <StackPanel Orientation="Horizontal">
                 <TextBlock x:Name="IconText"

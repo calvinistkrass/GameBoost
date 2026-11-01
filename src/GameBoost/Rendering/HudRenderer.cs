@@ -13,7 +13,7 @@ public static class HudRenderer
     private static readonly Typeface LabelFace = new(new FontFamily("Bahnschrift, Segoe UI"), FontStyles.Normal, FontWeights.SemiBold, FontStretches.Normal);
     private static readonly Typeface ValueFace = new(new FontFamily("Bahnschrift, Segoe UI"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
 
-    private static readonly Color Accent = Color.FromRgb(0x00, 0xF0, 0xA8);
+    private static readonly Color Accent = Color.FromRgb(0x2E, 0xD4, 0x97);
     private static readonly Color Text = Color.FromRgb(0xF2, 0xF5, 0xFA);
     private static readonly Color Dim = Color.FromRgb(0x8D, 0x97, 0xAB);
     private static readonly Color Warn = Color.FromRgb(0xFF, 0xB5, 0x47);
@@ -62,7 +62,7 @@ public static class HudRenderer
             var bgAlpha = (byte)Math.Round(settings.BackgroundOpacity / 100.0 * 230);
             if (bgAlpha > 0)
             {
-                var bg = new SolidColorBrush(Color.FromArgb(bgAlpha, 0x0C, 0x10, 0x18));
+                var bg = new SolidColorBrush(Color.FromArgb(bgAlpha, 0x12, 0x14, 0x19));
                 var border = new Pen(new SolidColorBrush(Color.FromArgb((byte)(bgAlpha / 2), 0x2F, 0x3A, 0x50)), Math.Max(1, k));
                 dc.DrawRoundedRectangle(bg, border, new Rect(0.5, 0.5, width - 1, height - 1), 8 * k, 8 * k);
                 // accent bar on the left

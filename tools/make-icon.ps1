@@ -22,11 +22,11 @@ function New-LogoPng([int]$size) {
     $path.AddArc($rect.Right - $d, $rect.Bottom - $d, $d, $d, 0, 90)
     $path.AddArc($rect.X, $rect.Bottom - $d, $d, $d, 90, 90)
     $path.CloseFigure()
-    $bg = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(255, 16, 21, 33))
+    $bg = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(255, 23, 25, 31))
     $g.FillPath($bg, $path)
 
-    # Crosshair with gradient (green → cyan)
-    $grad = New-Object System.Drawing.Drawing2D.LinearGradientBrush (New-Object System.Drawing.PointF 0, 0), (New-Object System.Drawing.PointF $size, $size), ([System.Drawing.Color]::FromArgb(0, 240, 168)), ([System.Drawing.Color]::FromArgb(0, 194, 255))
+    # Crosshair in the accent color
+    $grad = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(46, 212, 151))
     $pen = New-Object System.Drawing.Pen $grad, ([Math]::Max(1.5, 2.6 * $s))
     $pen.StartCap = [System.Drawing.Drawing2D.LineCap]::Round
     $pen.EndCap = [System.Drawing.Drawing2D.LineCap]::Round
@@ -35,7 +35,7 @@ function New-LogoPng([int]$size) {
     $g.DrawLine($pen, 16 * $s, 21 * $s, 16 * $s, 28 * $s)
     $g.DrawLine($pen, 4 * $s, 16 * $s, 11 * $s, 16 * $s)
     $g.DrawLine($pen, 21 * $s, 16 * $s, 28 * $s, 16 * $s)
-    $dot = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(0, 240, 168))
+    $dot = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(46, 212, 151))
     $g.FillEllipse($dot, 14.25 * $s, 14.25 * $s, 3.5 * $s, 3.5 * $s)
     $g.Dispose()
 

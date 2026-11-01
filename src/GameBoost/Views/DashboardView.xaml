@@ -5,8 +5,8 @@
         <Style x:Key="TileIcon" TargetType="Border">
             <Setter Property="Width" Value="40" />
             <Setter Property="Height" Value="40" />
-            <Setter Property="CornerRadius" Value="12" />
-            <Setter Property="Background" Value="{StaticResource B.AccentSoft}" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Background" Value="{StaticResource B.Bg3}" />
         </Style>
         <Style x:Key="StatBlock" TargetType="StackPanel">
             <Setter Property="Margin" Value="0,0,18,0" />
@@ -17,8 +17,7 @@
         <StackPanel Margin="0,0,10,0">
             <!-- Header -->
             <StackPanel Margin="0,0,0,20">
-                <TextBlock Text="{DynamicResource Home.Eyebrow}" Style="{StaticResource Text.Eyebrow}" />
-                <TextBlock Text="{Binding Greeting}" Style="{StaticResource Text.H1}" />
+                <TextBlock Text="{DynamicResource Nav.Home}" Style="{StaticResource Text.H1}" />
                 <TextBlock Text="{DynamicResource Home.Subtitle}" Style="{StaticResource Text.Muted}" Margin="0,4,0,0" />
             </StackPanel>
 
@@ -104,12 +103,6 @@
                     <StackPanel>
                         <Grid Margin="0,0,0,16">
                             <TextBlock Text="{DynamicResource Home.LiveTitle}" Style="{StaticResource Text.H2}" />
-                            <Border Style="{StaticResource Chip}" HorizontalAlignment="Right" Margin="0">
-                                <StackPanel Orientation="Horizontal">
-                                    <Ellipse Width="7" Height="7" Fill="{StaticResource B.Accent}" Margin="0,0,6,0" VerticalAlignment="Center" />
-                                    <TextBlock Text="{DynamicResource Home.Live}" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource B.TextDim}" />
-                                </StackPanel>
-                            </Border>
                         </Grid>
                         <UniformGrid Columns="4">
                             <StackPanel Style="{StaticResource StatBlock}">
@@ -152,7 +145,7 @@
                         </Button>
                         <StackPanel VerticalAlignment="Center" Margin="0,10,0,0">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding ScoreText}" FontFamily="{StaticResource DisplayFont}" FontSize="54" FontWeight="Bold" Foreground="{StaticResource B.Accent}" />
+                                <TextBlock Text="{Binding ScoreText}" FontFamily="{StaticResource DisplayFont}" FontSize="44" FontWeight="SemiBold" Foreground="{StaticResource B.Accent}" />
                                 <TextBlock Text="/100" FontFamily="{StaticResource DisplayFont}" FontSize="18" Foreground="{StaticResource B.TextDim}" VerticalAlignment="Bottom" Margin="4,0,0,12" />
                             </StackPanel>
                             <TextBlock Text="{Binding ScoreLabel}" FontWeight="SemiBold" FontSize="14" />
@@ -161,73 +154,6 @@
                     </DockPanel>
                 </Border>
             </Grid>
-
-            <!-- Hardware + hotkeys -->
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="14" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <Border Style="{StaticResource Card.Glass}">
-                    <StackPanel>
-                        <Grid Margin="0,0,0,14">
-                            <TextBlock Text="{DynamicResource Home.SystemTitle}" Style="{StaticResource Text.H2}" />
-                            <Border Style="{StaticResource Chip}" HorizontalAlignment="Right" Margin="0" Visibility="{Binding HasCheck, Converter={StaticResource BoolToVis}}">
-                                <TextBlock Text="{Binding TierText}" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource B.Accent}" />
-                            </Border>
-                        </Grid>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="90" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <TextBlock Text="{DynamicResource Home.Cpu}" Style="{StaticResource Text.StatLabel}" Margin="0,0,0,10" />
-                            <TextBlock Grid.Column="1" Text="{Binding CpuName}" TextTrimming="CharacterEllipsis" />
-                            <TextBlock Grid.Row="1" Text="{DynamicResource Home.Gpu}" Style="{StaticResource Text.StatLabel}" Margin="0,0,0,10" />
-                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding GpuName}" TextTrimming="CharacterEllipsis" />
-                            <TextBlock Grid.Row="2" Text="{DynamicResource Home.Memory}" Style="{StaticResource Text.StatLabel}" Margin="0,0,0,10" />
-                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding MemoryName}" />
-                            <TextBlock Grid.Row="3" Text="{DynamicResource Home.Display}" Style="{StaticResource Text.StatLabel}" />
-                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding DisplayName}" />
-                        </Grid>
-                    </StackPanel>
-                </Border>
-
-                <Border Grid.Column="2" Style="{StaticResource Card.Glass}">
-                    <StackPanel>
-                        <TextBlock Text="{DynamicResource Home.HotkeysTitle}" Style="{StaticResource Text.H2}" Margin="0,0,0,14" />
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <TextBlock Text="{DynamicResource Nav.GameMode}" Foreground="{StaticResource B.TextDim}" Margin="0,0,0,9" />
-                            <TextBlock Grid.Column="1" Text="{Binding HkGameMode}" FontWeight="SemiBold" FontFamily="{StaticResource DisplayFont}" />
-                            <TextBlock Grid.Row="1" Text="{DynamicResource Nav.Crosshair}" Foreground="{StaticResource B.TextDim}" Margin="0,0,0,9" />
-                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding HkCrosshair}" FontWeight="SemiBold" FontFamily="{StaticResource DisplayFont}" />
-                            <TextBlock Grid.Row="2" Text="{DynamicResource Nav.Performance}" Foreground="{StaticResource B.TextDim}" Margin="0,0,0,9" />
-                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding HkHud}" FontWeight="SemiBold" FontFamily="{StaticResource DisplayFont}" />
-                            <TextBlock Grid.Row="3" Text="{DynamicResource ST.Hk.NextPreset}" Foreground="{StaticResource B.TextDim}" />
-                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding HkNextPreset}" FontWeight="SemiBold" FontFamily="{StaticResource DisplayFont}" />
-                        </Grid>
-                        <TextBlock Text="{DynamicResource Home.HotkeysHint}" Style="{StaticResource Text.Muted}" FontSize="11.5" Margin="0,12,0,0" />
-                    </StackPanel>
-                </Border>
-            </Grid>
-        </StackPanel>
+</StackPanel>
     </ScrollViewer>
 </UserControl>
