@@ -1,6 +1,7 @@
 # Builds GameBoost as a single self-contained .exe (no installed .NET required).
 # Usage:  powershell -ExecutionPolicy Bypass -File build.ps1
-# Output: publish\GameBoost.exe and publish\GameBoost-<version>-win-x64.zip
+# Output: publish\GameBoost-<version>-win-x64.zip (portable) and publish\GameBoost-Setup-<version>.exe (installer)
+# Needs the .NET 8 SDK and Inno Setup 6.
 param(
     [string]$Configuration = "Release",
     [string]$Runtime = "win-x64",
@@ -47,7 +48,20 @@ $version = ($proj.Project.PropertyGroup | Where-Object { $_.Version } | Select-O
 $zip = Join-Path $out "GameBoost-$version-$Runtime.zip"
 Compress-Archive -Path (Join-Path $out "GameBoost.exe"), (Join-Path $out "README.txt") -DestinationPath $zip -Force
 
+Write-Host "==> Installer (Inno Setup)" -ForegroundColor Cyan
+$iscc = @(
+    (Get-Command iscc.exe -ErrorAction SilentlyContinue).Source,
+    (Join-Path $env:LOCALAPPDATA "Programs\Inno Setup 6\ISCC.exe"),
+    (Join-Path ${env:ProgramFiles(x86)} "Inno Setup 6\ISCC.exe"),
+    (Join-Path $env:ProgramFiles "Inno Setup 6\ISCC.exe")
+) | Where-Object { $_ -and (Test-Path $_) } | Select-Object -First 1
+if (-not $iscc) { throw "Inno Setup 6 not found. Install it from https://jrsoftware.org/isdl.php" }
+& $iscc /Q "/DMyAppVersion=$version" "/DSourceDir=$out" (Join-Path $root "installer\GameBoost.iss")
+if ($LASTEXITCODE -ne 0) { throw "Installer build failed" }
+$setup = Join-Path $out "GameBoost-Setup-$version.exe"
+
 $exe = Get-Item (Join-Path $out "GameBoost.exe")
 Write-Host ""
-Write-Host ("Done: {0} ({1:N1} MB)" -f $exe.FullName, ($exe.Length / 1MB)) -ForegroundColor Green
-Write-Host ("ZIP:    {0}" -f $zip) -ForegroundColor Green
+Write-Host ("Done:  {0} ({1:N1} MB)" -f $exe.FullName, ($exe.Length / 1MB)) -ForegroundColor Green
+Write-Host ("ZIP:   {0}" -f $zip) -ForegroundColor Green
+Write-Host ("Setup: {0} ({1:N1} MB)" -f $setup, ((Get-Item $setup).Length / 1MB)) -ForegroundColor Green

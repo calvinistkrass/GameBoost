@@ -5,6 +5,7 @@
 - Leaner dashboard (toggles, live stats, PC score).
 - New flat accent color for app, overlay, tray icon and app icon.
 - Simpler one-page website.
+- New: Windows installer (`GameBoost-Setup-<version>.exe`, Inno Setup) next to the portable ZIP – Start menu entry, optional desktop icon, uninstall via *Apps & features*, no admin rights needed.
 
 ## 1.1.0
 - New in-game **performance overlay**: FPS/frame time (admin), GPU load & temperature, VRAM, CPU, RAM, clock – position, size, background and values configurable, hotkey `Ctrl+Alt+H`, optional auto-show with game mode and "only over fullscreen games".

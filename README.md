@@ -61,8 +61,12 @@ No installation, a single `.exe`, free and open source.
 
 ## Download & run
 
-1. Download the latest `GameBoost-x.y.z-win-x64.zip` from **[Releases](../../releases/latest)**.
-2. Unzip it and run `GameBoost.exe` – done.
+Download from **[Releases](../../releases/latest)** – two options with the same app:
+
+| | File | |
+|---|---|---|
+| **Installer** (recommended) | `GameBoost-Setup-x.y.z.exe` | Run it and follow the steps. Adds GameBoost to the Start menu (optionally the desktop) and to *Apps & features*, so it can be uninstalled like any other app. No admin rights needed – choose “Install for me only”. |
+| **Portable** | `GameBoost-x.y.z-win-x64.zip` | Unzip anywhere and run `GameBoost.exe`. Nothing is installed. |
 
 > **Windows SmartScreen:** the `.exe` is not digitally signed, so Windows may show “Windows protected your PC” on first launch. Click **More info → Run anyway**.
 
@@ -109,16 +113,16 @@ In `%AppData%\GameBoost\settings.json`. Log files are in `%AppData%\GameBoost\lo
 Set the game to borderless window mode, and pick the right screen under *Crosshair → Monitor*.
 
 **How do I uninstall GameBoost?**
-Turn off “Start with Windows”, quit GameBoost from the tray menu, then delete `GameBoost.exe` and the folder `%AppData%\GameBoost`. Use *Undo* in the PC check first if you want to restore changed Windows settings.
+Installer version: *Settings → Apps → Installed apps → GameBoost → Uninstall* (this also removes the “Start with Windows” entry). Portable version: turn off “Start with Windows”, quit GameBoost from the tray menu, then delete `GameBoost.exe`. To also remove your settings, delete the folder `%AppData%\GameBoost`. Use *Undo* in the PC check first if you want to restore changed Windows settings.
 
 ---
 
 ## Build from source
 
-Requirement: [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+Requirements: [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) and [Inno Setup 6](https://jrsoftware.org/isdl.php) (for the installer)
 
 ```powershell
-# Run the tests and create the single .exe (output in .\publish)
+# Run the tests and create the portable ZIP and the installer (output in .\publish)
 powershell -ExecutionPolicy Bypass -File build.ps1
 ```
 
@@ -148,6 +152,7 @@ src/GameBoost/
 ├── Infrastructure/        logger, localization (EN/DE), Win32 interop, converters
 └── Themes/Theme.xaml      dark theme
 tests/GameBoost.Tests/     xUnit tests
+installer/GameBoost.iss    Inno Setup script for the installer
 website/                   landing page (static, deployable to Vercel – root directory: website)
 ```
 

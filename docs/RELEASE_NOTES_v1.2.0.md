@@ -9,7 +9,8 @@
 All features from 1.1.0 are unchanged: game mode, performance overlay (FPS, GPU load and temperature, VRAM, CPU, RAM), PC check and crosshair overlay.
 
 ### Download
-Download **`GameBoost-1.2.0-win-x64.zip`**, unzip it and run `GameBoost.exe`. No installation needed.
+- **Installer (recommended):** `GameBoost-Setup-1.2.0.exe` – run it and follow the steps. Adds GameBoost to the Start menu and to *Apps & features*. No admin rights needed (“Install for me only”).
+- **Portable:** `GameBoost-1.2.0-win-x64.zip` – unzip anywhere and run `GameBoost.exe`, nothing is installed.
 
 > Windows SmartScreen warns on first launch because the `.exe` is not signed → **More info → Run anyway**.
 
