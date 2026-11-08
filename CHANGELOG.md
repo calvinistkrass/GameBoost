@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.3.0
+- New **Games** page: installed games from Steam, Epic Games and Riot plus manual entries; play with the linked profile or create a profile in one click.
+- New **Sessions** page: every game mode run is recorded (avg FPS, 1% low, max FPS, GPU temperature, GPU/CPU load, RAM) with FPS and temperature charts; last session on the dashboard.
+- **Temperature warning** in-game when the GPU exceeds a configurable limit.
+- **On-screen hints** for hotkey actions (crosshair, preset, game mode, overlay).
+- **Free RAM** button in the PC check and optional "free memory on start" per profile.
+- **Cleanup** of temp files, crash dumps, old logs and shader caches.
+- **Crosshair:** new styles X, square and circle + dot; "hide while aiming" (right mouse button).
+- **Appearance:** light mode and seven accent colors.
+- **Profiles:** export and import as `.gbprofile` files.
+- **Auto-updater:** checks GitHub on startup; installed versions download and install the new setup silently and restart.
+- **Discord Rich Presence** (optional, needs an application ID).
+- Website: new features, screenshots and copyright notice.
+
 ## 1.2.0
 - Simpler design: flat colors, no gradients or glow effects, cleaner sidebar and headings.
 - Leaner dashboard (toggles, live stats, PC score).

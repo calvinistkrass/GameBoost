@@ -41,6 +41,8 @@ public sealed class GameModeViewModel : ObservableObject, IDisposable, INavigati
         RenameProfileCommand = new RelayCommand(RenameProfile);
         DuplicateProfileCommand = new RelayCommand(DuplicateProfile);
         DeleteProfileCommand = new RelayCommand(DeleteProfile, () => Profiles.Count > 1);
+        ExportProfileCommand = new RelayCommand(ExportProfile);
+        ImportProfileCommand = new RelayCommand(ImportProfile);
         AddProgramCommand = new RelayCommand(AddProgram);
         RemoveProgramCommand = new RelayCommand(p => RemoveProgram(p as StartProgram));
         AddTriggerCommand = new RelayCommand(AddTriggerByName, () => !string.IsNullOrWhiteSpace(NewTriggerName));
@@ -66,6 +68,8 @@ public sealed class GameModeViewModel : ObservableObject, IDisposable, INavigati
     public RelayCommand RenameProfileCommand { get; }
     public RelayCommand DuplicateProfileCommand { get; }
     public RelayCommand DeleteProfileCommand { get; }
+    public RelayCommand ExportProfileCommand { get; }
+    public RelayCommand ImportProfileCommand { get; }
     public RelayCommand AddProgramCommand { get; }
     public RelayCommand RemoveProgramCommand { get; }
     public RelayCommand AddTriggerCommand { get; }
@@ -325,6 +329,48 @@ public sealed class GameModeViewModel : ObservableObject, IDisposable, INavigati
         SelectedProfile = Profiles[index == 0 ? 1 : index - 1];
         Profiles.Remove(toDelete);
         _controller.SettingsService.RequestSave();
+    }
+
+    private void ExportProfile()
+    {
+        var dlg = new SaveFileDialog
+        {
+            Title = Loc.T("GM.ExportProfile"),
+            Filter = Loc.T("Dlg.ProfileFilter"),
+            DefaultExt = ProfileTransfer.Extension,
+            FileName = string.Concat(SelectedProfile.Name.Split(Path.GetInvalidFileNameChars())) + ProfileTransfer.Extension
+        };
+        if (dlg.ShowDialog() != true) return;
+        try
+        {
+            ProfileTransfer.Export(SelectedProfile, dlg.FileName);
+            Dialogs.Info(Loc.F("GM.Exported", SelectedProfile.Name));
+        }
+        catch (Exception ex)
+        {
+            ErrorReporter.Report("Profile could not be exported", ex);
+        }
+    }
+
+    private void ImportProfile()
+    {
+        var dlg = new OpenFileDialog
+        {
+            Title = Loc.T("GM.ImportProfile"),
+            Filter = Loc.T("Dlg.ProfileFilter"),
+            CheckFileExists = true
+        };
+        if (dlg.ShowDialog() != true) return;
+        var profile = ProfileTransfer.Import(dlg.FileName, Profiles.Select(p => p.Name));
+        if (profile == null)
+        {
+            Dialogs.Error(Loc.T("GM.ImportFailed"));
+            return;
+        }
+        Profiles.Add(profile);
+        SelectedProfile = profile;
+        _controller.SettingsService.RequestSave();
+        Dialogs.Info(Loc.F("GM.Imported", profile.Name));
     }
 
     // ------------------------------------------------------------------ Start programs

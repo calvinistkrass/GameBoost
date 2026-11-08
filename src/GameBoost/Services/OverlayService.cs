@@ -1,4 +1,6 @@
+using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Threading;
 using GameBoost.Infrastructure;
 using GameBoost.Views;
 using Microsoft.Win32;
@@ -8,13 +10,30 @@ namespace GameBoost.Services;
 /// <summary>Manages the crosshair overlay window.</summary>
 public sealed class OverlayService : IDisposable
 {
+    private const int VK_RBUTTON = 0x02;
+
+    [DllImport("user32.dll")]
+    private static extern short GetAsyncKeyState(int vKey);
+
     private readonly SettingsService _settings;
+    private readonly DispatcherTimer _aimTimer;
     private CrosshairOverlayWindow? _window;
 
     public OverlayService(SettingsService settings)
     {
         _settings = settings;
         SystemEvents.DisplaySettingsChanged += OnDisplaySettingsChanged;
+        // "Hide while aiming": hide the crosshair while the right mouse button is held.
+        _aimTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(15), DispatcherPriority.Render, (_, _) => CheckAiming(), Dispatcher.CurrentDispatcher);
+        _aimTimer.Stop();
+    }
+
+    private void CheckAiming()
+    {
+        if (_window is not { IsVisible: true }) return;
+        var aiming = _settings.Settings.Crosshair.HideWhileAiming && (GetAsyncKeyState(VK_RBUTTON) & 0x8000) != 0;
+        var opacity = aiming ? 0.0 : 1.0;
+        if (Math.Abs(_window.Opacity - opacity) > 0.01) _window.Opacity = opacity;
     }
 
     public bool IsVisible => _window?.IsVisible == true;
@@ -30,6 +49,7 @@ public sealed class OverlayService : IDisposable
             Reposition();
             if (!_window.IsVisible) _window.Show();
             Reposition();
+            _aimTimer.Start();
             Logger.Info("Crosshair shown");
         }
         catch (Exception ex)
@@ -43,8 +63,10 @@ public sealed class OverlayService : IDisposable
     {
         try
         {
+            _aimTimer.Stop();
             if (_window?.IsVisible == true)
             {
+                _window.Opacity = 1;
                 _window.Hide();
                 Logger.Info("Crosshair hidden");
             }
@@ -116,6 +138,7 @@ public sealed class OverlayService : IDisposable
     public void Dispose()
     {
         SystemEvents.DisplaySettingsChanged -= OnDisplaySettingsChanged;
+        _aimTimer.Stop();
         try
         {
             _window?.Close();

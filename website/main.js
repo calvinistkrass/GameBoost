@@ -3,9 +3,9 @@
 // and both download links (installer + portable ZIP) are taken from the latest release automatically.
 const RELEASE = {
   repo: "calvinistkrass/GameBoost",
-  version: "1.2.0",
-  setup: "GameBoost-Setup-1.2.0.exe",
-  zip: "GameBoost-1.2.0-win-x64.zip",
+  version: "1.3.0",
+  setup: "GameBoost-Setup-1.3.0.exe",
+  zip: "GameBoost-1.3.0-win-x64.zip",
   size: "approx. 60 MB",
 };
 
@@ -25,7 +25,6 @@ apply({
   setupUrl: `${base}/download/v${RELEASE.version}/${RELEASE.setup}`,
   zipUrl: `${base}/download/v${RELEASE.version}/${RELEASE.zip}`,
 });
-document.getElementById("year").textContent = new Date().getFullYear();
 
 // Latest release from GitHub (public API, no login)
 fetch(`https://api.github.com/repos/${RELEASE.repo}/releases/latest`, { headers: { Accept: "application/vnd.github+json" } })

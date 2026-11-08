@@ -8,7 +8,10 @@ public enum CrosshairStyle
     Dot,
     Circle,
     CrossWithDot,
-    TShape
+    TShape,
+    Diagonal,
+    Square,
+    CircleWithDot
 }
 
 /// <summary>All crosshair parameters. All sizes are in physical screen pixels.</summary>
@@ -163,6 +166,9 @@ public static class CrosshairSamples
     public static CrosshairConfig Circle { get; } = new() { Style = CrosshairStyle.Circle, Color = "#E8ECF4", Length = 9, Thickness = 2, Outline = false };
     public static CrosshairConfig CrossWithDot { get; } = new() { Style = CrosshairStyle.CrossWithDot, Color = "#E8ECF4", Length = 6, Thickness = 2, Gap = 4, DotSize = 2, Outline = false };
     public static CrosshairConfig TShape { get; } = new() { Style = CrosshairStyle.TShape, Color = "#E8ECF4", Length = 7, Thickness = 2, Gap = 3, Outline = false };
+    public static CrosshairConfig Diagonal { get; } = new() { Style = CrosshairStyle.Diagonal, Color = "#E8ECF4", Length = 6, Thickness = 2, Gap = 3, Outline = false };
+    public static CrosshairConfig Square { get; } = new() { Style = CrosshairStyle.Square, Color = "#E8ECF4", Length = 8, Thickness = 2, Outline = false };
+    public static CrosshairConfig CircleWithDot { get; } = new() { Style = CrosshairStyle.CircleWithDot, Color = "#E8ECF4", Length = 10, Thickness = 2, DotSize = 2, Outline = false };
 
     public static IEnumerable<CrosshairPreset> DefaultPresets()
     {

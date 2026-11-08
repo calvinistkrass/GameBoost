@@ -84,6 +84,20 @@
                         </StackPanel>
                     </Border>
 
+                    <!-- Temperature warning -->
+                    <Border Style="{StaticResource Card.Glass}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <CheckBox IsChecked="{Binding Options.TempWarning}" Margin="0,0,0,12">
+                                <StackPanel>
+                                    <TextBlock Text="{DynamicResource Hud.TempWarn}" FontWeight="SemiBold" />
+                                    <TextBlock Text="{DynamicResource Hud.TempWarnDesc}" Style="{StaticResource Text.Muted}" Margin="0,2,0,0" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </CheckBox>
+                            <controls:SliderRow Label="{DynamicResource Hud.TempLimit}" Minimum="60" Maximum="100" Suffix=" °C" Value="{Binding Options.TempWarningLimit}"
+                                                IsEnabled="{Binding Options.TempWarning}" />
+                        </StackPanel>
+                    </Border>
+
                     <!-- FPS needs admin -->
                     <Border Style="{StaticResource WarnBox}" Padding="16,14" Visibility="{Binding IsElevated, Converter={StaticResource BoolToVis}, ConverterParameter=invert}">
                         <Grid>

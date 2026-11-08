@@ -52,12 +52,129 @@
                             <TextBlock Text="{DynamicResource ST.CloseToTrayDesc}" Style="{StaticResource Text.Muted}" Margin="0,2,0,0" />
                         </StackPanel>
                     </CheckBox>
+                    <CheckBox IsChecked="{Binding ShowOsd}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource ST.Osd}" FontWeight="SemiBold" />
+                            <TextBlock Text="{DynamicResource ST.OsdDesc}" Style="{StaticResource Text.Muted}" Margin="0,2,0,0" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </CheckBox>
                     <CheckBox IsChecked="{Binding AutoProfileSwitch}">
                         <StackPanel>
                             <TextBlock Text="{DynamicResource ST.AutoProfile}" FontWeight="SemiBold" />
                             <TextBlock Text="{DynamicResource ST.AutoProfileDesc}" Style="{StaticResource Text.Muted}" Margin="0,2,0,0" />
                         </StackPanel>
                     </CheckBox>
+                </StackPanel>
+            </Border>
+
+            <!-- Appearance -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="{DynamicResource ST.Appearance}" Style="{StaticResource Text.H2}" Margin="0,0,0,16" />
+                    <Grid Margin="0,0,0,18">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="{DynamicResource ST.Theme}" FontWeight="SemiBold" />
+                            <TextBlock Text="{DynamicResource ST.ThemeDesc}" Style="{StaticResource Text.Muted}" Margin="0,2,0,0" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <RadioButton Style="{StaticResource RadioButton.Tab}" GroupName="Theme" IsChecked="{Binding DarkTheme}" Content="{DynamicResource ST.Theme.Dark}" />
+                            <RadioButton Style="{StaticResource RadioButton.Tab}" GroupName="Theme" IsChecked="{Binding LightTheme}" Content="{DynamicResource ST.Theme.Light}" />
+                        </StackPanel>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="{DynamicResource ST.Accent}" FontWeight="SemiBold" />
+                            <TextBlock Text="{Binding AccentName}" Style="{StaticResource Text.Muted}" Margin="0,2,0,0" />
+                        </StackPanel>
+                        <ItemsControl Grid.Column="1" ItemsSource="{Binding Accents}" VerticalAlignment="Center">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Style="{StaticResource Button.Swatch}" Margin="0,0,8,0" Background="{Binding Hex, Converter={StaticResource HexToBrush}}" ToolTip="{Binding Name}"
+                                            CommandParameter="{Binding Hex}" Command="{Binding DataContext.SetAccentCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                    <Border Style="{StaticResource InfoBox}" Margin="0,16,0,0" Visibility="{Binding RestartNeeded, Converter={StaticResource BoolToVis}}">
+                        <Grid>
+                            <TextBlock Text="{DynamicResource ST.RestartHint}" Style="{StaticResource Text.Muted}" VerticalAlignment="Center" Margin="0,0,150,0" TextWrapping="Wrap" />
+                            <Button HorizontalAlignment="Right" Style="{StaticResource Button.Primary}" Padding="12,6" Content="{DynamicResource ST.RestartNow}" Command="{Binding RestartCommand}" />
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!-- Updates -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="{DynamicResource ST.Updates}" Style="{StaticResource Text.H2}" Margin="0,0,0,16" />
+                    <CheckBox IsChecked="{Binding CheckForUpdates}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource ST.AutoUpdate}" FontWeight="SemiBold" />
+                            <TextBlock Text="{DynamicResource ST.AutoUpdateDesc}" Style="{StaticResource Text.Muted}" Margin="0,2,0,0" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </CheckBox>
+                    <Grid>
+                        <TextBlock Text="{Binding UpdateStatus}" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,300,0" TextWrapping="Wrap" />
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Command="{Binding CheckUpdateCommand}" Margin="0,0,8,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE72C;" Style="{StaticResource Text.Icon}" FontSize="13" Margin="0,0,8,0" />
+                                    <TextBlock Text="{DynamicResource Update.CheckNow}" />
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource Button.Primary}" Command="{Binding InstallUpdateCommand}" Content="{Binding InstallUpdateText}"
+                                    Visibility="{Binding UpdateAvailable, Converter={StaticResource BoolToVis}}" />
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Discord -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <Grid Margin="0,0,0,16">
+                        <TextBlock Text="{DynamicResource ST.Discord}" Style="{StaticResource Text.H2}" VerticalAlignment="Center" />
+                        <Border Style="{StaticResource Chip}" HorizontalAlignment="Right" Margin="0">
+                            <TextBlock Text="{Binding DiscordStatus}" FontSize="11" FontWeight="SemiBold" />
+                        </Border>
+                    </Grid>
+                    <CheckBox IsChecked="{Binding DiscordEnabled}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource ST.DiscordEnable}" FontWeight="SemiBold" />
+                            <TextBlock Text="{DynamicResource ST.DiscordEnableDesc}" Style="{StaticResource Text.Muted}" Margin="0,2,0,0" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </CheckBox>
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="260" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="{DynamicResource ST.DiscordId}" FontWeight="SemiBold" />
+                            <TextBlock Text="{DynamicResource ST.DiscordIdDesc}" Style="{StaticResource Text.Muted}" Margin="0,2,12,0" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <TextBox Grid.Column="1" Text="{Binding DiscordClientId, UpdateSourceTrigger=LostFocus}" FontFamily="Consolas" VerticalAlignment="Center" />
+                    </Grid>
+                    <Button HorizontalAlignment="Left" Style="{StaticResource Button.Ghost}" Padding="8,4" Command="{Binding OpenDiscordPortalCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE8A7;" Style="{StaticResource Text.Icon}" FontSize="12" Margin="0,0,6,0" />
+                            <TextBlock Text="{DynamicResource ST.DiscordPortal}" />
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
             </Border>
 

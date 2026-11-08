@@ -19,14 +19,22 @@ Game mode
   - "Automation" tab: enter a game's .exe -> the profile starts automatically with the game.
   - When you turn it off, power plan and notifications are restored.
 
-Performance overlay (new in 1.1)
+Performance overlay
   - Shows FPS, GPU load and temperature, VRAM, CPU and RAM on top of your game.
   - Pick corner, size, background and values on the "Performance Overlay" page.
   - FPS needs administrator rights: click "Restart as administrator" on that page.
 
-PC check (new in 1.1)
+PC check
   - Scores your PC and checks Windows gaming settings. "Optimize" fixes them, "Undo" restores them.
   - Shows recommended in-game graphics settings for your hardware.
+  - "Free RAM" and "Clean up" remove unused memory, temp files and caches.
+
+Games (new in 1.3)
+  - Lists your Steam, Epic Games and Riot games. "Play" starts the game with its profile,
+    "Create profile" makes game mode start automatically with that game.
+
+Sessions (new in 1.3)
+  - Every game mode run is recorded: average FPS, 1% low, GPU temperature and load, with charts.
 
 Crosshair
   - Set style, color, size, thickness, gap, outline and offset – the preview updates live.

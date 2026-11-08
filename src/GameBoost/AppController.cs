@@ -37,6 +37,7 @@ public sealed class AppController : IDisposable
     {
         _app = app;
         SettingsService.Load();
+        ThemeService.Apply(Settings); // before any window or style is created
         Loc.Apply(Settings.Language);
 
         GameMode = new GameModeService(SettingsService);
@@ -44,6 +45,10 @@ public sealed class AppController : IDisposable
         Performance = new PerformanceMonitorService();
         Hud = new HudService(SettingsService, Performance);
         SystemCheck = new SystemCheckService(SettingsService);
+        Osd = new OsdService(SettingsService);
+        Sessions = new SessionService(Performance);
+        Updates = new UpdateService();
+        Discord = new DiscordPresenceService();
         Hotkeys = new HotkeyService();
         Tray = new TrayService();
         Watcher = new ProcessWatcherService(this);
@@ -55,6 +60,10 @@ public sealed class AppController : IDisposable
     public PerformanceMonitorService Performance { get; }
     public HudService Hud { get; }
     public SystemCheckService SystemCheck { get; }
+    public OsdService Osd { get; }
+    public SessionService Sessions { get; }
+    public UpdateService Updates { get; }
+    public DiscordPresenceService Discord { get; }
     public HotkeyService Hotkeys { get; }
     public TrayService Tray { get; }
     public ProcessWatcherService Watcher { get; }
@@ -73,6 +82,9 @@ public sealed class AppController : IDisposable
         AutostartService.Sync(Settings.StartWithWindows);
 
         GameMode.StateChanged += (_, _) => UpdateTray();
+        GameMode.StateChanged += (_, _) => OnGameModeChanged();
+        Performance.Updated += OnPerformanceSnapshot;
+        ApplyDiscordSettings();
         Overlay.VisibilityChanged += (_, _) => UpdateTray();
         Hud.VisibilityChanged += (_, _) => UpdateTray();
 
@@ -101,6 +113,7 @@ public sealed class AppController : IDisposable
         if (!(options.Minimized || Settings.StartMinimized)) ShowMainWindow();
 
         if (recovered) Tray.ShowBalloon(Loc.T("Tray.Recovered.Title"), Loc.T("Tray.Recovered.Text"));
+        if (Settings.CheckForUpdates) _ = CheckForUpdatesDelayedAsync();
         Logger.Info("GameBoost started");
     }
 
@@ -167,6 +180,12 @@ public sealed class AppController : IDisposable
         try
         {
             if (!await GameMode.ActivateAsync(profile, automatic)) return;
+
+            if (profile.FreeRamOnActivate)
+            {
+                var keep = profile.TriggerExecutables.ToList();
+                _ = Task.Run(() => MemoryCleaner.Trim(keep));
+            }
 
             if (profile.ShowCrosshair)
             {
@@ -292,16 +311,115 @@ public sealed class AppController : IDisposable
         {
             case HotkeyAction.ToggleCrosshair:
                 ToggleCrosshair();
+                Osd.Show(Loc.T(Overlay.IsVisible ? "Osd.CrosshairOn" : "Osd.CrosshairOff"));
                 break;
             case HotkeyAction.ToggleGameMode:
-                _ = ToggleGameModeAsync();
+                _ = ToggleGameModeWithHintAsync();
                 break;
             case HotkeyAction.NextPreset:
                 NextPreset();
+                Osd.Show(Loc.F("Osd.Preset", Settings.Crosshair.ActivePresetName ?? ""));
                 break;
             case HotkeyAction.ToggleHud:
                 ToggleHud();
+                Osd.Show(Loc.T(Hud.IsVisible ? "Osd.HudOn" : "Osd.HudOff"));
                 break;
+        }
+    }
+
+    private async Task ToggleGameModeWithHintAsync()
+    {
+        await ToggleGameModeAsync();
+        Osd.Show(GameMode.IsActive
+            ? Loc.F("Osd.GameModeOn", GameMode.ActiveProfile?.Name ?? "")
+            : Loc.T("Osd.GameModeOff"));
+    }
+
+    // ------------------------------------------------------------------ Sessions, Discord, warnings, updates
+
+    private bool _sessionActive;
+    private DateTime _lastTempWarning = DateTime.MinValue;
+
+    private void OnGameModeChanged()
+    {
+        if (GameMode.IsBusy) return;
+        if (GameMode.IsActive && !_sessionActive)
+        {
+            _sessionActive = true;
+            var name = GameMode.ActiveProfile?.Name ?? "";
+            Sessions.Start(name);
+            Discord.SetActivity(name, Loc.T("Discord.GameModeOn"), GameMode.ActivatedAt ?? DateTime.Now);
+        }
+        else if (!GameMode.IsActive && _sessionActive)
+        {
+            _sessionActive = false;
+            _ = Task.Run(Sessions.Stop);
+            Discord.Clear();
+        }
+    }
+
+    private void OnPerformanceSnapshot(object? sender, Services.Performance.PerformanceSnapshot s)
+    {
+        if (s.GpuTemperature is not { } temp) return;
+        var hud = Settings.Hud;
+        if (!hud.TempWarning || temp < hud.TempWarningLimit) return;
+        if (DateTime.Now - _lastTempWarning < TimeSpan.FromMinutes(3)) return;
+        _app.Dispatcher.BeginInvoke(() =>
+        {
+            if (!(Hud.IsVisible || GameMode.IsActive)) return;
+            _lastTempWarning = DateTime.Now;
+            Logger.Warn($"GPU temperature warning: {temp:0} °C");
+            Osd.Show(Loc.F("Osd.TempWarning", temp.ToString("0")), warning: true);
+        });
+    }
+
+    public void ApplyDiscordSettings()
+    {
+        Discord.Configure(Settings.Discord.Enabled, Settings.Discord.ClientId);
+        if (GameMode.IsActive)
+            Discord.SetActivity(GameMode.ActiveProfile?.Name ?? "", Loc.T("Discord.GameModeOn"), GameMode.ActivatedAt ?? DateTime.Now);
+    }
+
+    private async Task CheckForUpdatesDelayedAsync()
+    {
+        await Task.Delay(TimeSpan.FromSeconds(8));
+        var update = await Updates.CheckAsync();
+        if (update != null) Tray.ShowBalloon(Loc.T("Update.Title"), Loc.F("Update.Text", update.Version));
+    }
+
+    /// <summary>Restarts GameBoost (e.g. to apply a new theme).</summary>
+    public void Restart()
+    {
+        try
+        {
+            var exe = Environment.ProcessPath;
+            if (string.IsNullOrEmpty(exe)) return;
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(exe, $"--page=settings --after-pid={Environment.ProcessId}") { UseShellExecute = true })?.Dispose();
+            Exit();
+        }
+        catch (Exception ex)
+        {
+            ErrorReporter.Report("Could not restart GameBoost", ex);
+        }
+    }
+
+    /// <summary>Downloads and starts the setup of a newer version (installed version) or opens the release page (portable).</summary>
+    public async Task InstallUpdateAsync(IProgress<double>? progress = null)
+    {
+        if (Updates.Available is not { } info) return;
+        if (!UpdateService.IsInstalled || info.SetupUrl == null)
+        {
+            UpdateService.OpenReleasePage(info.ReleaseUrl);
+            return;
+        }
+        try
+        {
+            if (await Updates.DownloadAndInstallAsync(progress)) Exit();
+            else UpdateService.OpenReleasePage(info.ReleaseUrl);
+        }
+        catch (Exception ex)
+        {
+            ErrorReporter.Report("Update failed", ex);
         }
     }
 
@@ -320,6 +438,7 @@ public sealed class AppController : IDisposable
         Hotkeys.Apply(Settings.Hotkeys);
         Overlay.ApplySettings();
         Hud.ApplySettings();
+        ApplyDiscordSettings();
         MainViewModel?.Rebuild();
         UpdateTray();
     }
@@ -356,7 +475,10 @@ public sealed class AppController : IDisposable
         try { Hotkeys.Dispose(); } catch { /* ignore */ }
         try { Overlay.Dispose(); } catch { /* ignore */ }
         try { Hud.Dispose(); } catch { /* ignore */ }
+        try { Sessions.Dispose(); } catch { /* ignore */ }
         try { Performance.Dispose(); } catch { /* ignore */ }
+        try { Osd.Dispose(); } catch { /* ignore */ }
+        try { Discord.Dispose(); } catch { /* ignore */ }
         try { Tray.Dispose(); } catch { /* ignore */ }
         try { MainViewModel?.Dispose(); } catch { /* ignore */ }
     }

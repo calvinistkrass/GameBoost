@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Windows;
 using GameBoost.Infrastructure;
+using GameBoost.Services;
 using GameBoost.Services.Performance;
 using GameBoost.Services.SystemCheck;
 
@@ -28,7 +29,26 @@ public sealed class DashboardViewModel : ObservableObject, IDisposable, INavigat
         _controller.Performance.Updated += OnSnapshot;
         _controller.SystemCheck.Completed += OnCheckCompleted;
         Loc.LanguageChanged += OnStateChanged;
+        _controller.Updates.AvailableChanged += OnStateChanged;
+        _controller.Sessions.Completed += OnSessionCompleted;
+        InstallUpdateCommand = new AsyncRelayCommand(() => _controller.InstallUpdateAsync());
     }
+
+    public AsyncRelayCommand InstallUpdateCommand { get; }
+
+    // ------------------------------------------------------------------ Update + last session
+
+    public bool UpdateAvailable => _controller.Updates.Available != null;
+    public string UpdateText => _controller.Updates.Available is { } u ? Loc.F("Update.Available", u.Version) : "";
+    public string InstallUpdateText => UpdateService.IsInstalled ? Loc.T("Update.Install") : Loc.T("Update.Download");
+
+    public bool HasLastSession => _controller.Sessions.Sessions.Count > 0;
+    public string LastSessionText => _controller.Sessions.Sessions.FirstOrDefault() is { } s
+        ? Loc.F("Home.LastSession", s.Game, SessionsViewModel.FormatDuration(s.Duration),
+            s.AvgFps is { } f ? $"{f:0} FPS" : "– FPS", s.MaxGpuTemp is { } t ? $"{t:0} °C" : "– °C")
+        : "";
+
+    private void OnSessionCompleted(object? sender, SessionRecord e) => OnPropertyChanged(string.Empty);
 
     public AsyncRelayCommand ToggleGameModeCommand { get; }
     public RelayCommand ToggleCrosshairCommand { get; }
@@ -179,5 +199,7 @@ public sealed class DashboardViewModel : ObservableObject, IDisposable, INavigat
         _controller.Performance.Updated -= OnSnapshot;
         _controller.SystemCheck.Completed -= OnCheckCompleted;
         Loc.LanguageChanged -= OnStateChanged;
+        _controller.Updates.AvailableChanged -= OnStateChanged;
+        _controller.Sessions.Completed -= OnSessionCompleted;
     }
 }

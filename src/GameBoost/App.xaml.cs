@@ -6,8 +6,12 @@ namespace GameBoost;
 
 public partial class App : Application
 {
-    private const string MutexName = @"Local\GameBoost.SingleInstance";
-    private const string ShowEventName = @"Local\GameBoost.ShowWindow";
+    // A separate data folder (GAMEBOOST_DATA_DIR, used for tests) gets its own instance so it can run next to the real app.
+    private static readonly string InstanceSuffix = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GAMEBOOST_DATA_DIR"))
+        ? "" : "." + Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(
+            System.Text.Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("GAMEBOOST_DATA_DIR")!.ToLowerInvariant())))[..12];
+    private static readonly string MutexName = @"Local\GameBoost.SingleInstance" + InstanceSuffix;
+    private static readonly string ShowEventName = @"Local\GameBoost.ShowWindow" + InstanceSuffix;
 
     private Mutex? _mutex;
     private EventWaitHandle? _showEvent;

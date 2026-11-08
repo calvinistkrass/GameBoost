@@ -110,6 +110,9 @@ public sealed class CrosshairRenderer : FrameworkElement
                     case EllipseShape e:
                         dc.DrawEllipse(null, Freeze(new Pen(outline, e.StrokeThickness + 2 * o)), new Point(e.Cx, e.Cy), e.R, e.R);
                         break;
+                    case LineShape ln:
+                        DrawLine(dc, outline, ln, o);
+                        break;
                 }
             }
         }
@@ -127,6 +130,9 @@ public sealed class CrosshairRenderer : FrameworkElement
                 case EllipseShape e:
                     dc.DrawEllipse(null, Freeze(new Pen(fill, e.StrokeThickness)), new Point(e.Cx, e.Cy), e.R, e.R);
                     break;
+                case LineShape ln:
+                    DrawLine(dc, fill, ln, 0);
+                    break;
             }
         }
 
@@ -138,6 +144,20 @@ public sealed class CrosshairRenderer : FrameworkElement
     private abstract record Shape;
     private sealed record RectShape(double X, double Y, double W, double H) : Shape;
     private sealed record EllipseShape(double Cx, double Cy, double R, double StrokeThickness) : Shape;
+    private sealed record LineShape(double X1, double Y1, double X2, double Y2, double Thickness) : Shape;
+
+    /// <summary>Draws a straight line with square ends; <paramref name="grow"/> widens and lengthens it for the outline.</summary>
+    private static void DrawLine(DrawingContext dc, Brush brush, LineShape ln, double grow)
+    {
+        var dx = ln.X2 - ln.X1;
+        var dy = ln.Y2 - ln.Y1;
+        var len = Math.Sqrt(dx * dx + dy * dy);
+        if (len <= 0) return;
+        var ux = dx / len * grow;
+        var uy = dy / len * grow;
+        var pen = Freeze(new Pen(brush, ln.Thickness + 2 * grow) { StartLineCap = PenLineCap.Flat, EndLineCap = PenLineCap.Flat });
+        dc.DrawLine(pen, new Point(ln.X1 - ux, ln.Y1 - uy), new Point(ln.X2 + ux, ln.Y2 + uy));
+    }
 
     /// <summary>
     /// Builds the shapes relative to the center (0,0) in pixels. With odd thickness the center lies
@@ -160,13 +180,35 @@ public sealed class CrosshairRenderer : FrameworkElement
                 list.Add(new RectShape(ox - half, oy - g - l, t, l));             // top
         }
 
-        if (cfg.Style == CrosshairStyle.Circle)
+        if (cfg.Style is CrosshairStyle.Circle or CrosshairStyle.CircleWithDot)
         {
             var c = odd * 0.5;
             list.Add(new EllipseShape(ox + c, oy + c, l, t));
         }
 
-        if (cfg.Style is CrosshairStyle.Dot or CrosshairStyle.CrossWithDot)
+        if (cfg.Style == CrosshairStyle.Diagonal)
+        {
+            // X-shape: four arms at 45°, starting "gap" pixels away from the center.
+            var c = odd * 0.5;
+            var s = Math.Sqrt(0.5);
+            foreach (var (dx, dy) in new[] { (-1, -1), (1, -1), (-1, 1), (1, 1) })
+            {
+                list.Add(new LineShape(ox + c + dx * g * s, oy + c + dy * g * s,
+                                       ox + c + dx * (g + l) * s, oy + c + dy * (g + l) * s, t));
+            }
+        }
+
+        if (cfg.Style == CrosshairStyle.Square)
+        {
+            // Hollow square with an outer half size of "length".
+            int h = l, size = 2 * h + odd;
+            list.Add(new RectShape(ox - h, oy - h, size, t));               // top
+            list.Add(new RectShape(ox - h, oy + h + odd - t, size, t));     // bottom
+            list.Add(new RectShape(ox - h, oy - h, t, size));               // left
+            list.Add(new RectShape(ox + h + odd - t, oy - h, t, size));     // right
+        }
+
+        if (cfg.Style is CrosshairStyle.Dot or CrosshairStyle.CrossWithDot or CrosshairStyle.CircleWithDot)
         {
             var d = cfg.DotSize;
             if (d <= 3)

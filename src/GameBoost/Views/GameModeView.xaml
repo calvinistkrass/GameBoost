@@ -46,7 +46,9 @@
                             <Button Style="{StaticResource Button.Icon}" Content="&#xE710;" Command="{Binding NewProfileCommand}" ToolTip="{DynamicResource GM.NewProfile}" Margin="0,0,6,0" />
                             <Button Style="{StaticResource Button.Icon}" Content="&#xE70F;" Command="{Binding RenameProfileCommand}" ToolTip="{DynamicResource GM.RenameProfile}" Margin="0,0,6,0" />
                             <Button Style="{StaticResource Button.Icon}" Content="&#xE8C8;" Command="{Binding DuplicateProfileCommand}" ToolTip="{DynamicResource GM.DuplicateProfile}" Margin="0,0,6,0" />
-                            <Button Style="{StaticResource Button.Icon}" Content="&#xE74D;" Command="{Binding DeleteProfileCommand}" ToolTip="{DynamicResource GM.DeleteProfile}" />
+                            <Button Style="{StaticResource Button.Icon}" Content="&#xE74D;" Command="{Binding DeleteProfileCommand}" ToolTip="{DynamicResource GM.DeleteProfile}" Margin="0,0,6,0" />
+                            <Button Style="{StaticResource Button.Icon}" Content="&#xEDE1;" Command="{Binding ExportProfileCommand}" ToolTip="{DynamicResource GM.ExportProfile}" Margin="0,0,6,0" />
+                            <Button Style="{StaticResource Button.Icon}" Content="&#xE8B5;" Command="{Binding ImportProfileCommand}" ToolTip="{DynamicResource GM.ImportProfile}" />
                         </StackPanel>
                         <TextBlock Text="{DynamicResource GM.HotkeyHint}" Style="{StaticResource Text.Muted}" FontSize="11.5" Margin="0,12,0,0" />
                     </StackPanel>
@@ -237,6 +239,12 @@
                                 <StackPanel>
                                     <TextBlock Text="{DynamicResource GM.Opt.Notif}" FontWeight="SemiBold" />
                                     <TextBlock Text="{DynamicResource GM.Opt.NotifDesc}" Style="{StaticResource Text.Muted}" Margin="0,2,0,0" />
+                                </StackPanel>
+                            </CheckBox>
+                            <CheckBox IsChecked="{Binding SelectedProfile.FreeRamOnActivate}" Margin="0,0,0,18">
+                                <StackPanel>
+                                    <TextBlock Text="{DynamicResource GM.Opt.FreeRam}" FontWeight="SemiBold" />
+                                    <TextBlock Text="{DynamicResource GM.Opt.FreeRamDesc}" Style="{StaticResource Text.Muted}" Margin="0,2,0,0" TextWrapping="Wrap" />
                                 </StackPanel>
                             </CheckBox>
                             <CheckBox IsChecked="{Binding SelectedProfile.RestartKilledOnDeactivate}" Margin="0,0,0,18">

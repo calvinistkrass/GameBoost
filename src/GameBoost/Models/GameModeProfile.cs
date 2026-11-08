@@ -14,6 +14,7 @@ public sealed class GameModeProfile : ObservableObject
     private bool _showCrosshair;
     private string? _crosshairPresetName;
     private bool _autoDeactivateOnExit = true;
+    private bool _freeRamOnActivate;
 
     public string Id { get; set; } = NewId();
 
@@ -69,6 +70,13 @@ public sealed class GameModeProfile : ObservableObject
         set => SetProperty(ref _autoDeactivateOnExit, value);
     }
 
+    /// <summary>Free unused memory of background programs when game mode starts.</summary>
+    public bool FreeRamOnActivate
+    {
+        get => _freeRamOnActivate;
+        set => SetProperty(ref _freeRamOnActivate, value);
+    }
+
     public static string NewId() => Guid.NewGuid().ToString("N");
 
     public GameModeProfile CloneAsNew(string name) => new()
@@ -82,7 +90,8 @@ public sealed class GameModeProfile : ObservableObject
         RestartKilledOnDeactivate = RestartKilledOnDeactivate,
         ShowCrosshair = ShowCrosshair,
         CrosshairPresetName = CrosshairPresetName,
-        AutoDeactivateOnExit = AutoDeactivateOnExit
+        AutoDeactivateOnExit = AutoDeactivateOnExit,
+        FreeRamOnActivate = FreeRamOnActivate
     };
 
     internal void Normalize()

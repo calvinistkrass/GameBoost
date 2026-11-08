@@ -140,7 +140,7 @@ public sealed class TrayService : IDisposable
                 g.FillPath(bg, path);
             }
 
-            var accent = active ? Drawing.Color.FromArgb(46, 212, 151) : Drawing.Color.FromArgb(160, 166, 176);
+            var accent = active ? ThemeAccent() : Drawing.Color.FromArgb(160, 166, 176);
             using var pen = new Drawing.Pen(accent, 2.6f);
             g.DrawEllipse(pen, 8.5f, 8.5f, 15f, 15f);
             g.DrawLine(pen, 16f, 4f, 16f, 11f);
@@ -193,7 +193,7 @@ public sealed class TrayService : IDisposable
     private sealed class DarkMenuRenderer : WinForms.ToolStripProfessionalRenderer
     {
         private static readonly Drawing.Color Text = Drawing.Color.FromArgb(232, 236, 244);
-        private static readonly Drawing.Color Accent = Drawing.Color.FromArgb(46, 212, 151);
+        private static readonly Drawing.Color Accent = ThemeAccent();
 
         public DarkMenuRenderer() : base(new DarkColors())
         {
@@ -243,5 +243,11 @@ public sealed class TrayService : IDisposable
         public override Drawing.Color CheckBackground => Bg;
         public override Drawing.Color CheckSelectedBackground => Hover;
         public override Drawing.Color CheckPressedBackground => Hover;
+    }
+
+    private static Drawing.Color ThemeAccent()
+    {
+        var c = ThemeService.AccentColor;
+        return Drawing.Color.FromArgb(c.R, c.G, c.B);
     }
 }

@@ -37,6 +37,12 @@
         <DataTemplate DataType="{x:Type vm:PcCheckViewModel}">
             <views:PcCheckView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:GamesViewModel}">
+            <views:GamesView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:SessionsViewModel}">
+            <views:SessionsView />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
             <views:SettingsView />
         </DataTemplate>
@@ -144,6 +150,13 @@
                                     <TextBlock Text="{DynamicResource Nav.GameMode}" VerticalAlignment="Center" />
                                 </StackPanel>
                             </RadioButton>
+                            <RadioButton Style="{StaticResource RadioButton.Nav}" Command="{Binding NavigateCommand}" CommandParameter="Games"
+                                         IsChecked="{Binding CurrentPageKey, Mode=OneWay, Converter={StaticResource EqualsToBool}, ConverterParameter=Games}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE8F1;" Style="{StaticResource NavIcon}" />
+                                    <TextBlock Text="{DynamicResource Nav.Games}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </RadioButton>
                             <RadioButton Style="{StaticResource RadioButton.Nav}" Command="{Binding NavigateCommand}" CommandParameter="PcCheck"
                                          IsChecked="{Binding CurrentPageKey, Mode=OneWay, Converter={StaticResource EqualsToBool}, ConverterParameter=PcCheck}">
                                 <StackPanel Orientation="Horizontal">
@@ -172,6 +185,13 @@
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="&#xE945;" Style="{StaticResource NavIcon}" />
                                     <TextBlock Text="{DynamicResource Nav.Performance}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource RadioButton.Nav}" Command="{Binding NavigateCommand}" CommandParameter="Sessions"
+                                         IsChecked="{Binding CurrentPageKey, Mode=OneWay, Converter={StaticResource EqualsToBool}, ConverterParameter=Sessions}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE9D2;" Style="{StaticResource NavIcon}" />
+                                    <TextBlock Text="{DynamicResource Nav.Sessions}" VerticalAlignment="Center" />
                                 </StackPanel>
                             </RadioButton>
                         </StackPanel>

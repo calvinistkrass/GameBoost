@@ -63,7 +63,15 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExe}"; Tasks: deskto
 
 [Run]
 Filename: "{app}\{#MyAppExe}"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: nowait postinstall skipifsilent
+; In-app updates run the setup silently with /UPDATE=1 – start GameBoost again afterwards.
+Filename: "{app}\{#MyAppExe}"; Flags: nowait; Check: IsUpdate
 
 [UninstallRun]
 ; Remove the "Start with Windows" entry the app may have created.
 Filename: "{sys}\reg.exe"; Parameters: "delete ""HKCU\Software\Microsoft\Windows\CurrentVersion\Run"" /v GameBoost /f"; Flags: runhidden; RunOnceId: "RemoveAutostart"
+
+[Code]
+function IsUpdate: Boolean;
+begin
+  Result := ExpandConstant('{param:UPDATE|0}') = '1';
+end;

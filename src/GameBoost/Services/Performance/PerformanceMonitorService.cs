@@ -34,7 +34,8 @@ public sealed class PerformanceMonitorService : IDisposable
 
     private readonly object _gate = new();
     private int _users;
-    private bool _wantFps;
+    private bool _hudFps;
+    private bool _sessionFps;
     private Timer? _timer;
     private PdhCounters? _pdh;
     private GpuTemperatureReader? _gpuTemp;
@@ -76,8 +77,18 @@ public sealed class PerformanceMonitorService : IDisposable
     {
         lock (_gate)
         {
-            _wantFps = wanted;
-            if (!wanted) _fps?.Stop();
+            _hudFps = wanted;
+            if (!_hudFps && !_sessionFps) _fps?.Stop();
+        }
+    }
+
+    /// <summary>Session recording also needs FPS, independent of the overlay.</summary>
+    public void SetSessionFps(bool wanted)
+    {
+        lock (_gate)
+        {
+            _sessionFps = wanted;
+            if (!_hudFps && !_sessionFps) _fps?.Stop();
         }
     }
 
@@ -93,7 +104,7 @@ public sealed class PerformanceMonitorService : IDisposable
                 if (_timer == null) return;
                 _pdh ??= new PdhCounters(CpuCounter, CpuFallbackCounter, GpuCounter, VramCounter);
                 _gpuTemp ??= new GpuTemperatureReader();
-                if (_wantFps && FpsCounter.IsElevated)
+                if ((_hudFps || _sessionFps) && FpsCounter.IsElevated)
                 {
                     _fps ??= new FpsCounter();
                     if (!_fps.IsRunning) _fps.Start();

@@ -105,9 +105,25 @@ public sealed class CrosshairViewModel : ObservableObject, IDisposable, INavigat
 
     public bool ShowLength => Config.Style != CrosshairStyle.Dot;
     public bool ShowThickness => Config.Style != CrosshairStyle.Dot;
-    public bool ShowGap => Config.Style is CrosshairStyle.Cross or CrosshairStyle.CrossWithDot or CrosshairStyle.TShape;
-    public bool ShowDotSize => Config.Style is CrosshairStyle.Dot or CrosshairStyle.CrossWithDot;
-    public string LengthLabel => Config.Style == CrosshairStyle.Circle ? Loc.T("CH.Radius") : Loc.T("CH.Length");
+    public bool ShowGap => Config.Style is CrosshairStyle.Cross or CrosshairStyle.CrossWithDot or CrosshairStyle.TShape or CrosshairStyle.Diagonal;
+    public bool ShowDotSize => Config.Style is CrosshairStyle.Dot or CrosshairStyle.CrossWithDot or CrosshairStyle.CircleWithDot;
+    public string LengthLabel => Config.Style switch
+    {
+        CrosshairStyle.Circle or CrosshairStyle.CircleWithDot => Loc.T("CH.Radius"),
+        CrosshairStyle.Square => Loc.T("CH.Size"),
+        _ => Loc.T("CH.Length")
+    };
+
+    public bool HideWhileAiming
+    {
+        get => _controller.Settings.Crosshair.HideWhileAiming;
+        set
+        {
+            _controller.Settings.Crosshair.HideWhileAiming = value;
+            _controller.SettingsService.RequestSave();
+            OnPropertyChanged();
+        }
+    }
 
     public int PreviewZoom
     {

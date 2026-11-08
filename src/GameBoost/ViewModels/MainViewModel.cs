@@ -29,6 +29,8 @@ public sealed class MainViewModel : ObservableObject, IDisposable
     public CrosshairViewModel CrosshairPage { get; private set; } = null!;
     public PerformanceViewModel PerformancePage { get; private set; } = null!;
     public PcCheckViewModel PcCheckPage { get; private set; } = null!;
+    public GamesViewModel GamesPage { get; private set; } = null!;
+    public SessionsViewModel SessionsPage { get; private set; } = null!;
     public SettingsViewModel SettingsPage { get; private set; } = null!;
 
     public RelayCommand NavigateCommand { get; }
@@ -68,6 +70,8 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             "crosshair" => CrosshairPage,
             "performance" or "hud" => PerformancePage,
             "pccheck" or "check" => PcCheckPage,
+            "games" => GamesPage,
+            "sessions" => SessionsPage,
             "settings" => SettingsPage,
             _ => HomePage
         };
@@ -80,6 +84,8 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             CrosshairViewModel => "Crosshair",
             PerformanceViewModel => "Performance",
             PcCheckViewModel => "PcCheck",
+            GamesViewModel => "Games",
+            SessionsViewModel => "Sessions",
             SettingsViewModel => "Settings",
             _ => "Home"
         };
@@ -113,6 +119,8 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         CrosshairPage = new CrosshairViewModel(_controller);
         PerformancePage = new PerformanceViewModel(_controller);
         PcCheckPage = new PcCheckViewModel(_controller);
+        GamesPage = new GamesViewModel(_controller);
+        SessionsPage = new SessionsViewModel(_controller);
         SettingsPage = new SettingsViewModel(_controller);
     }
 
@@ -123,6 +131,8 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         CrosshairPage?.Dispose();
         PerformancePage?.Dispose();
         PcCheckPage?.Dispose();
+        GamesPage?.Dispose();
+        SessionsPage?.Dispose();
         SettingsPage?.Dispose();
     }
 

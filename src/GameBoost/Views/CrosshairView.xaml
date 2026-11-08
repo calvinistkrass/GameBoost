@@ -56,6 +56,12 @@
                                     <TextBlock Text="{DynamicResource CH.Overlay.ShowDesc}" Style="{StaticResource Text.Muted}" Margin="0,2,0,0" />
                                 </StackPanel>
                             </CheckBox>
+                            <CheckBox IsChecked="{Binding HideWhileAiming}" Margin="0,0,0,16">
+                                <StackPanel>
+                                    <TextBlock Text="{DynamicResource CH.HideAim}" FontWeight="SemiBold" />
+                                    <TextBlock Text="{DynamicResource CH.HideAimDesc}" Style="{StaticResource Text.Muted}" Margin="0,2,0,0" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </CheckBox>
                             <TextBlock Text="{DynamicResource CH.Monitor}" Style="{StaticResource Text.Label}" Margin="0,0,0,6" />
                             <Grid Margin="0,0,0,16">
                                 <Grid.ColumnDefinitions>
@@ -189,6 +195,24 @@
                                     <StackPanel>
                                         <controls:CrosshairRenderer Config="{x:Static models:CrosshairSamples.TShape}" Width="40" Height="40" Zoom="1" ApplyOffset="False" />
                                         <TextBlock Text="{DynamicResource CH.Style.T}" FontSize="11.5" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                                    </StackPanel>
+                                </RadioButton>
+                                <RadioButton Style="{StaticResource RadioButton.Tile}" IsChecked="{Binding Config.Style, Converter={StaticResource EqualsToBool}, ConverterParameter=Diagonal}">
+                                    <StackPanel>
+                                        <controls:CrosshairRenderer Config="{x:Static models:CrosshairSamples.Diagonal}" Width="40" Height="40" Zoom="1" ApplyOffset="False" />
+                                        <TextBlock Text="{DynamicResource CH.Style.Diagonal}" FontSize="11.5" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                                    </StackPanel>
+                                </RadioButton>
+                                <RadioButton Style="{StaticResource RadioButton.Tile}" IsChecked="{Binding Config.Style, Converter={StaticResource EqualsToBool}, ConverterParameter=Square}">
+                                    <StackPanel>
+                                        <controls:CrosshairRenderer Config="{x:Static models:CrosshairSamples.Square}" Width="40" Height="40" Zoom="1" ApplyOffset="False" />
+                                        <TextBlock Text="{DynamicResource CH.Style.Square}" FontSize="11.5" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                                    </StackPanel>
+                                </RadioButton>
+                                <RadioButton Style="{StaticResource RadioButton.Tile}" IsChecked="{Binding Config.Style, Converter={StaticResource EqualsToBool}, ConverterParameter=CircleWithDot}">
+                                    <StackPanel>
+                                        <controls:CrosshairRenderer Config="{x:Static models:CrosshairSamples.CircleWithDot}" Width="40" Height="40" Zoom="1" ApplyOffset="False" />
+                                        <TextBlock Text="{DynamicResource CH.Style.CircleDot}" FontSize="11.5" HorizontalAlignment="Center" Margin="0,4,0,0" />
                                     </StackPanel>
                                 </RadioButton>
                             </WrapPanel>

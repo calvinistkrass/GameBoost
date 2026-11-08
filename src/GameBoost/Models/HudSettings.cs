@@ -26,6 +26,8 @@ public sealed class HudSettings : ObservableObject
     private bool _showClock;
     private bool _showWithGameMode = true;
     private bool _onlyOverFullscreen;
+    private bool _tempWarning = true;
+    private int _tempWarningLimit = 85;
 
     /// <summary>Was the HUD visible when the app last exited?</summary>
     public bool Visible { get => _visible; set => SetProperty(ref _visible, value); }
@@ -55,4 +57,10 @@ public sealed class HudSettings : ObservableObject
 
     /// <summary>Hide the HUD while no fullscreen/borderless game is in the foreground.</summary>
     public bool OnlyOverFullscreen { get => _onlyOverFullscreen; set => SetProperty(ref _onlyOverFullscreen, value); }
+
+    /// <summary>Show a warning when the GPU gets hotter than <see cref="TempWarningLimit"/>.</summary>
+    public bool TempWarning { get => _tempWarning; set => SetProperty(ref _tempWarning, value); }
+
+    /// <summary>GPU temperature in °C that triggers the warning (60–100).</summary>
+    public int TempWarningLimit { get => _tempWarningLimit; set => SetProperty(ref _tempWarningLimit, Math.Clamp(value, 60, 100)); }
 }

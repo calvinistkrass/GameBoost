@@ -31,7 +31,7 @@ public static class AppPaths
         {
             var asm = Assembly.GetExecutingAssembly();
             var info = asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
-            if (string.IsNullOrEmpty(info)) return asm.GetName().Version?.ToString(3) ?? "1.2.0";
+            if (string.IsNullOrEmpty(info)) return asm.GetName().Version?.ToString(3) ?? "1.3.0";
             var plus = info.IndexOf('+');
             return plus > 0 ? info[..plus] : info;
         }

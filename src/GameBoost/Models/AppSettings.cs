@@ -15,6 +15,23 @@ public sealed class AppSettings
     public bool AutoProfileSwitch { get; set; } = true;
     public bool TrayHintShown { get; set; }
 
+    /// <summary>Check GitHub for a new version on startup.</summary>
+    public bool CheckForUpdates { get; set; } = true;
+
+    /// <summary>Show short on-screen hints when hotkeys are used and for warnings.</summary>
+    public bool ShowOsd { get; set; } = true;
+
+    /// <summary>"Dark" or "Light". Applied on the next start.</summary>
+    public string Theme { get; set; } = "Dark";
+
+    /// <summary>Accent color as #RRGGBB. Applied on the next start.</summary>
+    public string AccentColor { get; set; } = "#2ED497";
+
+    public DiscordSettings Discord { get; set; } = new();
+
+    /// <summary>Games added by hand to the library.</summary>
+    public List<ManualGame> ManualGames { get; set; } = new();
+
     public string? ActiveProfileId { get; set; }
     public ObservableCollection<GameModeProfile> Profiles { get; set; } = new();
 
@@ -71,6 +88,10 @@ public sealed class AppSettings
         Hotkeys ??= new();
         Hud ??= new();
         TweakBackups ??= new();
+        Discord ??= new();
+        ManualGames ??= new();
+        if (Theme is not ("Dark" or "Light")) Theme = "Dark";
+        AccentColor = Infrastructure.ColorUtil.Normalize(AccentColor) ?? "#2ED497";
     }
 
     /// <summary>Schema 1 → 2: English becomes the default language; German default names are renamed.</summary>
@@ -137,4 +158,23 @@ public sealed class CrosshairSettings
 
     /// <summary>Was the overlay visible when the app last exited?</summary>
     public bool OverlayVisible { get; set; }
+
+    /// <summary>Hide the crosshair while the right mouse button is held (aiming down sights).</summary>
+    public bool HideWhileAiming { get; set; }
+}
+
+/// <summary>Discord Rich Presence ("Playing … with GameBoost").</summary>
+public sealed class DiscordSettings
+{
+    public bool Enabled { get; set; }
+
+    /// <summary>Application ID from discord.com/developers/applications.</summary>
+    public string ClientId { get; set; } = "";
+}
+
+/// <summary>A game the user added to the library by hand.</summary>
+public sealed class ManualGame
+{
+    public string Name { get; set; } = "";
+    public string ExePath { get; set; } = "";
 }

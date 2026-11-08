@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using GameBoost.Models;
+using GameBoost.Services;
 using GameBoost.Services.Performance;
 
 namespace GameBoost.Rendering;
@@ -13,7 +14,7 @@ public static class HudRenderer
     private static readonly Typeface LabelFace = new(new FontFamily("Bahnschrift, Segoe UI"), FontStyles.Normal, FontWeights.SemiBold, FontStretches.Normal);
     private static readonly Typeface ValueFace = new(new FontFamily("Bahnschrift, Segoe UI"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
 
-    private static readonly Color Accent = Color.FromRgb(0x2E, 0xD4, 0x97);
+    private static Color Accent => ThemeService.AccentColor;
     private static readonly Color Text = Color.FromRgb(0xF2, 0xF5, 0xFA);
     private static readonly Color Dim = Color.FromRgb(0x8D, 0x97, 0xAB);
     private static readonly Color Warn = Color.FromRgb(0xFF, 0xB5, 0x47);

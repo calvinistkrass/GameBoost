@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
 using GameBoost.Infrastructure;
+using GameBoost.Services;
 using GameBoost.Services.SystemCheck;
 using GameBoost.Views;
 
@@ -21,6 +22,9 @@ public sealed class PcCheckViewModel : ObservableObject, IDisposable, INavigatio
         UndoCommand = new AsyncRelayCommand(p => UndoAsync(p as SystemCheckItem), p => !IsRunning && p is SystemCheckItem { CanUndo: true });
         OpenCommand = new RelayCommand(p => SystemCheckService.OpenLink((p as SystemCheckItem)?.Link), p => p is SystemCheckItem { Link: not null });
         FixAllCommand = new AsyncRelayCommand(FixAllAsync, () => !IsRunning && Checks.Any(c => c.CanFix && c.Id != "RefreshRate"));
+        FreeRamCommand = new AsyncRelayCommand(FreeRamAsync, () => !IsCleaning);
+        ScanCleanupCommand = new AsyncRelayCommand(ScanCleanupAsync, () => !IsCleaning);
+        CleanCommand = new AsyncRelayCommand(CleanAsync, () => !IsCleaning && Cleanup.Any(c => c.IsSelected && c.SizeBytes > 0));
 
         _controller.SystemCheck.Completed += OnCompleted;
         Loc.LanguageChanged += OnLanguageChanged;
@@ -35,6 +39,110 @@ public sealed class PcCheckViewModel : ObservableObject, IDisposable, INavigatio
 
     public ObservableCollection<SystemCheckItem> Checks { get; } = new();
     public ObservableCollection<GameSettingRecommendation> Recommendations { get; } = new();
+
+    // ------------------------------------------------------------------ Cleanup
+
+    private bool _isCleaning, _cleanupScanned;
+    private string _ramResult = "", _cleanResult = "";
+
+    public AsyncRelayCommand FreeRamCommand { get; }
+    public AsyncRelayCommand ScanCleanupCommand { get; }
+    public AsyncRelayCommand CleanCommand { get; }
+
+    public List<CleanupCategory> Cleanup { get; } = TempCleaner.CreateCategories();
+
+    public bool IsCleaning
+    {
+        get => _isCleaning;
+        private set => SetProperty(ref _isCleaning, value);
+    }
+
+    public string RamResult
+    {
+        get => _ramResult;
+        private set => SetProperty(ref _ramResult, value);
+    }
+
+    public string CleanResult
+    {
+        get => _cleanResult;
+        private set => SetProperty(ref _cleanResult, value);
+    }
+
+    public string CleanupTotal => TempCleaner.FormatSize(Cleanup.Where(c => c.IsSelected).Sum(c => c.SizeBytes));
+
+    private async Task FreeRamAsync()
+    {
+        IsCleaning = true;
+        try
+        {
+            var keep = _controller.GameMode.ActiveProfile?.TriggerExecutables.ToList();
+            var r = await Task.Run(() => MemoryCleaner.Trim(keep));
+            RamResult = Loc.F("PC.RamResult", r.FreedMb.ToString("0", CultureInfo.CurrentCulture), r.Processes,
+                (r.AvailableMbAfter / 1024).ToString("0.0", CultureInfo.CurrentCulture));
+        }
+        catch (Exception ex)
+        {
+            ErrorReporter.Report("Memory could not be freed", ex);
+        }
+        finally
+        {
+            IsCleaning = false;
+        }
+    }
+
+    private async Task ScanCleanupAsync()
+    {
+        IsCleaning = true;
+        try
+        {
+            await Task.Run(() =>
+            {
+                foreach (var c in Cleanup) TempCleaner.Scan(c);
+            });
+            _cleanupScanned = true;
+            CleanResult = "";
+        }
+        finally
+        {
+            IsCleaning = false;
+            OnPropertyChanged(nameof(CleanupTotal));
+        }
+    }
+
+    private async Task CleanAsync()
+    {
+        var selected = Cleanup.Where(c => c.IsSelected).ToList();
+        if (selected.Count == 0) return;
+        if (!Dialogs.Confirm(Loc.F("PC.CleanConfirm", CleanupTotal), Loc.T("PC.CleanTitle"))) return;
+        IsCleaning = true;
+        try
+        {
+            var (files, bytes) = await Task.Run(() =>
+            {
+                int f = 0;
+                long b = 0;
+                foreach (var c in selected)
+                {
+                    var r = TempCleaner.Clean(c);
+                    f += r.Files;
+                    b += r.Bytes;
+                    TempCleaner.Scan(c);
+                }
+                return (f, b);
+            });
+            CleanResult = Loc.F("PC.CleanResult", TempCleaner.FormatSize(bytes), files);
+        }
+        catch (Exception ex)
+        {
+            ErrorReporter.Report("Cleanup failed", ex);
+        }
+        finally
+        {
+            IsCleaning = false;
+            OnPropertyChanged(nameof(CleanupTotal));
+        }
+    }
 
     public bool IsRunning
     {
@@ -64,6 +172,7 @@ public sealed class PcCheckViewModel : ObservableObject, IDisposable, INavigatio
     public void OnNavigatedTo()
     {
         if (!HasResult && !IsRunning) _ = RescanAsync();
+        if (!_cleanupScanned && !IsCleaning) _ = ScanCleanupAsync();
     }
 
     private async Task RescanAsync()

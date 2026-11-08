@@ -21,6 +21,20 @@
                 <TextBlock Text="{DynamicResource Home.Subtitle}" Style="{StaticResource Text.Muted}" Margin="0,4,0,0" />
             </StackPanel>
 
+            <!-- Update banner -->
+            <Border Style="{StaticResource InfoBox}" Margin="0,0,0,16" Visibility="{Binding UpdateAvailable, Converter={StaticResource BoolToVis}}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="&#xE896;" Style="{StaticResource Text.Icon}" Foreground="{StaticResource B.Accent}" Margin="0,0,10,0" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="1" Text="{Binding UpdateText}" FontWeight="SemiBold" VerticalAlignment="Center" />
+                    <Button Grid.Column="2" Style="{StaticResource Button.Primary}" Padding="12,6" Content="{Binding InstallUpdateText}" Command="{Binding InstallUpdateCommand}" />
+                </Grid>
+            </Border>
+
             <!-- Quick toggles -->
             <Grid Margin="0,0,0,16">
                 <Grid.ColumnDefinitions>
@@ -154,6 +168,17 @@
                     </DockPanel>
                 </Border>
             </Grid>
+            <!-- Last session -->
+            <Border Style="{StaticResource Card.Glass}" Margin="0,16,0,0" Visibility="{Binding HasLastSession, Converter={StaticResource BoolToVis}}">
+                <Grid>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="{DynamicResource Home.LastSessionTitle}" Style="{StaticResource Text.Label}" />
+                        <TextBlock Text="{Binding LastSessionText}" FontWeight="SemiBold" Margin="0,4,0,0" TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                    <Button HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource Button.Ghost}" Content="{DynamicResource Home.AllSessions}"
+                            Command="{Binding NavigateCommand}" CommandParameter="Sessions" />
+                </Grid>
+            </Border>
 </StackPanel>
     </ScrollViewer>
 </UserControl>
